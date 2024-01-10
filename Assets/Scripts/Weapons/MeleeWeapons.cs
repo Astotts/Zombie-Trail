@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class MeleeWeapons : WeaponsClass
 {
+    void Update()
+    {
+
+    }
+
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
     {
