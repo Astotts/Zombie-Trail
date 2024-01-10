@@ -5,15 +5,16 @@ using UnityEngine.UI;
 
 public class HealthSystem : MonoBehaviour
 {
-    //Variable Declaration
+    //Declaration
     public int maxHealth = 100;
     private int currentHealth;
     public Slider healthBar;
 
     private void Awake()
     {
-        // Assigning currentHealth a value
+        // Assigning currentHealth & healthBar to the value of maxHealth
         currentHealth = maxHealth;
+        healthBar.value = maxHealth;
     }
 
     void Update()
