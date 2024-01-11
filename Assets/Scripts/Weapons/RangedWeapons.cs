@@ -9,7 +9,8 @@ public class RangedWeapons : WeaponsClass
     [SerializeField] private float recoilTime; // the amount of time it takes between each shot - so the recoil of the weapon
     [SerializeField] private int clipSize; 
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
-    private int counter = 0; 
+    private int counter = 0;
+    private bool reloaded = true;
 
     void Start()
     {
@@ -20,7 +21,7 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && ammo > 0) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        if (Input.GetMouseButtonDown(0) && ammo > 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
             Attack(); 
         }
@@ -56,8 +57,15 @@ public class RangedWeapons : WeaponsClass
     // variables used from base(Parent): ReloadSpeed
     public override void Reload()
     {
-        
+        StartCoroutine(Reloading());
 
         Debug.Log("RangedWeapons Reload() function used.");
+    }
+
+    IEnumerator Reloading()
+    {
+        reloaded = false; 
+        yield return new WaitForSeconds(ReloadSpeed);
+        reloaded = true; 
     }
 }

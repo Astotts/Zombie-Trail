@@ -1662,8 +1662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 013a25ccd2badaf4f95372225877c43e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RangeOfAttack: 0
-  ReloadSpeed: 0
+  ReloadSpeed: 0.8
   WeightOfWeapon: 0
   projectileSpeed: 35
   projectilePrefab: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
