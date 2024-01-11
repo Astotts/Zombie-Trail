@@ -1488,6 +1488,8 @@ GameObject:
   - component: {fileID: 346338561}
   - component: {fileID: 346338563}
   - component: {fileID: 346338564}
+  - component: {fileID: 346338560}
+  - component: {fileID: 346338565}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1648,6 +1650,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &346338565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346338559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013a25ccd2badaf4f95372225877c43e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RangeOfAttack: 0
+  ReloadSpeed: 0
+  WeightOfWeapon: 0
+  projectileSpeed: 35
+  projectilePrefab: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
+  recoilTime: 0
+  clipSize: 0
+  ammo: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
