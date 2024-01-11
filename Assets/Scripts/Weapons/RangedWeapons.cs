@@ -48,7 +48,7 @@ public class RangedWeapons : WeaponsClass
             Debug.Log("RangedWeapons Attack() function used.");
 
             // decreasing ammo and increasing amount of ammo used
-            ammo -= 1; counter += 1;
+            counter += 1;
         }
     }
 
@@ -56,7 +56,9 @@ public class RangedWeapons : WeaponsClass
     // variables used from base(Parent): ReloadSpeed
     public override void Reload()
     {
-        
+        ammo -= clipSize;
+
+        //Play Reload Anim
 
         Debug.Log("RangedWeapons Reload() function used.");
     }
