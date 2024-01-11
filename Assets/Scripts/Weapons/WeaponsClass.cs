@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class WeaponsClass : MonoBehaviour
 {
-    [SerializeField] protected float rangeOfAttack;
-    [SerializeField] protected int reloadSpeed; // how long the reload / cooldown of attacks will take 
+    [SerializeField] protected float reloadSpeed; // how long the reload / cooldown of attacks will take 
     protected Vector2 directionOfAttack;
     public float weightOfWeapon; // decreases speed
 
@@ -37,12 +36,12 @@ public class WeaponsClass : MonoBehaviour
 
 
 
-        Debug.Log("Parent class Reload() function used.");
+        //Debug.Log("Parent class Reload() function used.");
     }
 
     // variables used: RangeOfAttack and DirectionOfAttack
     public virtual void Attack()
     {
-        Debug.Log("Parent class Attack() function used.");
+        //Debug.Log("Parent class Attack() function used.");
     }
 }
