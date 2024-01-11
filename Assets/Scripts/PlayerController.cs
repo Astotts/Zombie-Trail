@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
     {    
         PlayerInput();
         
-        Debug.Log(selectedWeapon);
         for(int i = 0; i <= 2; i++){
             if(i != selectedWeapon){
                 weapons[i].gameObject.SetActive(false);
