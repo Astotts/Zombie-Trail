@@ -6,21 +6,21 @@ public class RangedWeapons : WeaponsClass
 {
     [SerializeField] private float projectileSpeed;
     [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float RecoilTime; // the amount of time it takes between each shot - so the recoil of the weapon
-    [SerializeField] private int ClipSize; // IF WE WANT, so after you shoot a certain amount of times the Reload() function
-    // will be called or we will scratch this and only use reload as a cooldown or the recoil time between attacks like it is with melee
-    public int Ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
+    [SerializeField] private float recoilTime; // the amount of time it takes between each shot - so the recoil of the weapon
+    [SerializeField] private int clipSize; 
+    public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
+    private int counter = 0; 
 
     void Start()
     {
         // get Ammo from wherever we're getting that
-        Ammo = 100; // for testing
-        ClipSize = 25; // for testing
+        ammo = 100; // for testing
+        clipSize = 25; // for testing
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        if (Input.GetMouseButtonDown(0) && ammo > 0) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
             Attack(); 
         }
@@ -29,23 +29,27 @@ public class RangedWeapons : WeaponsClass
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
     {
-        if (Ammo%ClipSize == 0)
+        if (counter == clipSize)
         {
             Reload();
-        }
-
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        DirectionOfAttack = (mousePos - this.transform.position).normalized; 
-
-        GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
-        Rigidbody2D rb = newProjectile.GetComponent<Rigidbody2D>();
-
-        if(rb != null)
+            counter = 0;
+        } else
         {
-            rb.velocity = DirectionOfAttack * projectileSpeed;
-        }
+            // get the mouse position
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // current position to mouse position
+            directionOfAttack = (mousePos - this.transform.position).normalized;
 
-        Debug.Log("RangedWeapons Attack() function used.");
+            // create the projectile 
+            GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+            // shoot the projectile
+            newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed);
+
+            Debug.Log("RangedWeapons Attack() function used.");
+
+            // decreasing ammo and increasing amount of ammo used
+            ammo -= 1; counter += 1;
+        }
     }
 
     // after a certain amount of ammo is used this function is called, and if there is no ammo left - you are done
