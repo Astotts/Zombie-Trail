@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class MeleeWeapons : WeaponsClass
 {
-    [SerializeField] float elapsedTime;
+    private float elapsedTime;
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && elapsedTime > 0) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        elapsedTime += Time.deltaTime;
+        if (Input.GetMouseButtonDown(0) && elapsedTime > reloadSpeed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
             Attack(); 
+            elapsedTime = 0;
         }
     }
 
@@ -20,7 +22,7 @@ public class MeleeWeapons : WeaponsClass
         // current position to mouse position
         directionOfAttack = (mousePos - this.transform.position).normalized;
 
-
+        
 
         Debug.Log("MeleeWeapons Attack() function used.");
     }

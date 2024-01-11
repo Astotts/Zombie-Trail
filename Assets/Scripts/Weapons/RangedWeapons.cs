@@ -65,7 +65,8 @@ public class RangedWeapons : WeaponsClass
     IEnumerator Reloading()
     {
         reloaded = false; 
-        yield return new WaitForSeconds(ReloadSpeed);
+        yield return new WaitForSeconds(reloadSpeed);
+        ammo -= clipSize;
         reloaded = true; 
     }
 }
