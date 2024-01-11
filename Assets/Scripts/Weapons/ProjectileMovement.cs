@@ -6,7 +6,6 @@ public class ProjectileMovement : MonoBehaviour
 {
     private float speed;
     private Vector3 direction;
-
     private Vector2 initialPosition;
     public float outOfBounds; // Maximum range the projectile can travel
 

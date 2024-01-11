@@ -1,5 +1,4 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: f64a2b75cf17bb345bc4756b981e54cf
 ScriptedImporter:
   internalIDToNameTable: []
@@ -13,11 +12,3 @@ ScriptedImporter:
   wrapperCodePath: 
   wrapperClassName: 
   wrapperCodeNamespace: 
-=======
-guid: 17b5dedf8913c944babe45a5c8ebe0c5
-DefaultImporter:
-  externalObjects: {}
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
->>>>>>> dbc08efdf82fbe705a78198023f6e8a6ba5565be

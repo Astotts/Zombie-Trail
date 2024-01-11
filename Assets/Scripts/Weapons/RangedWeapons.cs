@@ -21,36 +21,37 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && ammo > 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
-        {
-            Attack(); 
-        }
+        
     }
 
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
     {
-        if (counter == clipSize)
+        if (ammo > 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
-            Reload();
-            counter = 0;
-        } else
-        {
-            // get the mouse position
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // current position to mouse position
-            directionOfAttack = (mousePos - this.transform.position).normalized;
+            if (counter == clipSize)
+            {
+                Reload();
+                counter = 0;
+            } else
+            {
+                // get the mouse position
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                // current position to mouse position
+                directionOfAttack = (mousePos - characterPos.position).normalized;
 
-            // create the projectile 
-            GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
-            // shoot the projectile
-            newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed);
+                // create the projectile 
+                GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+                // shoot the projectile
+                newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed);
 
-            Debug.Log("RangedWeapons Attack() function used.");
+                Debug.Log("RangedWeapons Attack() function used.");
 
-            // decreasing ammo and increasing amount of ammo used
-            counter += 1;
+                // decreasing ammo and increasing amount of ammo used
+                counter += 1;
+            }
         }
+        
     }
 
     // after a certain amount of ammo is used this function is called, and if there is no ammo left - you are done

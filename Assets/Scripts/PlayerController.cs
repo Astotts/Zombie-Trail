@@ -5,13 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 1f;
-
     PlayerControls playerControls;          // Input Action Asset - This allows the controls for the player. Check the file out to see the set up.
     Vector2 movement;                       // Controls the player movement
     Rigidbody2D rb;                         // Controls the player rigidbody
 
+    //----------------------------------------
+
+    int selectedWeapon;
+
+    [SerializeField] List<WeaponsClass> weapons;
+
     private void Awake()
     {
+        if(weapons == null){
+            weapons = new List<WeaponsClass>();
+        }
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
 
@@ -37,8 +45,20 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {    
         PlayerInput();
+        
+        Debug.Log(selectedWeapon);
+        for(int i = 0; i <= 2; i++){
+            if(i != selectedWeapon){
+                weapons[i].gameObject.SetActive(false);
+            }
+        }
+        weapons[selectedWeapon].gameObject.SetActive(true);
+
+        if(Input.GetMouseButtonDown(0)){
+            weapons[selectedWeapon].Attack();
+        }
     }
 
     private void FixedUpdate()
@@ -53,6 +73,12 @@ public class PlayerController : MonoBehaviour
 
         //Debug.Log("Movement x: " + movement.x);
         //Debug.Log("Movement y: " + movement.y);
+
+        //Get Selected Slot
+        if(Input.GetKeyDown("1")) selectedWeapon = 0;
+        if(Input.GetKeyDown("2")) selectedWeapon = 1;
+        if(Input.GetKeyDown("3")) selectedWeapon = 2;
+        //if(Input.GetKeyDown("4")) selectedWeapon = 4; 
     }
 
     void MovePlayer()

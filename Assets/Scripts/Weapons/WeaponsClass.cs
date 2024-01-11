@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WeaponsClass : MonoBehaviour
 {
+    [SerializeField] protected Transform characterPos;
     [SerializeField] protected float reloadSpeed; // how long the reload / cooldown of attacks will take 
     protected Vector2 directionOfAttack;
     public float weightOfWeapon; // decreases speed
