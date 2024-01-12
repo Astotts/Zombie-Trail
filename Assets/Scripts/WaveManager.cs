@@ -7,38 +7,44 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] GameObject[] zombiePrefabs;
 
-    private int zombCount; // tracks how many zombies are currently 'alive'
-    public int difficulity = 1; // depending on the difficulity number, there will be either more or less zombs
+    [SerializeField] List<GameObject> zombies; // used to track the number of zombies 
+
+    public int difficulity = 10; // depending on the difficulity number, there will be either more or less zombs
     public float spawnRate = 0.5f; // the spawn rate of the zombies
+
+    public bool readyForNextWave = false;  
 
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnWave(difficulity + 10));
+        zombies = new List<GameObject>();
+        StartCoroutine(SpawnWave(difficulity));
     }
 
     // Update is called once per frame
     void Update()
     {
-        zombCount = FindObjectsOfType<GenericEnemy>().Length;
-
-        if(zombCount == 0) // && playerIsAlive
+        // if zombie dead, remove from list. Probably need a zombie manager to properly do this. 
+        if(zombies.Count == 0 && readyForNextWave) // && playerIsAlive
         {
             difficulity += 10;
-            StartCoroutine(SpawnWave(difficulity + 10));
+            StartCoroutine(SpawnWave(difficulity));
+            readyForNextWave = false;
         }
     }
 
     IEnumerator SpawnWave(int numOfZombs)
     {
-        for (int i = 0; i <= numOfZombs; i++)
+        for (int i = 0; i < numOfZombs; i++)
         {
             int randIndex = GenerateRandomIndex(zombiePrefabs);
-            Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
+            GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
+            zombies.Add(newZomb);
             yield return new WaitForSeconds(spawnRate);
         }
+        readyForNextWave = true;
     }
-
+    
     // generates a random position at a random spawn point
     private Vector2 GenerateRandomPos()
     {
