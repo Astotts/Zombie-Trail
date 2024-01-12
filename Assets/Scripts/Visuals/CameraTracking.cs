@@ -41,7 +41,7 @@ public class CameraTracking : MonoBehaviour
         pos.z = Mathf.Clamp(pos.z, -10f, -10f);
         //mouseWheelLerpIncrement = Mathf.Lerp(mouseWheelLerpIncrement, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed, 10f * Time.deltaTime);
         //Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - mouseWheelLerpIncrement, zoomOutMin, zoomOutMax);
-        lerpPosition = Vector3.Lerp(lerpPosition, pos, Time.deltaTime);
+        lerpPosition = Vector3.Lerp(lerpPosition, pos, Time.deltaTime * 5);
         transform.position = lerpPosition;
     }
 }

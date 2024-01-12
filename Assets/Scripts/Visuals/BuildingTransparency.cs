@@ -13,47 +13,45 @@ public class BuildingTransparency : MonoBehaviour
     }
     
     void OnTriggerEnter2D(Collider2D col){
-        if(col.tag == "Player"){
-            Debug.Log("Enter");
-            elapsedTime = timeToFade;  
-            StartCoroutine("Revert");
-            StopCoroutine("Apply");
+        if(col.tag == "Player"){ 
+            StartCoroutine("Apply", spriteRenderer.color.a);
+            StopCoroutine("Revert"); 
         }
         
     }
 
     void OnTriggerExit2D(Collider2D col){
         if(col.tag == "Player"){
-            Debug.Log("Exit");
-            elapsedTime = timeToFade;
-            StartCoroutine("Apply");
-            StopCoroutine("Revert"); 
+            StartCoroutine("Revert", spriteRenderer.color.a);
+            StopCoroutine("Apply");
         }
     }
 
-    IEnumerator Revert(){
-        float startingAlpha = spriteRenderer.color.a;
-        while(0 <= elapsedTime){
-            elapsedTime -= Time.deltaTime;
+    IEnumerator Revert(float startingAlpha){
+        while(timeToFade >= elapsedTime){
+            elapsedTime += Time.deltaTime;
             float scalar = elapsedTime / timeToFade;
             Color temp = spriteRenderer.color;
-            temp.a = Mathf.Lerp(0.25f, 1f, scalar);
+            temp.a = Mathf.Lerp(startingAlpha, 1f, scalar);
             spriteRenderer.color = temp;
             yield return null;
         }
+        elapsedTime = 2;
         yield break;
     }
 
-    IEnumerator Apply(){
-        float startingAlpha = spriteRenderer.color.a;
+    //Makes object transparent over time
+    IEnumerator Apply(float startingAlpha){
         while(0 <= elapsedTime){
             elapsedTime -= Time.deltaTime;
             float scalar = elapsedTime / timeToFade;
             Color temp = spriteRenderer.color;
-            temp.a = Mathf.Lerp(1f, 0.25f, scalar);
+            temp.a = Mathf.Lerp(0.25f, startingAlpha, scalar);
+            
             spriteRenderer.color = temp;
             yield return null;
         }
+        elapsedTime = 0;
         yield break;
     }
 }

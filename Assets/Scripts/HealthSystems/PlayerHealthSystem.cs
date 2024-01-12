@@ -3,29 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthSystem : MonoBehaviour
+public class PlayerHealthSystem : HealthSystem
 {
     //Declaration
-    public int maxHealth = 100;
+    [SerializeField] private int maxHealth;
     private int currentHealth;
     public Slider healthBar;
 
-    private void Awake()
+    public override void Awake()
     {
         // Assigning currentHealth & healthBar to the value of maxHealth
         currentHealth = maxHealth;
         healthBar.value = maxHealth;
     }
 
-    void Update()
-    {
-        // Update the health bar UI
-        healthBar.value = currentHealth;
-    }
-
-    public void AlterHealth(int amount)
+    public override void AlterHealth(int amount)
     {
         currentHealth += amount;
+        healthBar.value = maxHealth;
 
         // Check for death
         if (currentHealth <= 0)
@@ -34,12 +29,15 @@ public class HealthSystem : MonoBehaviour
         }
     }
 
-    void Die()
+    public override void Die()
     {
         // Death animation, game over screen, etc.
         Debug.Log("You Are Dead.");
 
         //Removes gameObject
-        Destroy(gameObject);
+        //Destroy(gameObject);
+
+        //!DEBUG RESET TO HEALTH DELETE LATER
+        currentHealth = maxHealth;
     }
 }
