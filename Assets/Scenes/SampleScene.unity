@@ -938,25 +938,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7012ba4379150340bc6009e9e2327e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPos: {fileID: 0}
+  characterPos: {fileID: 346338562}
   reloadSpeed: 0
   weightOfWeapon: 0
   filter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  attackHitBox: {fileID: 0}
-  rb: {fileID: 0}
+  attackHitBox: {fileID: 168777886}
+  rb: {fileID: 168777887}
 --- !u!212 &168777889
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2059,7 +2059,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  weapons: []
+  weapons:
+  - {fileID: 1431152168}
+  - {fileID: 168777888}
+  - {fileID: 589350434}
 --- !u!212 &346338561
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2455,7 +2458,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78315914b2f357446b26f8cd6eee5010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounds: []
+  bounds:
+  - {fileID: 1269705197}
+  - {fileID: 1976771896}
   player: {fileID: 346338562}
 --- !u!1 &589350430
 GameObject:
@@ -2576,25 +2581,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7012ba4379150340bc6009e9e2327e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPos: {fileID: 0}
+  characterPos: {fileID: 346338562}
   reloadSpeed: 0
   weightOfWeapon: 0
   filter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  attackHitBox: {fileID: 0}
-  rb: {fileID: 0}
+  attackHitBox: {fileID: 589350432}
+  rb: {fileID: 589350433}
 --- !u!212 &589350435
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5955,25 +5960,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7012ba4379150340bc6009e9e2327e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPos: {fileID: 0}
+  characterPos: {fileID: 346338562}
   reloadSpeed: 0
   weightOfWeapon: 0
   filter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 8
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  attackHitBox: {fileID: 0}
-  rb: {fileID: 0}
+  attackHitBox: {fileID: 1431152167}
+  rb: {fileID: 1431152169}
 --- !u!50 &1431152169
 Rigidbody2D:
   serializedVersion: 4
@@ -7966,6 +7971,7 @@ MonoBehaviour:
   zombies: []
   difficulity: 10
   spawnRate: 0.5
+  readyForNextWave: 0
 --- !u!1 &1872661427
 GameObject:
   m_ObjectHideFlags: 0
