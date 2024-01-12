@@ -51,12 +51,14 @@ public class UnitHealthSystem : HealthSystem
     IEnumerator HealthFlashing(){
         /*while(){}
         sprites[0].color = Color.white;
-        yield break;*/
+        */
+        yield break;
     }
 
     IEnumerator HideHealth(){
         /*yield return new WaitForSeconds(waitBeforeFade);
         //while(){}
-        yield break;*/
+        */
+        yield break;
     }
 }
