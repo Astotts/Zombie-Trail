@@ -11,19 +11,24 @@ public class GenericEnemy : MonoBehaviour
     //Weapon (Malcolm's Weapon)
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float moveSpeed;
+    [SerializeField] Transform unitTransform;
 
     //Temporary Testing
-    [SerializeField] Transform destinationTransform;
+    [SerializeField] GameObject destinations;
     
     void Awake(){
-        //Setup health
-        //Populate the list with all friendly units
+        destinations = FindObjectWithTag();
     }
 
     void Update(){
-        /*for(amount of friendlies){
-            friendly closest = Which is closest?
-        }*/
+        float distance = Vector3.Distance(unitTransform, destinations[0]);
+        int closestEnemy = 0;
+        for(int i = 0; destinations.Length > 0; i++){
+            if(distance > Vector3.Distance(unitTransform, destinations[i])){
+                distance = Vector3.Distance(unitTransform, destinations[i]);
+                closestEnemy = i;
+            }
+        }
 
         MoveTo(destinationTransform.position);
         /*if(Vector3.Distance(this.transform.position, friendly.transform.position) > Weapon.range){
@@ -32,10 +37,10 @@ public class GenericEnemy : MonoBehaviour
     }
 
     void MoveTo(Vector3 position){
-        Vector3 moveDirection = this.transform.position - position;
+        Vector3 moveDirection = unitTransform.position - position;
         RotateTowards((Vector2)moveDirection);
         //ToDo: Feature to speed up and slow down
-        this.transform.position = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)this.transform.position;
+        unitTransform.position = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)this.transform.position;
         rb.velocity = Vector2.zero;
     }
 
