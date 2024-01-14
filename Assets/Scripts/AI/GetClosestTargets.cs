@@ -43,7 +43,6 @@ public class GetClosestTargets : MonoBehaviour
     }
 
     public Transform GetClosest(){
-        Debug.Log("Target" + target);
         return target.transform;
     }
 }

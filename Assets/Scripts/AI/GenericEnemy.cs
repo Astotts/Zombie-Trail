@@ -11,6 +11,7 @@ public class GenericEnemy : MonoBehaviour
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
     void Update(){
+        transform.position = unitTransform.position;
         target = targetFinder.GetClosest();
 
         MoveTo(target.position);

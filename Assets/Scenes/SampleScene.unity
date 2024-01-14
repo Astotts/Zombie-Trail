@@ -2103,29 +2103,61 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 401849486956735802, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 401849486956735802, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 401849486956735802, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Constraints
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 1153253664133053637, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: tagToFind.Array.data[0]
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1831202880468665311, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Size.x
+      value: 0.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831202880468665311, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Size.y
+      value: 0.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 1831202880468665311, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.49
+      objectReference: {fileID: 0}
     - target: {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_Name
-      value: Zombie
+      value: Zombie (OG Zombie Do not touch TY)
       objectReference: {fileID: 0}
     - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_Mass
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LinearDrag
-      value: 1
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_Constraints
-      value: 7
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235909462508157153, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Mass
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3235909462508157153, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LinearDrag
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235909462508157153, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Constraints
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5086730164292026502, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LocalPosition.x
