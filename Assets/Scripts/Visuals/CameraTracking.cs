@@ -17,15 +17,15 @@ public class CameraTracking : MonoBehaviour
         Vector3 topRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,0f)) - player.position;
         Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(Vector3.zero) - player.position;
 
-        Debug.DrawRay(player.position, topRight, Color.green, 5f);
-        Debug.DrawRay(player.position, bottomLeft, Color.green, 5f);
+        //Debug.DrawRay(player.position, topRight, Color.green, 5f);
+        //Debug.DrawRay(player.position, bottomLeft, Color.green, 5f);
         
         
         horizontal = Vector3.Distance(new Vector3(topRight.x,0f,0f),new Vector3(bottomLeft.x,0f,0f)) / 2;
         vertical = Vector3.Distance(new Vector3(0f,topRight.y,0f),new Vector3(0f,bottomLeft.y,0f)) / 2;
 
-        Debug.Log(horizontal);
-        Debug.Log(vertical);
+        //Debug.Log(horizontal);
+        //Debug.Log(vertical);
     }
 
     // Update is called once per frame

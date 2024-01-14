@@ -2103,22 +2103,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1153253664133053637, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: tagToFind.Array.data[0]
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
     - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
-      propertyPath: m_Constraints
-      value: 4
+      propertyPath: m_Mass
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
-      propertyPath: m_GravityScale
-      value: 0
+      propertyPath: m_LinearDrag
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4205771391385822227, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
-      propertyPath: destinationTransform
-      value: 
-      objectReference: {fileID: 346338562}
+    - target: {fileID: 3116468650665661371, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_Constraints
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3235909462508157153, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_LinearDrag
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5086730164292026502, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.86858
@@ -2158,6 +2166,10 @@ PrefabInstance:
     - target: {fileID: 5086730164292026502, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7474044908196294609, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: filter.layerMask.m_Bits
+      value: 64
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6001,6 +6013,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 4112189378522689206, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4293306925252277395, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6163502872295569999, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -6020,6 +6040,14 @@ PrefabInstance:
     - target: {fileID: 6685390163217880047, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
       propertyPath: m_Color.r
       value: 0.21226418
+      objectReference: {fileID: 0}
+    - target: {fileID: 8648341921271465077, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 9099486104623049446, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 9111808227167877653, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
       propertyPath: m_Size.x

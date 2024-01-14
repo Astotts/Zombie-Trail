@@ -9,6 +9,8 @@ public class MeleeWeapons : WeaponsClass
     [SerializeField] private Collider2D attackHitBox;
     private Collider2D[] enemies;
     [SerializeField] Rigidbody2D rb;
+    [SerializeField] GetClosestTargets targetFinder;
+    private Transform target;
 
     void Awake(){
         enemies = new Collider2D[10];
@@ -16,14 +18,24 @@ public class MeleeWeapons : WeaponsClass
 
     void Update()
     {
+        Vector2 moveDirection;
 
         attackHitBox.transform.position = characterPos.position;
 
-        Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
+        if(characterPos.gameObject.tag == "player"){
+            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
 
-        Vector2 moveDirection = mouseWorldPos;
+            moveDirection = mouseWorldPos;
+        }
+        else{
+            target = targetFinder.GetClosest();
+            Vector2 mouseWorldPos = (Vector2)characterPos.position - (Vector2)target.position;
 
-        Debug.DrawRay(characterPos.position, mouseWorldPos, Color.red, 0.5f);
+            moveDirection = target.position;
+        }
+        
+
+        //Debug.DrawRay(characterPos.position, mouseWorldPos, Color.red, 0.5f);
 
         moveDirection = moveDirection.normalized;
         float rotateAmount = Vector3.Cross(moveDirection, attackHitBox.transform.up).z;

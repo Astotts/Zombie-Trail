@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class PlayerHealthSystem : HealthSystem
 {
     //Declaration
-    [SerializeField] private int maxHealth;
-    private int currentHealth;
     public Slider healthBar;
 
     public override void Awake()

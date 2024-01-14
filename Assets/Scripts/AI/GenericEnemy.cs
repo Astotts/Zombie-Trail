@@ -4,36 +4,19 @@ using UnityEngine;
 
 public class GenericEnemy : MonoBehaviour
 {
-    //[Serialized] Health (stetson's health manager)
-    
-    //List<Friendly> //friendly units (Includes player, bus, and companions)
-
-    //Weapon (Malcolm's Weapon)
+    [SerializeField] WeaponsClass weapon;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float moveSpeed;
     [SerializeField] Transform unitTransform;
-
-    //Temporary Testing
-    [SerializeField] GameObject destinations;
-    
-    void Awake(){
-        destinations = FindObjectWithTag();
-    }
-
+    [SerializeField] GetClosestTargets targetFinder;
+    private Transform target;
     void Update(){
-        float distance = Vector3.Distance(unitTransform, destinations[0]);
-        int closestEnemy = 0;
-        for(int i = 0; destinations.Length > 0; i++){
-            if(distance > Vector3.Distance(unitTransform, destinations[i])){
-                distance = Vector3.Distance(unitTransform, destinations[i]);
-                closestEnemy = i;
-            }
-        }
+        target = targetFinder.GetClosest();
 
-        MoveTo(destinationTransform.position);
-        /*if(Vector3.Distance(this.transform.position, friendly.transform.position) > Weapon.range){
-            Weapon.Attack();
-        }*/
+        MoveTo(target.position);
+        if(Vector3.Distance(unitTransform.position, target.position) > weapon.range){
+            weapon.Attack();
+        }
     }
 
     void MoveTo(Vector3 position){
