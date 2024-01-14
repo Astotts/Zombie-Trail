@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;                   // To keep track of one GameManager
+    public static GameManager Instance;                     // To keep track of one GameManager
+    //[SerializeField] float playerHealth;                    // Player's current health
+    List<GameObject> zombiesInTheLevel;                     // Keeps track of the zombies in the level. Allows for wave start/end
+
+    bool isWaveActive = false;
+    
 
     // This allows us to keep the GameManager script when scenes are reloading or changing
     private void Awake()
@@ -22,15 +27,26 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);      // Don't destroy you, you lucky
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void AddZombieToList(GameObject zombie)
     {
-        
+        zombiesInTheLevel.Add(zombie);
+
+        if (!isWaveActive)
+        {
+            isWaveActive = true; // Wave has started. This is the first zombie in the wave
+            Debug.Log("Wave has started");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RemoveZombieFromList(GameObject zombie)
     {
-        
+        zombiesInTheLevel.Remove(zombie);
+
+        if(zombiesInTheLevel.Count == 0)
+        {
+            // The wave is over. This was the last zombie alive.
+            isWaveActive = false;
+            Debug.Log("Wave is completed");
+        }
     }
 }
