@@ -29,9 +29,9 @@ public class MeleeWeapons : WeaponsClass
         }
         else{
             target = targetFinder.GetClosest();
-            Vector2 mouseWorldPos = (Vector2)characterPos.position - (Vector2)target.position;
-
-            moveDirection = target.position;
+            moveDirection = (Vector2)target.position - (Vector2)characterPos.position;
+            //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
+        
         }
         
 
