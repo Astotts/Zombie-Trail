@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 9111808227167877653}
   - component: {fileID: 8239923267037570209}
   - component: {fileID: 6904845198273967224}
-  m_Layer: 0
+  - component: {fileID: 8671548003545558297}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -193,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPos: {fileID: 0}
+  range: 0
   reloadSpeed: 0
   weightOfWeapon: 0
   projectileSpeed: 35
@@ -200,6 +202,20 @@ MonoBehaviour:
   recoilTime: 0
   clipSize: 0
   ammo: 0
+--- !u!114 &8671548003545558297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4112189378522689206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 678822d7a49c46d49a983d201b74a25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthBar: {fileID: 0}
 --- !u!1 &4293306925252277395
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +229,7 @@ GameObject:
   - component: {fileID: 3050844147060718033}
   - component: {fileID: 867657728401003390}
   - component: {fileID: 4830335315728599393}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SlashAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +373,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPos: {fileID: 730696331179920750}
-  reloadSpeed: 0
+  range: 0
+  reloadSpeed: 1
   weightOfWeapon: 0
   filter:
     useTriggers: 0
@@ -375,6 +392,8 @@ MonoBehaviour:
     maxNormalAngle: 0
   attackHitBox: {fileID: 3050844147060718033}
   rb: {fileID: 4830335315728599393}
+  targetFinder: {fileID: 0}
+  damage: 10
 --- !u!50 &4830335315728599393
 Rigidbody2D:
   serializedVersion: 4
@@ -415,7 +434,7 @@ GameObject:
   - component: {fileID: 3239709091348550212}
   - component: {fileID: 1979836923269563098}
   - component: {fileID: 3371615904381188194}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SmashAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -502,7 +521,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPos: {fileID: 730696331179920750}
-  reloadSpeed: 0
+  range: 0
+  reloadSpeed: 1
   weightOfWeapon: 0
   filter:
     useTriggers: 0
@@ -520,6 +540,8 @@ MonoBehaviour:
     maxNormalAngle: 0
   attackHitBox: {fileID: 3371615904381188194}
   rb: {fileID: 1979836923269563098}
+  targetFinder: {fileID: 0}
+  damage: 10
 --- !u!50 &1979836923269563098
 Rigidbody2D:
   serializedVersion: 4
@@ -595,7 +617,7 @@ GameObject:
   - component: {fileID: 6412788096046645534}
   - component: {fileID: 4240099339693339768}
   - component: {fileID: 4934833868649827041}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StraightAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -682,7 +704,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPos: {fileID: 730696331179920750}
-  reloadSpeed: 0
+  range: 0
+  reloadSpeed: 1
   weightOfWeapon: 0
   filter:
     useTriggers: 0
@@ -700,6 +723,8 @@ MonoBehaviour:
     maxNormalAngle: 0
   attackHitBox: {fileID: 4934833868649827041}
   rb: {fileID: 4240099339693339768}
+  targetFinder: {fileID: 0}
+  damage: 10
 --- !u!50 &4240099339693339768
 Rigidbody2D:
   serializedVersion: 4

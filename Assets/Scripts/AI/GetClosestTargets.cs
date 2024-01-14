@@ -39,7 +39,6 @@ public class GetClosestTargets : MonoBehaviour
             }
         }
         target = destinations[closestEnemy];
-        Debug.Log("Target" + target);
     }
 
     public Transform GetClosest(){

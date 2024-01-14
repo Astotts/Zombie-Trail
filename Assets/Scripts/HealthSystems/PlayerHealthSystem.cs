@@ -18,7 +18,7 @@ public class PlayerHealthSystem : HealthSystem
     public override void AlterHealth(int amount)
     {
         currentHealth += amount;
-        healthBar.value = maxHealth;
+        healthBar.value = currentHealth;
 
         // Check for death
         if (currentHealth <= 0)
@@ -30,7 +30,7 @@ public class PlayerHealthSystem : HealthSystem
     public override void Die()
     {
         // Death animation, game over screen, etc.
-        Debug.Log("You Are Dead.");
+        Debug.LogWarning("You Are Dead.");
 
         //Removes gameObject
         //Destroy(gameObject);

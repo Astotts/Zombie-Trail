@@ -11,6 +11,7 @@ public class MeleeWeapons : WeaponsClass
     [SerializeField] Rigidbody2D rb;
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
+    [SerializeField] private int damage;
 
     void Awake(){
         enemies = new Collider2D[10];
@@ -47,19 +48,29 @@ public class MeleeWeapons : WeaponsClass
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
     {   
-        if (Input.GetMouseButtonDown(0) && elapsedTime > reloadSpeed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
-        { 
+        if (elapsedTime > reloadSpeed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        {
             elapsedTime = 0;
             attackHitBox.OverlapCollider(filter, enemies);
-
-            foreach(Collider2D collider in enemies){
-                if(collider != null && collider.tag == "Enemy"){
-                    //Take Damage   
+            
+            if(characterPos.gameObject.tag == "Player" && Input.GetMouseButtonDown(0)){
+                foreach(Collider2D collider in enemies){
+                    if(collider != null && collider.tag == "Enemy"){
+                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);   
+                    }
+                }
+            }
+            else{
+                foreach(Collider2D collider in enemies){
+                    if(collider != null && collider.tag == "Player"){
+                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);   
+                    }
                 }
             }
 
-            Debug.Log("MeleeWeapons Attack() function used.");
+            //Debug.Log("MeleeWeapons Attack() function used.");
         }
+        
     }
 
     // after each attack this function is called in order to serve as a cooldown between attacks

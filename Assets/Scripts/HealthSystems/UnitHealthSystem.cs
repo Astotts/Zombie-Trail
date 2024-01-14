@@ -9,7 +9,7 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private GameObject unit;
 
     //Visual Elements
-    [SerializeField] private SpriteRenderer[] sprites;
+    [SerializeField] private SpriteRenderer sprite;
     [SerializeField] private Color displayColor;
     [SerializeField] private float flashingDuration;
     [SerializeField] private float fadeDuration;
@@ -26,9 +26,9 @@ public class UnitHealthSystem : HealthSystem
         currentHealth += amount;
         if(currentHealth > 0){
             SetSize(((float)currentHealth / (float)maxHealth)); //Since health variables are ints must cast to float values
-            for(int i = sprites.Length; i > 0; i--){
-                sprites[i].color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
-            }
+            //for(int i = sprites.Length; i > 0; i--){
+                //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
+            //}
             StartCoroutine("HideHealth");
             StartCoroutine("HealthFlashing");
         }
@@ -49,9 +49,10 @@ public class UnitHealthSystem : HealthSystem
     }
 
     IEnumerator HealthFlashing(){
-        /*while(){}
-        sprites[0].color = Color.white;
-        */
+        //while(){
+            //sprite.color = Color.white;
+        //}
+        
         yield break;
     }
 

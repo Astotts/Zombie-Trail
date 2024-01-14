@@ -15,7 +15,7 @@ public class GenericEnemy : MonoBehaviour
         target = targetFinder.GetClosest();
 
         MoveTo(target.position);
-        if(Vector3.Distance(unitTransform.position, target.position) > weapon.range){
+        if(Vector3.Distance(unitTransform.position, target.position) < weapon.range){
             weapon.Attack();
         }
     }
