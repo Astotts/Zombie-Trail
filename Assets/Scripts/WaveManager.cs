@@ -7,7 +7,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] GameObject[] zombiePrefabs;
 
-    [SerializeField] List<GameObject> zombies; // used to track the number of zombies 
+    [SerializeField] public List<GameObject> zombies; // used to track the number of zombies 
 
     public int difficulity = 10; // depending on the difficulity number, there will be either more or less zombs
     public float spawnRate = 0.5f; // the spawn rate of the zombies
@@ -33,13 +33,24 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    public void RemoveZombie()
+    {
+        for(int i = 0; i < zombies.Count; i++)
+        {
+            if (zombies[i] == null)
+            {
+                zombies.RemoveAt(i);
+            }
+        }
+    }
+
     IEnumerator SpawnWave(int numOfZombs)
     {
         for (int i = 0; i < numOfZombs; i++)
         {
             int randIndex = GenerateRandomIndex(zombiePrefabs);
             GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
-            zombies.Add(newZomb);
+            zombies.Add(newZomb); 
             yield return new WaitForSeconds(spawnRate);
         }
         readyForNextWave = true;

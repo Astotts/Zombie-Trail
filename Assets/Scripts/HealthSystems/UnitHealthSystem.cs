@@ -14,7 +14,6 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private float flashingDuration;
     [SerializeField] private float fadeDuration;
     [SerializeField] private float waitBeforeFade;
-
     
     public override void Awake()
     {
@@ -41,6 +40,10 @@ public class UnitHealthSystem : HealthSystem
     public override void Die(){
         StopCoroutine("HealthFlashing");
         StopCoroutine("ShowHealth");
+
+        // wave manager helper
+        GameObject.Find("Wave Manager").GetComponent<WaveManager>().RemoveZombie();
+
         Destroy(unit);
     }
 

@@ -18,11 +18,13 @@ public class BaseHealthSystem : HealthSystem
     public override void AlterHealth(int amount)
     {
         currentHealth += amount;
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
         healthBar.value = currentHealth;
+/*
 =======
         healthBar.value = maxHealth;
 >>>>>>> Stashed changes
+        */
 
         // Check for death
         if (currentHealth <= 0)
@@ -34,11 +36,11 @@ public class BaseHealthSystem : HealthSystem
     public override void Die()
     {
         // Death animation, game over screen, etc.
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
         Debug.LogWarning("Your Base Has Been Destroyed.");
-=======
+/*=======
         Debug.Log("The Base Has Been Destroyed.");
->>>>>>> Stashed changes
+>>>>>>> Stashed changes */
 
         //Removes gameObject
         //Destroy(gameObject);
