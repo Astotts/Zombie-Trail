@@ -41,9 +41,6 @@ public class UnitHealthSystem : HealthSystem
         StopCoroutine("HealthFlashing");
         StopCoroutine("ShowHealth");
 
-        // wave manager helper
-        GameObject.Find("Wave Manager").GetComponent<WaveManager>().RemoveZombie();
-
         Destroy(unit);
     }
 
