@@ -40,7 +40,7 @@ public class UnitHealthSystem : HealthSystem
     public override void Die(){
         StopCoroutine("HealthFlashing");
         StopCoroutine("ShowHealth");
-
+        GameManager.Instance.RemoveZombieFromList(gameObject);
         Destroy(gameObject);
     }
 

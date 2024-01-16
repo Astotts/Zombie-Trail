@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     // This allows us to keep the GameManager script when scenes are reloading or changing
     private void Awake()
     {
+        zombiesInTheLevel = new List<GameObject>();
+
         // Instance of this object already around?
         if (Instance != null)
         {
@@ -40,13 +42,20 @@ public class GameManager : MonoBehaviour
 
     public void RemoveZombieFromList(GameObject zombie)
     {
+        Debug.Log("Remove Zombie called");
         zombiesInTheLevel.Remove(zombie);
+    }
 
+    public bool IsWaveOver()
+    {
+        Debug.Log("Number of zombers left: " + zombiesInTheLevel.Count);
         if(zombiesInTheLevel.Count == 0)
         {
-            // The wave is over. This was the last zombie alive.
-            isWaveActive = false;
-            Debug.Log("Wave is completed");
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

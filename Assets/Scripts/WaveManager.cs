@@ -25,27 +25,13 @@ public class WaveManager : MonoBehaviour
     void Update()
     {
         // if zombie dead, remove from list. Probably need a zombie manager to properly do this. 
-        if(EmptySlots() == 50 && readyForNextWave) // && playerIsAlive
+        if (GameManager.Instance.IsWaveOver())
         {
-            difficulity += 10;
-            StartCoroutine(SpawnWave(difficulity));
+            difficulity += 10;      // Update this later, testings
+
+            StartCoroutine(SpawnWave(difficulity));     // Start wave
             readyForNextWave = false;
         }
-        EmptySlots();
-    }
-
-    public int EmptySlots()
-    {
-        int countRemoved = 0;
-        for(int i = 0; i < zombies.Length; i++)
-        {
-            if (zombies[i] == null)
-            {
-                zombies[i] = null;
-                countRemoved++;
-            }
-        }
-        return countRemoved;
     }
 
     IEnumerator SpawnWave(int numOfZombs)
@@ -54,7 +40,8 @@ public class WaveManager : MonoBehaviour
         {
             int randIndex = GenerateRandomIndex(zombiePrefabs);
             GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
-            zombies[i] = newZomb; 
+            GameManager.Instance.AddZombieToList(newZomb);
+            //zombies[i] = newZomb; 
             yield return new WaitForSeconds(spawnRate);
         }
         readyForNextWave = true;
