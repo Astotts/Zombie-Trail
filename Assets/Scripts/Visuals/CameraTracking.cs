@@ -24,8 +24,8 @@ public class CameraTracking : MonoBehaviour
         horizontal = Vector3.Distance(new Vector3(topRight.x,0f,0f),new Vector3(bottomLeft.x,0f,0f)) / 2;
         vertical = Vector3.Distance(new Vector3(0f,topRight.y,0f),new Vector3(0f,bottomLeft.y,0f)) / 2;
 
-        Debug.Log(horizontal);
-        Debug.Log(vertical);
+        //Debug.Log(horizontal);
+        //Debug.Log(vertical);
     }
 
     // Update is called once per frame

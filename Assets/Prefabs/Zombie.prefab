@@ -445,11 +445,11 @@ MonoBehaviour:
   - {fileID: 6158726481333157422}
   - {fileID: 8355394030007464729}
   displayColor:
-  - {r: 0.6037736, g: 0.08897443, b: 0, a: 0.00000021253942}
+  - {r: 0.6037736, g: 0.08897443, b: 0, a: 1}
   - {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 8.172631e+20}
-  flashingDuration: 1
+  singleFlashTime: 0.15
+  flashCycles: 3
   fadeDuration: 1
-  waitBeforeFade: 1
 --- !u!1 &3753309609748619708
 GameObject:
   m_ObjectHideFlags: 0
