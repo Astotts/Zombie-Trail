@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance;                     // To keep track of one GameManager
-    //[SerializeField] float playerHealth;                    // Player's current health
-    List<GameObject> zombiesInTheLevel;                     // Keeps track of the zombies in the level. Allows for wave start/end
+    public static GameManager Instance;                         // To keep track of one GameManager
+    public WaveManager wm;
+    //[SerializeField] float playerHealth;                      // Player's current health
+    List<GameObject> zombiesInTheLevel;                         // Keeps track of the zombies in the level. Allows for wave start/end
 
     bool isWaveActive = false;
     
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         zombiesInTheLevel = new List<GameObject>();
+
+        wm = FindObjectOfType<WaveManager>();
 
         // Instance of this object already around?
         if (Instance != null)
@@ -44,6 +47,12 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Remove Zombie called");
         zombiesInTheLevel.Remove(zombie);
+
+        if (IsWaveOver())
+        {
+            Debug.Log("Wave Over. New wave starting...");
+            wm.StartNewWave();
+        }
     }
 
     public bool IsWaveOver()

@@ -24,14 +24,15 @@ public class WaveManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // if zombie dead, remove from list. Probably need a zombie manager to properly do this. 
-        if (GameManager.Instance.IsWaveOver())
-        {
-            difficulity += 10;      // Update this later, testings
+        
+    }
 
-            StartCoroutine(SpawnWave(difficulity));     // Start wave
-            readyForNextWave = false;
-        }
+    public void StartNewWave()
+    {
+        difficulity += 10;      // Update this later, testings
+
+        StartCoroutine(SpawnWave(difficulity));     // Start wave
+        readyForNextWave = false;
     }
 
     IEnumerator SpawnWave(int numOfZombs)
