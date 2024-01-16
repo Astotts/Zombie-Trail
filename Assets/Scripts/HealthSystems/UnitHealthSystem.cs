@@ -6,12 +6,12 @@ public class UnitHealthSystem : HealthSystem
 {
     //Health Functionality
     [SerializeField] private Transform bar;
-    [SerializeField] private GameObject unit;
 
     //Visual Elements
-    [SerializeField] private SpriteRenderer sprite;
-    [SerializeField] private Color displayColor;
+    [SerializeField] private SpriteRenderer[] sprites; //Holds Health and Health Background
+    [SerializeField] private Color[] displayColor; //Holds Health and Health Background
     [SerializeField] private float flashingDuration;
+    [SerializeField] private float flashCycles;
     [SerializeField] private float fadeDuration;
     [SerializeField] private float waitBeforeFade;
     
@@ -41,7 +41,7 @@ public class UnitHealthSystem : HealthSystem
         StopCoroutine("HealthFlashing");
         StopCoroutine("ShowHealth");
 
-        Destroy(unit);
+        Destroy(gameObject);
     }
 
     private void SetSize(float sizeNormalized) {
@@ -49,26 +49,36 @@ public class UnitHealthSystem : HealthSystem
     }
 
     IEnumerator HealthFlashing(){
-        //while(){
-            //sprite.color = Color.white;
-        //}
+        /*float elapsed = 0f;
+        for(int i = 0; i >= ; i++){
+            while(elapsed <= flashingDuration){
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }*/
         
         yield break;
     }
 
     IEnumerator HideHealth(){
-        sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, 1f);
+        for(int i = 0; sprites.Length > i; i++){
+            sprites[i].color = new Color(displayColor[i].r, displayColor[i].g, displayColor[i].b, 1f);
+        }
+        
         float elapsed = 0f;
         while(elapsed <= waitBeforeFade){
             elapsed += Time.deltaTime;
-            yield return;
+            yield return null;
         }
         elapsed = 0f;
         while(elapsed <= fadeDuration){
             elapsed += Time.deltaTime;
-            Mathf.Lerp(0f, 1f, (elapsed / fadeDuration));
-            sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, );
-            yield return;
+            float alpha = Mathf.Lerp(1f, 0f, (elapsed / fadeDuration));
+            for(int i = 0; sprites.Length > i; i++){
+                sprites[i].color = new Color(displayColor[i].r, displayColor[i].g, displayColor[i].b, alpha);
+            }
+            
+            yield return null;
         }
         yield break;
     }
