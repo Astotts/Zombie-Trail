@@ -57,9 +57,19 @@ public class UnitHealthSystem : HealthSystem
     }
 
     IEnumerator HideHealth(){
-        /*yield return new WaitForSeconds(waitBeforeFade);
-        //while(){}
-        */
+        sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, 1f);
+        float elapsed = 0f;
+        while(elapsed <= waitBeforeFade){
+            elapsed += Time.deltaTime;
+            yield return;
+        }
+        elapsed = 0f;
+        while(elapsed <= fadeDuration){
+            elapsed += Time.deltaTime;
+            Mathf.Lerp(0f, 1f, (elapsed / fadeDuration));
+            sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, );
+            yield return;
+        }
         yield break;
     }
 }
