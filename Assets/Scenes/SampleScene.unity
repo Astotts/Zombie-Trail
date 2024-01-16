@@ -180,8 +180,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: -5177388603050735206, guid: cc35afd292fc349128b36a291fb3a165, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2354,6 +2354,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie (OG Zombie Do not touch TY)
       objectReference: {fileID: 0}
+    - target: {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5086730164292026502, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.86858
@@ -3816,11 +3820,6 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
---- !u!1 &1186096405 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
-  m_PrefabInstance: {fileID: 643925518}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1192660987
 GameObject:
   m_ObjectHideFlags: 0
@@ -5371,7 +5370,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6cd547a6f42256a49b0be0bf1fdbf0ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ab3abb73abebda740a61583eef1c9c1d, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5773,7 +5772,7 @@ MonoBehaviour:
   - {fileID: 1414925177}
   - {fileID: 1929712463}
   zombiePrefabs:
-  - {fileID: 1186096405}
+  - {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
   zombies: []
   difficulity: 10
   spawnRate: 0.5

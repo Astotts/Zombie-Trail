@@ -7,7 +7,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject[] spawnPoints;
     [SerializeField] GameObject[] zombiePrefabs;
 
-    [SerializeField] List<GameObject> zombies; // used to track the number of zombies 
+    [SerializeField] public GameObject[] zombies; // used to track the number of zombies 
 
     public int difficulity = 10; // depending on the difficulity number, there will be either more or less zombs
     public float spawnRate = 0.5f; // the spawn rate of the zombies
@@ -17,7 +17,7 @@ public class WaveManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        zombies = new List<GameObject>();
+        zombies = new GameObject[50];
         StartCoroutine(SpawnWave(difficulity));
     }
 
@@ -25,12 +25,27 @@ public class WaveManager : MonoBehaviour
     void Update()
     {
         // if zombie dead, remove from list. Probably need a zombie manager to properly do this. 
-        if(zombies.Count == 0 && readyForNextWave) // && playerIsAlive
+        if(EmptySlots() == 50 && readyForNextWave) // && playerIsAlive
         {
             difficulity += 10;
             StartCoroutine(SpawnWave(difficulity));
             readyForNextWave = false;
         }
+        EmptySlots();
+    }
+
+    public int EmptySlots()
+    {
+        int countRemoved = 0;
+        for(int i = 0; i < zombies.Length; i++)
+        {
+            if (zombies[i] == null)
+            {
+                zombies[i] = null;
+                countRemoved++;
+            }
+        }
+        return countRemoved;
     }
 
     IEnumerator SpawnWave(int numOfZombs)
@@ -39,10 +54,11 @@ public class WaveManager : MonoBehaviour
         {
             int randIndex = GenerateRandomIndex(zombiePrefabs);
             GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
-            zombies.Add(newZomb);
+            zombies[i] = newZomb; 
             yield return new WaitForSeconds(spawnRate);
         }
         readyForNextWave = true;
+        yield break;
     }
     
     // generates a random position at a random spawn point
