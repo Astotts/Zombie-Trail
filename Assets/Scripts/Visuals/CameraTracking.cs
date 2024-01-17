@@ -7,6 +7,7 @@ public class CameraTracking : MonoBehaviour
     [SerializeField] Transform[] bounds;
     Vector3 pos;
     [SerializeField] Transform player;
+    [SerializeField] float camSnapFloat;
 
     float vertical, horizontal;
     Vector3 lerpPosition;
@@ -33,15 +34,15 @@ public class CameraTracking : MonoBehaviour
     {
         pos = player.position;
 
-        pos.x += Input.GetAxisRaw("Horizontal"); 
-        pos.y += Input.GetAxisRaw("Vertical"); 
+        pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat; 
+        pos.y += Input.GetAxisRaw("Vertical") * camSnapFloat; 
 
         pos.x = Mathf.Clamp(pos.x, bounds[1].position.x + horizontal, bounds[0].position.x - horizontal);
         pos.y = Mathf.Clamp(pos.y, bounds[1].position.y + vertical, bounds[0].position.y - vertical);    
         pos.z = Mathf.Clamp(pos.z, -10f, -10f);
         //mouseWheelLerpIncrement = Mathf.Lerp(mouseWheelLerpIncrement, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed, 10f * Time.deltaTime);
         //Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - mouseWheelLerpIncrement, zoomOutMin, zoomOutMax);
-        lerpPosition = Vector3.Lerp(lerpPosition, pos, Time.deltaTime);
+        lerpPosition = Vector3.Lerp(lerpPosition, pos, Time.deltaTime * camSnapFloat);
         transform.position = lerpPosition;
     }
 }

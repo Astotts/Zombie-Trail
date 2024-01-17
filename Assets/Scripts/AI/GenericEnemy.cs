@@ -15,7 +15,9 @@ public class GenericEnemy : MonoBehaviour
         target = targetFinder.GetClosest();
 
         MoveTo(target.position);
-        if(Vector3.Distance(unitTransform.position, target.position) < weapon.range){
+        //Debug.Log(targetFinder.GetDistance());
+        if(targetFinder.GetDistance() < weapon.range){
+            Debug.Log("Working");
             weapon.Attack();
         }
     }

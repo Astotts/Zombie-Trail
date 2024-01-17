@@ -26,7 +26,7 @@ public class PlayerHealthSystem : HealthSystem
     {
         StartCoroutine("HealthFlashing");
         currentHealth += amount;
-        healthBar.value = currentHealth;
+        healthBar.value = (float)currentHealth / (float)maxHealth * 100f;
 
         // Check for death
         if (currentHealth <= 0)

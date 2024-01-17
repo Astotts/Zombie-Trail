@@ -352,7 +352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739087ea347b8f34d918550085236e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinations: []
   tagToFind:
   - Player
 --- !u!50 &401849486956735802
@@ -550,7 +549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPos: {fileID: 5086730164292026502}
-  range: 3
+  range: 0.65
   reloadSpeed: 1
   weightOfWeapon: 0
   filter:
