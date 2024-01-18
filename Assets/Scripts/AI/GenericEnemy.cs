@@ -4,20 +4,35 @@ using UnityEngine;
 
 public class GenericEnemy : MonoBehaviour
 {
-    [SerializeField] WeaponsClass weapon;
+
+    //Unit Movement
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float moveSpeed;
     [SerializeField] Transform unitTransform;
+
+    //Tracking Destination
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
+    [SerializeField] WeaponsClass weapon;
+
+    //Animation
+    [SerializeField] Animator animator;
+    private Vector2 lastPos;
+
     void Update(){
         transform.position = unitTransform.position;    
         target = targetFinder.GetClosest();
 
+        //Animator Variables
+        Vector2 distTraveled = (Vector2)transform.position - lastPos;
+        lastPos = (Vector2)transform.position;
+        animator.SetFloat("X", distTraveled.x);
+        animator.SetFloat("Y", distTraveled.y);
+        Debug.Log(distTraveled);
+
         MoveTo(target.position);
         //Debug.Log(targetFinder.GetDistance());
         if(targetFinder.GetDistance() < weapon.range){
-            Debug.Log("Working");
             weapon.Attack();
         }
     }

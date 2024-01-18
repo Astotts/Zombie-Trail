@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class MeleeWeapons : WeaponsClass
@@ -68,6 +69,7 @@ public class MeleeWeapons : WeaponsClass
                 }
             }
 
+            Array.Clear(enemies, 0, enemies.Length);
             //Debug.Log("MeleeWeapons Attack() function used.");
         }
         
