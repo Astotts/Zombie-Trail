@@ -4524,6 +4524,17 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!114 &1479482584 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+  m_PrefabInstance: {fileID: 2019300273}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 013a25ccd2badaf4f95372225877c43e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1504269426
 GameObject:
   m_ObjectHideFlags: 0
@@ -6457,6 +6468,34 @@ PrefabInstance:
       propertyPath: reloadSpeed
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: clipSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: reloadSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: characterPos
+      value: 
+      objectReference: {fileID: 989784470}
+    - target: {fileID: 8239923267037570209, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: weapons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8239923267037570209, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      propertyPath: weapons.Array.data[3]
+      value: 
+      objectReference: {fileID: 1479482584}
     - target: {fileID: 8648341921271465077, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
       propertyPath: m_Layer
       value: 6

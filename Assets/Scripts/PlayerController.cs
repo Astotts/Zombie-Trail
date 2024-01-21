@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown("1")) selectedWeapon = 0;
         if(Input.GetKeyDown("2")) selectedWeapon = 1;
         if(Input.GetKeyDown("3")) selectedWeapon = 2;
-        //if(Input.GetKeyDown("4")) selectedWeapon = 4; 
+        if(Input.GetKeyDown("4")) selectedWeapon = 3; 
     }
 
     void MovePlayer()

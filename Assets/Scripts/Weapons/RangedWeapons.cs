@@ -11,12 +11,13 @@ public class RangedWeapons : WeaponsClass
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
     private int counter = 0;
     private bool reloaded = true;
+    public int damage;
 
     void Start()
     {
         // get Ammo from wherever we're getting that
         ammo = 100; // for testing
-        clipSize = 25; // for testing
+        //clipSize = 25; // for testing
     }
 
     void Update()
@@ -43,15 +44,14 @@ public class RangedWeapons : WeaponsClass
                 // create the projectile 
                 GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
                 // shoot the projectile
-                newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed);
-
+                newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
+                
                 Debug.Log("RangedWeapons Attack() function used.");
 
                 // decreasing ammo and increasing amount of ammo used
                 counter += 1;
             }
         }
-        
     }
 
     // after a certain amount of ammo is used this function is called, and if there is no ammo left - you are done
