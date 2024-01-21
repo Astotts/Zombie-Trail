@@ -28,7 +28,6 @@ public class GenericEnemy : MonoBehaviour
         lastPos = (Vector2)transform.position;
         animator.SetFloat("X", distTraveled.x);
         animator.SetFloat("Y", distTraveled.y);
-        Debug.Log(distTraveled);
 
         MoveTo(target.position);
         //Debug.Log(targetFinder.GetDistance());

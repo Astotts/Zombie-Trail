@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] List<WeaponsClass> weapons;
 
+    //----------------------------------------
+
+    [SerializeField] Animator animator;
+
+
     private void Awake()
     {
         if(weapons == null){
@@ -70,6 +75,17 @@ public class PlayerController : MonoBehaviour
         // Get the x/y values from the "Input Action" asset, which has the keys assigned x +/-, y +/-
         movement = playerControls.Movement.Move.ReadValue<Vector2>();
 
+        if(movement == Vector2.zero){
+            animator.Play("Idle");
+        }else if(movement.x < 0f){
+            animator.Play("Player-Walk-Left");
+        }else if(movement.x > 0f){
+            animator.Play("Player-Walk-Right");
+        }else if(movement.y > 0f){
+            animator.Play("Player-Walk-Up");
+        }else if(movement.y < 0f){
+            animator.Play("Player-Walk-Down");
+        }
         //Debug.Log("Movement x: " + movement.x);
         //Debug.Log("Movement y: " + movement.y);
 
