@@ -8,11 +8,17 @@ public class PlayerHealthSystem : HealthSystem
     //Declaration
     public Slider healthBar;
 
-    //Visuals
+    //Health Visuals
     [SerializeField] private Image sprite; //Holds Health and Health Background
     [SerializeField] private Color displayColor; //Holds Health and Health Background
     [SerializeField] private float singleFlashTime;
     [SerializeField] private float flashCycles;
+
+    //Screen Visuals
+    [SerializeField] private Image[] bloodEffect;
+    [SerializeField] private Color bloodEffectColor; 
+    [SerializeField] private float waitForFade;
+    [SerializeField] private float timeToFade;
 
 
     public override void Awake()
@@ -24,7 +30,14 @@ public class PlayerHealthSystem : HealthSystem
 
     public override void AlterHealth(int amount)
     {
+        StopCoroutine("ScreenEffect");
+        //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
+        for(int i = 0; bloodEffect.Length > i; i++){
+            bloodEffect[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth - (float)maxHealth) / (float)maxHealth)); 
+        }
+
         StartCoroutine("HealthFlashing");
+        StartCoroutine("ScreenEffect");
         currentHealth += amount;
         healthBar.value = (float)currentHealth / (float)maxHealth * 100f;
 
@@ -67,6 +80,24 @@ public class PlayerHealthSystem : HealthSystem
             elapsed = 0f;
         }
         
+        yield break;
+    }
+
+    IEnumerator ScreenEffect(){
+        float elapsed = 0f;
+        while(elapsed <= waitForFade){
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        elapsed = 0f;
+        Color startingColor = bloodEffect[0].color;
+        while(elapsed <= timeToFade){
+            elapsed += Time.deltaTime;
+            for(int i = 0; bloodEffect.Length > i; i++){
+                bloodEffect[i].color = Color.Lerp(startingColor, Color.clear, elapsed / timeToFade);
+            }
+            yield return null;
+        }
         yield break;
     }
 }
