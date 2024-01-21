@@ -46,7 +46,7 @@ public class RangedWeapons : WeaponsClass
                 // shoot the projectile
                 newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
                 
-                Debug.Log("RangedWeapons Attack() function used.");
+                //Debug.Log("RangedWeapons Attack() function used.");
 
                 // decreasing ammo and increasing amount of ammo used
                 counter += 1;
@@ -60,7 +60,7 @@ public class RangedWeapons : WeaponsClass
     {
         StartCoroutine(Reloading());
 
-        Debug.Log("RangedWeapons Reload() function used.");
+        //Debug.Log("RangedWeapons Reload() function used.");
     }
 
     IEnumerator Reloading()

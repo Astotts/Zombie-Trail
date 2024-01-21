@@ -45,7 +45,12 @@ public class ProjectileMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy") && this.CompareTag("Player bullet"))
         {
-            other.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
+            if(other.gameObject.transform.parent != null){
+                other.gameObject.transform.parent.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
+            }
+            else{
+                other.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
+            }
         }
     }
 }

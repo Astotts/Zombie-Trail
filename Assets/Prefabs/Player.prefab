@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8239923267037570209}
   - component: {fileID: 6904845198273967224}
   - component: {fileID: 8671548003545558297}
-  - component: {fileID: 1887024163961122079}
+  - component: {fileID: 8697594637498151872}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: e7e3868235bddbf499821dffe237f867, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -152,7 +152,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.051785663}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -163,7 +163,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.3}
+  m_Size: {x: 0.1, y: 0.19642869}
   m_EdgeRadius: 0
 --- !u!114 &8239923267037570209
 MonoBehaviour:
@@ -182,7 +182,8 @@ MonoBehaviour:
   - {fileID: 867657728401003390}
   - {fileID: 3239709091348550212}
   - {fileID: 6412788096046645534}
-  animator: {fileID: 0}
+  - {fileID: 6904845198273967224}
+  animator: {fileID: 8697594637498151872}
 --- !u!114 &6904845198273967224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,21 +191,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4112189378522689206}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 013a25ccd2badaf4f95372225877c43e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterPos: {fileID: 0}
+  characterPos: {fileID: 730696331179920750}
   range: 0
-  reloadSpeed: 0
+  reloadSpeed: 0.5
   weightOfWeapon: 0
   projectileSpeed: 35
   projectilePrefab: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
   recoilTime: 0
-  clipSize: 0
+  clipSize: 5
   ammo: 0
-  damage: 0
+  damage: 5
 --- !u!114 &8671548003545558297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,10 +221,10 @@ MonoBehaviour:
   maxHealth: 100
   healthBar: {fileID: 0}
   sprite: {fileID: 0}
-  displayColor: {r: 0, g: 0, b: 0, a: 0}
-  singleFlashTime: 0
-  flashCycles: 0
---- !u!95 &1887024163961122079
+  displayColor: {r: 0.7075472, g: 0, b: 0, a: 1}
+  singleFlashTime: 0.15
+  flashCycles: 3
+--- !u!95 &8697594637498151872
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
