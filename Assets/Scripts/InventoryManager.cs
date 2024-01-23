@@ -9,8 +9,9 @@ using UnityEngine;
 public class InventoryManager : MonoBehaviour
 {
     // Store all the items in the game on this list
-    [SerializeField] List<Item> allItemsInGame = new List<Item>();           // Store all the items in the game here, to pull for reference if needed
-    [SerializeField] List<Item> playersItems = new List<Item>();             // List to stores the items that the player is carrying
+    [SerializeField] List<Item> allItemsInGame = new List<Item>();              // Store all the items in the game here, to pull for reference if needed
+    [SerializeField] List<Item> equipableItems = new List<Item>();              // Items that has equipable
+    [SerializeField] List<Item> playersItems = new List<Item>();                // List to stores the items that the player is carrying
 
     float maxWeight         = 25f;                              // Max amount of weight the player can carry (start at a low default, and can work up from there for weight carry)
     float currentWeight     = 0;                                // The amount of weight the player is currently carrying
@@ -69,13 +70,13 @@ public class InventoryManager : MonoBehaviour
 ///          maxStorable -      The max amount allowed to be stored
 ///          currentStored -    The # amount that the player has currently on them
 /// </summary>
-public class Item : MonoBehaviour
+public struct Item
 {
     // The following properties will be applied during the start up of this script
-    string itemName = "";       // Item's name
-    int maxStorable = 0;        // Max amount storable
-    int currentStored = 0;      // The player's current amount of this item on hand
-    float weight = .1f;         // Weight of the item
+    string itemName;       // Item's name
+    int maxStorable;        // Max amount storable
+    int currentStored;      // The player's current amount of this item on hand
+    float weight;         // Weight of the item
 
     public Item(string itemNameParam, int maxStorableParam, int currentStoredParam, float weightOfTheObject)
     {
