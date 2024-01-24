@@ -4834,7 +4834,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6904845198273967224, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
   m_PrefabInstance: {fileID: 2019300273}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2019300274}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 013a25ccd2badaf4f95372225877c43e, type: 3}
@@ -6931,13 +6931,51 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4112189378522689206, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+      insertIndex: 5
+      addedObject: {fileID: 2019300276}
   m_SourcePrefab: {fileID: 100100000, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+--- !u!1 &2019300274 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4112189378522689206, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
+  m_PrefabInstance: {fileID: 2019300273}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &2019300275 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8697594637498151872, guid: 33f28463cefa6224698ecb3b6772bfa7, type: 3}
   m_PrefabInstance: {fileID: 2019300273}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2019300276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019300274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: f64a2b75cf17bb345bc4756b981e54cf, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Movement
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &2020569395
 GameObject:
   m_ObjectHideFlags: 0

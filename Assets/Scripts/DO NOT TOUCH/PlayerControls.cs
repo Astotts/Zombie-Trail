@@ -94,6 +94,107 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Equipment"",
+            ""id"": ""00748c7a-36d2-485a-bba8-4b10602df484"",
+            ""actions"": [
+                {
+                    ""name"": ""ChangeItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d995e3b-732f-47c3-8b14-8d61ec2fe09e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""c662cdb5-47cf-4409-9f18-54282f7a3f1c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""WeaponSelect"",
+                    ""type"": ""Button"",
+                    ""id"": ""2971bbde-52fb-44f8-bf9b-47b24c7ad2a9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a2a5a383-7e00-48b4-ba5c-53410f798ec8"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1d03aec-f186-4617-8c77-eb2260620674"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4aa24461-4867-4c03-8c9d-7585c04f01af"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ece047e9-64a8-492e-a304-e51d788fc287"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7b4f7ae0-3a83-4aba-8ab0-ad759c3a5bdf"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""250b44f6-e868-41bc-8d3c-2f67acc10491"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -101,6 +202,11 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         // Movement
         m_Movement = asset.FindActionMap("Movement", throwIfNotFound: true);
         m_Movement_Move = m_Movement.FindAction("Move", throwIfNotFound: true);
+        // Equipment
+        m_Equipment = asset.FindActionMap("Equipment", throwIfNotFound: true);
+        m_Equipment_ChangeItem = m_Equipment.FindAction("ChangeItem", throwIfNotFound: true);
+        m_Equipment_ChangeWeapon = m_Equipment.FindAction("ChangeWeapon", throwIfNotFound: true);
+        m_Equipment_WeaponSelect = m_Equipment.FindAction("WeaponSelect", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -204,8 +310,76 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         }
     }
     public MovementActions @Movement => new MovementActions(this);
+
+    // Equipment
+    private readonly InputActionMap m_Equipment;
+    private List<IEquipmentActions> m_EquipmentActionsCallbackInterfaces = new List<IEquipmentActions>();
+    private readonly InputAction m_Equipment_ChangeItem;
+    private readonly InputAction m_Equipment_ChangeWeapon;
+    private readonly InputAction m_Equipment_WeaponSelect;
+    public struct EquipmentActions
+    {
+        private @PlayerControls m_Wrapper;
+        public EquipmentActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ChangeItem => m_Wrapper.m_Equipment_ChangeItem;
+        public InputAction @ChangeWeapon => m_Wrapper.m_Equipment_ChangeWeapon;
+        public InputAction @WeaponSelect => m_Wrapper.m_Equipment_WeaponSelect;
+        public InputActionMap Get() { return m_Wrapper.m_Equipment; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(EquipmentActions set) { return set.Get(); }
+        public void AddCallbacks(IEquipmentActions instance)
+        {
+            if (instance == null || m_Wrapper.m_EquipmentActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_EquipmentActionsCallbackInterfaces.Add(instance);
+            @ChangeItem.started += instance.OnChangeItem;
+            @ChangeItem.performed += instance.OnChangeItem;
+            @ChangeItem.canceled += instance.OnChangeItem;
+            @ChangeWeapon.started += instance.OnChangeWeapon;
+            @ChangeWeapon.performed += instance.OnChangeWeapon;
+            @ChangeWeapon.canceled += instance.OnChangeWeapon;
+            @WeaponSelect.started += instance.OnWeaponSelect;
+            @WeaponSelect.performed += instance.OnWeaponSelect;
+            @WeaponSelect.canceled += instance.OnWeaponSelect;
+        }
+
+        private void UnregisterCallbacks(IEquipmentActions instance)
+        {
+            @ChangeItem.started -= instance.OnChangeItem;
+            @ChangeItem.performed -= instance.OnChangeItem;
+            @ChangeItem.canceled -= instance.OnChangeItem;
+            @ChangeWeapon.started -= instance.OnChangeWeapon;
+            @ChangeWeapon.performed -= instance.OnChangeWeapon;
+            @ChangeWeapon.canceled -= instance.OnChangeWeapon;
+            @WeaponSelect.started -= instance.OnWeaponSelect;
+            @WeaponSelect.performed -= instance.OnWeaponSelect;
+            @WeaponSelect.canceled -= instance.OnWeaponSelect;
+        }
+
+        public void RemoveCallbacks(IEquipmentActions instance)
+        {
+            if (m_Wrapper.m_EquipmentActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IEquipmentActions instance)
+        {
+            foreach (var item in m_Wrapper.m_EquipmentActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_EquipmentActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public EquipmentActions @Equipment => new EquipmentActions(this);
     public interface IMovementActions
     {
         void OnMove(InputAction.CallbackContext context);
+    }
+    public interface IEquipmentActions
+    {
+        void OnChangeItem(InputAction.CallbackContext context);
+        void OnChangeWeapon(InputAction.CallbackContext context);
+        void OnWeaponSelect(InputAction.CallbackContext context);
     }
 }
