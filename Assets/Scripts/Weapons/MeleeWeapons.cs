@@ -23,6 +23,7 @@ public class MeleeWeapons : WeaponsClass
         Vector2 moveDirection;
 
         attackHitBox.transform.position = characterPos.position;
+        rb.transform.position = characterPos.position;
 
         if(characterPos.gameObject.tag == "Player"){
             Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
