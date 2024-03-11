@@ -13,7 +13,7 @@ public class WaitTimeManager : MonoBehaviour
 {
     [SerializeField] int waitTime = 60;
     [SerializeField] TMP_Text counter;
-    [SerializeField] GameObject merchantPrefab;
+    [SerializeField] GameObject merchantGO;
     [SerializeField] RawImage blackScreen;
     [SerializeField] int fadeTime = 1;
     [SerializeField] TMP_Text waitingTextObj;
@@ -45,7 +45,7 @@ public class WaitTimeManager : MonoBehaviour
         StartCoroutine(FadeOut());
         yield return new WaitUntil(() => fadeOutEnded);
         fadeOutEnded = false;
-        Instantiate(merchantPrefab);
+        merchantGO.SetActive(true);
         GameManager.StateUpdate(GameState.WaitStart);
         StartCoroutine(FadeIn());
         yield return new WaitUntil(() => fadeInEnded);
@@ -100,6 +100,7 @@ public class WaitTimeManager : MonoBehaviour
         counter.gameObject.SetActive(false);
         StartCoroutine(FadeIn());
         fadeOutEnded = false;
+        merchantGO.SetActive(false);
     }
 
     void FlipLetter()

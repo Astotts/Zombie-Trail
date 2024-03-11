@@ -3,24 +3,24 @@ using UnityEngine;
 
 public class CoinManager : MonoBehaviour
 {
-    public int amount = 0;
-
     [SerializeField] TMP_Text _text;
 
-
-    public void AddCoin(int a)
+    void Awake()
     {
-        amount += a;
-        _text.text = amount.ToString();
+        InventoryManager.instance.OnInventoryUpdate += UpdateCoinCounter;
+    }
+    void OnDestroy()
+    {
+        InventoryManager.instance.OnInventoryUpdate -= UpdateCoinCounter;
     }
 
-    public bool SubCoin(int a)
+    void UpdateCoinCounter(Item item)
     {
-        //Return false if amount is exceed current amount (avoid negative)
-        if (a > amount)
-            return false;
-        amount -= a;
-        _text.text = amount.ToString();
-        return true;
+            Debug.Log(item.itemType);
+        if (item.itemType == InventoryItem.Coin)
+        {
+            Debug.Log(item.currentStored.ToString());
+            _text.text = item.currentStored.ToString();
+        }
     }
 }

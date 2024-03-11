@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7590007838768364431}
   - component: {fileID: 171582511819020278}
   - component: {fileID: 7618394574527159567}
-  - component: {fileID: 7723706648608636721}
+  - component: {fileID: 8060467583154687608}
   m_Layer: 0
   m_Name: SmallCoin
   m_TagString: Untagged
@@ -107,9 +107,9 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.05, y: 0.05}
+  m_Size: {x: 0.2, y: 0.1}
   m_EdgeRadius: 0
---- !u!114 &7723706648608636721
+--- !u!114 &8060467583154687608
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,9 +118,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1633841149724743564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf260f4f28f2c41669710ef2e5cc2f99, type: 3}
+  m_Script: {fileID: 11500000, guid: 0163315ffe0c144b69ba5cda5611c044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  min: 1
+  max: 10
+  itemType: 7
 --- !u!1 &2788756722360085361
 GameObject:
   m_ObjectHideFlags: 0
