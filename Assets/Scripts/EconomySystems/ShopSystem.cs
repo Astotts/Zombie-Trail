@@ -8,6 +8,23 @@ public class ShopSystem : MonoBehaviour
     [SerializeField] GameObject shopUI;
     bool active = false;
     bool isOpen = false;
+    void Awake()
+    {
+        GameManager.OnStateChange += Spawn;
+        GameManager.OnStateChange += Despawn;
+    }
+
+    void Spawn(GameState state)
+    {
+        if (state != GameState.WaveStart) return;
+        gameObject.SetActive(true);
+    }
+
+    void Despawn(GameState state)
+    {
+        if (state != GameState.WaitStart) return;
+        gameObject.SetActive(false);
+    }
 
     void OnTriggerEnter2D(Collider2D target)
     {

@@ -4734,7 +4734,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 2d4f619428e90446992f99ecd0ccec22, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -7631,7 +7631,7 @@ MonoBehaviour:
   zombiePrefabs:
   - {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
   zombies: []
-  difficulity: 1
+  difficulity: 10
   spawnRate: 0.5
   readyForNextWave: 0
 --- !u!4 &1117383039
