@@ -118,9 +118,36 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""WeaponSelect"",
-                    ""type"": ""Button"",
+                    ""name"": ""FirstWeapon"",
+                    ""type"": ""Value"",
                     ""id"": ""2971bbde-52fb-44f8-bf9b-47b24c7ad2a9"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SecondWeapon"",
+                    ""type"": ""Value"",
+                    ""id"": ""e91bcae9-6191-4fee-9e29-81119c96fc9d"",
+                    ""expectedControlType"": ""Analog"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ThirdWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""52b60f35-2263-4c93-9c3e-628a50c849c3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FourthWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""306a2a9a-5193-423b-a299-79c334f98186"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -157,7 +184,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSelect"",
+                    ""action"": ""FirstWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -168,7 +195,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSelect"",
+                    ""action"": ""SecondWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -179,7 +206,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSelect"",
+                    ""action"": ""ThirdWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -190,7 +217,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""WeaponSelect"",
+                    ""action"": ""FourthWeapon"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -206,7 +233,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Equipment = asset.FindActionMap("Equipment", throwIfNotFound: true);
         m_Equipment_ChangeItem = m_Equipment.FindAction("ChangeItem", throwIfNotFound: true);
         m_Equipment_ChangeWeapon = m_Equipment.FindAction("ChangeWeapon", throwIfNotFound: true);
-        m_Equipment_WeaponSelect = m_Equipment.FindAction("WeaponSelect", throwIfNotFound: true);
+        m_Equipment_FirstWeapon = m_Equipment.FindAction("FirstWeapon", throwIfNotFound: true);
+        m_Equipment_SecondWeapon = m_Equipment.FindAction("SecondWeapon", throwIfNotFound: true);
+        m_Equipment_ThirdWeapon = m_Equipment.FindAction("ThirdWeapon", throwIfNotFound: true);
+        m_Equipment_FourthWeapon = m_Equipment.FindAction("FourthWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -316,14 +346,20 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private List<IEquipmentActions> m_EquipmentActionsCallbackInterfaces = new List<IEquipmentActions>();
     private readonly InputAction m_Equipment_ChangeItem;
     private readonly InputAction m_Equipment_ChangeWeapon;
-    private readonly InputAction m_Equipment_WeaponSelect;
+    private readonly InputAction m_Equipment_FirstWeapon;
+    private readonly InputAction m_Equipment_SecondWeapon;
+    private readonly InputAction m_Equipment_ThirdWeapon;
+    private readonly InputAction m_Equipment_FourthWeapon;
     public struct EquipmentActions
     {
         private @PlayerControls m_Wrapper;
         public EquipmentActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @ChangeItem => m_Wrapper.m_Equipment_ChangeItem;
         public InputAction @ChangeWeapon => m_Wrapper.m_Equipment_ChangeWeapon;
-        public InputAction @WeaponSelect => m_Wrapper.m_Equipment_WeaponSelect;
+        public InputAction @FirstWeapon => m_Wrapper.m_Equipment_FirstWeapon;
+        public InputAction @SecondWeapon => m_Wrapper.m_Equipment_SecondWeapon;
+        public InputAction @ThirdWeapon => m_Wrapper.m_Equipment_ThirdWeapon;
+        public InputAction @FourthWeapon => m_Wrapper.m_Equipment_FourthWeapon;
         public InputActionMap Get() { return m_Wrapper.m_Equipment; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -339,9 +375,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ChangeWeapon.started += instance.OnChangeWeapon;
             @ChangeWeapon.performed += instance.OnChangeWeapon;
             @ChangeWeapon.canceled += instance.OnChangeWeapon;
-            @WeaponSelect.started += instance.OnWeaponSelect;
-            @WeaponSelect.performed += instance.OnWeaponSelect;
-            @WeaponSelect.canceled += instance.OnWeaponSelect;
+            @FirstWeapon.started += instance.OnFirstWeapon;
+            @FirstWeapon.performed += instance.OnFirstWeapon;
+            @FirstWeapon.canceled += instance.OnFirstWeapon;
+            @SecondWeapon.started += instance.OnSecondWeapon;
+            @SecondWeapon.performed += instance.OnSecondWeapon;
+            @SecondWeapon.canceled += instance.OnSecondWeapon;
+            @ThirdWeapon.started += instance.OnThirdWeapon;
+            @ThirdWeapon.performed += instance.OnThirdWeapon;
+            @ThirdWeapon.canceled += instance.OnThirdWeapon;
+            @FourthWeapon.started += instance.OnFourthWeapon;
+            @FourthWeapon.performed += instance.OnFourthWeapon;
+            @FourthWeapon.canceled += instance.OnFourthWeapon;
         }
 
         private void UnregisterCallbacks(IEquipmentActions instance)
@@ -352,9 +397,18 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ChangeWeapon.started -= instance.OnChangeWeapon;
             @ChangeWeapon.performed -= instance.OnChangeWeapon;
             @ChangeWeapon.canceled -= instance.OnChangeWeapon;
-            @WeaponSelect.started -= instance.OnWeaponSelect;
-            @WeaponSelect.performed -= instance.OnWeaponSelect;
-            @WeaponSelect.canceled -= instance.OnWeaponSelect;
+            @FirstWeapon.started -= instance.OnFirstWeapon;
+            @FirstWeapon.performed -= instance.OnFirstWeapon;
+            @FirstWeapon.canceled -= instance.OnFirstWeapon;
+            @SecondWeapon.started -= instance.OnSecondWeapon;
+            @SecondWeapon.performed -= instance.OnSecondWeapon;
+            @SecondWeapon.canceled -= instance.OnSecondWeapon;
+            @ThirdWeapon.started -= instance.OnThirdWeapon;
+            @ThirdWeapon.performed -= instance.OnThirdWeapon;
+            @ThirdWeapon.canceled -= instance.OnThirdWeapon;
+            @FourthWeapon.started -= instance.OnFourthWeapon;
+            @FourthWeapon.performed -= instance.OnFourthWeapon;
+            @FourthWeapon.canceled -= instance.OnFourthWeapon;
         }
 
         public void RemoveCallbacks(IEquipmentActions instance)
@@ -380,6 +434,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     {
         void OnChangeItem(InputAction.CallbackContext context);
         void OnChangeWeapon(InputAction.CallbackContext context);
-        void OnWeaponSelect(InputAction.CallbackContext context);
+        void OnFirstWeapon(InputAction.CallbackContext context);
+        void OnSecondWeapon(InputAction.CallbackContext context);
+        void OnThirdWeapon(InputAction.CallbackContext context);
+        void OnFourthWeapon(InputAction.CallbackContext context);
     }
 }

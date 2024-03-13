@@ -96,9 +96,36 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "WeaponSelect",
-                    "type": "Button",
+                    "name": "FirstWeapon",
+                    "type": "Value",
                     "id": "2971bbde-52fb-44f8-bf9b-47b24c7ad2a9",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "SecondWeapon",
+                    "type": "Value",
+                    "id": "e91bcae9-6191-4fee-9e29-81119c96fc9d",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "ThirdWeapon",
+                    "type": "Button",
+                    "id": "52b60f35-2263-4c93-9c3e-628a50c849c3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FourthWeapon",
+                    "type": "Button",
+                    "id": "306a2a9a-5193-423b-a299-79c334f98186",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -135,7 +162,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSelect",
+                    "action": "FirstWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -146,7 +173,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSelect",
+                    "action": "SecondWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -157,7 +184,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSelect",
+                    "action": "ThirdWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -168,7 +195,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WeaponSelect",
+                    "action": "FourthWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

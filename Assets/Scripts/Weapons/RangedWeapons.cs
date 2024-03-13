@@ -13,6 +13,12 @@ public class RangedWeapons : WeaponsClass
     private bool reloaded = true;
     public int damage;
 
+    private float elapsedTime;
+    [SerializeField] Rigidbody2D rb;
+    [SerializeField] GetClosestTargets targetFinder;
+    private Transform target;
+    [SerializeField] SpriteRenderer sprite;
+
     void Start()
     {
         // get Ammo from wherever we're getting that
@@ -22,7 +28,34 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
+        Vector2 moveDirection;
+
+        if(characterPos.gameObject.tag == "Player"){
+            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
+
+            moveDirection = mouseWorldPos;
+        }
+
+        else{
+            target = targetFinder.GetClosest();
+            moveDirection = (Vector2)target.position - (Vector2)characterPos.position;
+            //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
         
+        }
+
+        moveDirection = moveDirection.normalized;
+        float rotateAmount = Vector3.Cross(moveDirection, transform.up).z;
+        rb.angularVelocity = -(rotateAmount * 400f);
+
+        elapsedTime += Time.deltaTime;
+
+        if(transform.eulerAngles.z > 180){
+            sprite.flipY = true;
+        }
+        else{
+            sprite.flipX = false;
+        }
+
     }
 
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack

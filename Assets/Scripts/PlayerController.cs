@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {    
         PlayerInputs();
         
-        for(int i = 0; i <= 2; i++){
+        for(int i = 0; i <= 3; i++){
             if(i != selectedWeapon){
                 weapons[i].gameObject.SetActive(false);
             }
@@ -126,33 +126,11 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Movement x: " + movement.x);
         //Debug.Log("Movement y: " + movement.y);
 
-        weaponSelected = playerControls.Equipment.WeaponSelect.GetBindingIndex();
-
-        switch (weaponSelected)
-        {
-            case 0:
-                // Bat
-                selectedWeapon = 0;
-                break;
-            case 1:
-                // Pistol
-                selectedWeapon = 1;
-                break;
-            case 2:
-                // Shotgun
-                selectedWeapon = 2;
-                break;
-            case 3:
-                // Assault Rifle
-                selectedWeapon = 3;
-                break;
-        }
-
         //Get Selected Slot
-        //if (Input.GetKeyDown("1")) selectedWeapon = 0;
-        //if(Input.GetKeyDown("2")) selectedWeapon = 1;
-        //if(Input.GetKeyDown("3")) selectedWeapon = 2;
-        //if(Input.GetKeyDown("4")) selectedWeapon = 3; 
+        if((0 < playerControls.Equipment.FirstWeapon.ReadValue<float>())) selectedWeapon = 0;
+        if((0 < playerControls.Equipment.SecondWeapon.ReadValue<float>())) selectedWeapon = 1;
+        if((0 < playerControls.Equipment.ThirdWeapon.ReadValue<float>())) selectedWeapon = 2;
+        if((0 < playerControls.Equipment.FourthWeapon.ReadValue<float>())) selectedWeapon = 3; 
     }
 
     void MovePlayer()
