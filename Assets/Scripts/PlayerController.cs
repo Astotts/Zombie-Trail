@@ -135,6 +135,6 @@ public class PlayerController : MonoBehaviour
 
     void MovePlayer()
     {
-        rb.MovePosition(rb.position + movement * (moveSpeed * Time.fixedDeltaTime));  // Current position + where to move * (the movement speed * timing of movement)
+        transform.position += (Vector3)movement * (moveSpeed * Time.fixedDeltaTime);  // Current position + where to move * (the movement speed * timing of movement)
     }
 }

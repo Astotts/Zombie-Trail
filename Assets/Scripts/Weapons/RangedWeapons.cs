@@ -50,10 +50,10 @@ public class RangedWeapons : WeaponsClass
         elapsedTime += Time.deltaTime;
 
         if(transform.eulerAngles.z > 180){
-            sprite.flipY = true;
+            sprite.flipY = false;
         }
         else{
-            sprite.flipX = false;
+            sprite.flipY = true;
         }
 
     }
