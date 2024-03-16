@@ -4389,7 +4389,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1272563357
 Transform:
   m_ObjectHideFlags: 0
@@ -7340,7 +7340,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4293306924847261474}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7361,10 +7361,10 @@ Transform:
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 574410613359549930}
-  - {fileID: 1472643995978411445}
   - {fileID: 6163502870816287230}
   - {fileID: 1272563357}
+  - {fileID: 574410613359549930}
+  - {fileID: 1472643995978411445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1472643995978411445
@@ -7595,7 +7595,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 8
+      m_Bits: 128
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
@@ -7806,14 +7806,14 @@ MonoBehaviour:
   weightOfWeapon: 0
   filter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 8
+      m_Bits: 128
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
@@ -7934,7 +7934,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 8
+      m_Bits: 128
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
