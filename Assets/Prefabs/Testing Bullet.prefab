@@ -4923,22 +4923,13 @@ TrailRenderer:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 0.36553544
-        value: 0.081959404
-        inSlope: -0.22010742
-        outSlope: -0.22010742
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.54044896
+        time: 0.4449768
         value: 0
-        inSlope: -0.023057854
-        outSlope: -0.023057854
+        inSlope: -0.2054913
+        outSlope: -0.2054913
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.29324633
+        inWeight: 0.36726278
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -5085,7 +5076,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outOfBounds: 70
-  damage: 0
 --- !u!70 &-7615249880738863681
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
