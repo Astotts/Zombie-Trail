@@ -61,7 +61,7 @@ void Update(){
 public override void StopAnimating(){
     if(!animRunning)
     return;
-    
+
     animRunning = false;
     switch(type){
         case AnimationClassType.AnimationType.Swing :
@@ -87,7 +87,7 @@ public override void StopAnimating(){
         float elapsed = 0f;
         elapsed += Time.deltaTime;
         while(elapsed <= primaryAnimationTime){
-            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, (8 * elapsed * elapsed) / primaryAnimationTime));
+            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, elapsed / primaryAnimationTime));
             hingePoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(hingeStartDegrees, hingeFinalDegrees, elapsed / primaryAnimationTime));
             elapsed += Time.deltaTime;
             yield return null;
@@ -108,7 +108,7 @@ public override void StopAnimating(){
         float elapsed = 0f;
         elapsed += Time.deltaTime;
         while(elapsed <= primaryAnimationTime){
-            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, (8 * elapsed * elapsed) / primaryAnimationTime));
+            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, elapsed / primaryAnimationTime));
             hingePoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(hingeStartDegrees, hingeFinalDegrees, elapsed / primaryAnimationTime));
             elapsed += Time.deltaTime;
             yield return null;
@@ -122,7 +122,7 @@ public override void StopAnimating(){
         float elapsed = 0f;
         elapsed += Time.deltaTime;
         while(elapsed <= primaryAnimationTime){
-            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerFinalDegrees, centerStartDegrees, (8 * elapsed * elapsed) / primaryAnimationTime));
+            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerFinalDegrees, centerStartDegrees, elapsed / primaryAnimationTime));
             hingePoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(hingeFinalDegrees, hingeStartDegrees, elapsed / primaryAnimationTime));
             elapsed += Time.deltaTime;
             yield return null;
@@ -136,7 +136,7 @@ public override void StopAnimating(){
         //Stab
         float elapsed = 0f;
         while(elapsed <= primaryAnimationTime){
-            weaponTransform.position = Vector3.Lerp(startingTransform.position, weaponTransform.up * forwardOffset + weaponTransform.position, (8 * elapsed * elapsed) / primaryAnimationTime);
+            weaponTransform.position = Vector3.Lerp(startingTransform.position, weaponTransform.up * forwardOffset + weaponTransform.position, elapsed / primaryAnimationTime);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -149,7 +149,7 @@ public override void StopAnimating(){
         //Unstab
         elapsed = 0f;
         while(elapsed <= tertiaryAnimationTime){
-            weaponTransform.position = Vector3.Lerp(weaponTransform.position, startingTransform.position, (8 * elapsed * elapsed) / tertiaryAnimationTime);
+            weaponTransform.position = Vector3.Lerp(weaponTransform.position, startingTransform.position, elapsed / tertiaryAnimationTime);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -162,7 +162,7 @@ public override void StopAnimating(){
         elapsed += Time.deltaTime;
         //Wind Up
         while(elapsed <= primaryAnimationTime){
-            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, (100 * elapsed * elapsed * elapsed * elapsed) / primaryAnimationTime));
+            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerStartDegrees, centerFinalDegrees, elapsed / primaryAnimationTime));
             hingePoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(hingeStartDegrees, hingeFinalDegrees, elapsed / primaryAnimationTime));
             elapsed += Time.deltaTime;
             yield return null;
@@ -176,7 +176,7 @@ public override void StopAnimating(){
         //Wind Down
         elapsed = 0f;
         while(elapsed <= tertiaryAnimationTime){
-            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerFinalDegrees, centerStartDegrees, (-10 * Mathf.Pow((elapsed + tertiaryAnimationTime), 3)) / tertiaryAnimationTime));
+            centerPoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(centerFinalDegrees, centerStartDegrees, elapsed / tertiaryAnimationTime));
             hingePoint.localEulerAngles = new Vector3(0, 0, Mathf.Lerp(hingeFinalDegrees, hingeStartDegrees - offsetDegrees, elapsed / tertiaryAnimationTime));
             elapsed += Time.deltaTime;
             yield return null;

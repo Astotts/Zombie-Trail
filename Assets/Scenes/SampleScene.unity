@@ -7808,7 +7808,11 @@ MonoBehaviour:
   attackHitBox: {fileID: 3371615905056205779}
   rb: {fileID: 1979836923945111915}
   targetFinder: {fileID: 0}
+<<<<<<< Updated upstream
   damage: 20
+=======
+  damage: 30
+>>>>>>> Stashed changes
 --- !u!58 &3371615905056205779
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8007,7 +8011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPos: {fileID: 730696332392865503}
   range: 0
-  reloadSpeed: 0
+  reloadSpeed: 0.3
   weightOfWeapon: 0
   filter:
     useTriggers: 0
