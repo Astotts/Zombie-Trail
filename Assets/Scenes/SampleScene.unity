@@ -7808,8 +7808,7 @@ MonoBehaviour:
   attackHitBox: {fileID: 3371615905056205779}
   rb: {fileID: 1979836923945111915}
   targetFinder: {fileID: 0}
-  damage: 30
-  windUpTime: 0
+  damage: 20
 --- !u!58 &3371615905056205779
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -8028,7 +8027,6 @@ MonoBehaviour:
   rb: {fileID: 4293306924847261475}
   targetFinder: {fileID: 0}
   damage: 10
-  windUpTime: 0
 --- !u!61 &4934833866900543824
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8151,7 +8149,6 @@ MonoBehaviour:
   rb: {fileID: 4240099338213533641}
   targetFinder: {fileID: 0}
   damage: 50
-  windUpTime: 0
 --- !u!212 &6685390163077627998
 SpriteRenderer:
   m_ObjectHideFlags: 0

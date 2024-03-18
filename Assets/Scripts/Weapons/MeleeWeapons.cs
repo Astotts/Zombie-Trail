@@ -13,7 +13,6 @@ public class MeleeWeapons : WeaponsClass
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
     [SerializeField] private int damage;
-    [SerializeField] private float windUpTime;
 
     void Awake(){
         enemies = new Collider2D[10];
