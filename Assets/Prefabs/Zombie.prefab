@@ -363,6 +363,7 @@ GameObject:
   - component: {fileID: 5383228798856606979}
   - component: {fileID: 3006633679670788099}
   - component: {fileID: 6125487822850625641}
+  - component: {fileID: 2936548798193529741}
   m_Layer: 7
   m_Name: Zombie
   m_TagString: Enemy
@@ -570,6 +571,23 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2936548798193529741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2792160428735217364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4586f44aae2234004aec740d79d468ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemPrefab:
+  - {fileID: 1633841149724743564, guid: 7358a20f8591144daa6b470f3f5601c4, type: 3}
+  chance:
+  - 0.5
+  dropRange: 5
 --- !u!1 &3753309609748619708
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +709,6 @@ MonoBehaviour:
   rb: {fileID: 2677892136240692727}
   targetFinder: {fileID: 1153253664133053637}
   damage: 5
-  windUpTime: 0
 --- !u!50 &2677892136240692727
 Rigidbody2D:
   serializedVersion: 4
