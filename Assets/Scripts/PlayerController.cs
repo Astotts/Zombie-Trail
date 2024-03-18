@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     int selectedWeapon;
 
     [SerializeField] List<WeaponsClass> weapons;
+    [SerializeField] List<AnimationGenerator> animators;
 
     //----------------------------------------
 
@@ -60,12 +61,15 @@ public class PlayerController : MonoBehaviour
         
         for(int i = 0; i <= 3; i++){
             if(i != selectedWeapon){
+                if(animators[i] != null){
+                    animators[i].StopAnimating();
+                }
                 weapons[i].gameObject.SetActive(false);
             }
         }
         weapons[selectedWeapon].gameObject.SetActive(true);
 
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButton(0)){
             weapons[selectedWeapon].Attack();
         }
     }

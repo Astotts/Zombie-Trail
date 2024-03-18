@@ -13,6 +13,7 @@ public class MeleeWeapons : WeaponsClass
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
     [SerializeField] private int damage;
+    [SerializeField] private float windUpTime;
 
     void Awake(){
         enemies = new Collider2D[10];
@@ -71,7 +72,7 @@ public class MeleeWeapons : WeaponsClass
             }
 
             Array.Clear(enemies, 0, enemies.Length);
-            //Debug.Log("MeleeWeapons Attack() function used.");
+            
         }
         
     }
@@ -83,4 +84,6 @@ public class MeleeWeapons : WeaponsClass
 
         Debug.Log("MeleeWeapons Reload() function used.");
     }
+
+
 }

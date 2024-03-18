@@ -11,6 +11,8 @@ public class RangedWeapons : WeaponsClass
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
     private int counter = 0;
     private bool reloaded = true;
+
+    private float elapsed = 0;
     public int damage;
 
     private float elapsedTime;
@@ -56,19 +58,21 @@ public class RangedWeapons : WeaponsClass
             sprite.flipY = true;
         }
 
+        elapsed -= Time.deltaTime;
+
     }
 
-    // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
+    //Called from player controller
     public override void Attack()
     {
-        if (ammo > 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
-        {
-            if (counter == clipSize)
-            {
+        if (ammo > 0 && reloaded && 0 >= elapsed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        {    
+            if (counter == clipSize){
                 Reload();
                 counter = 0;
-            } else
-            {
+            } 
+            else{
+                elapsed = recoilTime;
                 // get the mouse position
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 // current position to mouse position

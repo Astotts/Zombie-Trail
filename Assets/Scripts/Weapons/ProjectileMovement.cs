@@ -8,7 +8,7 @@ public class ProjectileMovement : MonoBehaviour
     private Vector3 direction;
     private Vector2 initialPosition;
     public float outOfBounds; // Maximum range the projectile can travel
-    private int damage;
+    public int damage;
 
     // Start is called before the first frame update
     void Start()
