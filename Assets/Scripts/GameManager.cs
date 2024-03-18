@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,9 +10,6 @@ public class GameManager : MonoBehaviour
     List<GameObject> zombiesInTheLevel;                         // Keeps track of the zombies in the level. Allows for wave start/end
 
     bool isWaveActive = false;
-
-    public static event Action<GameState> OnStateChange;
-    public static GameState currentState = GameState.WaveStart;
     
 
     // This allows us to keep the GameManager script when scenes are reloading or changing
@@ -42,7 +39,7 @@ public class GameManager : MonoBehaviour
         if (!isWaveActive)
         {
             isWaveActive = true; // Wave has started. This is the first zombie in the wave
-            StateUpdate(GameState.WaveStart);
+            Debug.Log("Wave has started");
         }
     }
 
@@ -53,7 +50,8 @@ public class GameManager : MonoBehaviour
 
         if (IsWaveOver())
         {
-            StateUpdate(GameState.WaveEnd);
+            Debug.Log("Wave Over. New wave starting...");
+            wm.StartNewWave();
         }
     }
 
@@ -69,39 +67,4 @@ public class GameManager : MonoBehaviour
             return false;
         }
     }
-
-    public static void StateUpdate(GameState state)
-    {
-        switch (state)
-        {
-            case GameState.WaveStart:
-                Debug.Log("Wave has started");
-                currentState = state;
-                OnStateChange?.Invoke(state);
-                break;
-            case GameState.WaveEnd:
-                Debug.Log("Wave Over. Waiting");
-                currentState = state;
-                OnStateChange?.Invoke(state);
-                break;
-            case GameState.WaitStart:
-                Debug.Log("It's Shopping Time");
-                currentState = state;
-                OnStateChange?.Invoke(state);
-                break;
-            case GameState.WaitEnd:
-                Debug.Log("Shopping Over. New Wave starting...");
-                currentState = state;
-                OnStateChange?.Invoke(state);
-                break;
-        }
-    }
-}
-
-public enum GameState
-{
-    WaveStart,
-    WaveEnd,
-    WaitStart,
-    WaitEnd
 }

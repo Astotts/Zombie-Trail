@@ -9,7 +9,7 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField] public GameObject[] zombies; // used to track the number of zombies 
 
-    public int difficulity = 0; // depending on the difficulity number, there will be either more or less zombs
+    public int difficulity = 10; // depending on the difficulity number, there will be either more or less zombs
     public float spawnRate = 0.5f; // the spawn rate of the zombies
 
     public bool readyForNextWave = false;  
@@ -21,23 +21,15 @@ public class WaveManager : MonoBehaviour
         StartCoroutine(SpawnWave(difficulity));
     }
 
-    void OnEnable()
+    // Update is called once per frame
+    void Update()
     {
-        GameManager.OnStateChange += StartNewWave;
+        
     }
 
-    void OnDisable()
+    public void StartNewWave()
     {
-        GameManager.OnStateChange -= StartNewWave;
-    }
-
-    public void StartNewWave(GameState state)
-    {
-        if (state != GameState.WaitEnd)
-            return;
-
-        GameManager.StateUpdate(GameState.WaveStart);
-        difficulity += 0;      // Update this later, testings
+        difficulity += 10;      // Update this later, testings
 
         StartCoroutine(SpawnWave(difficulity));     // Start wave
         readyForNextWave = false;
