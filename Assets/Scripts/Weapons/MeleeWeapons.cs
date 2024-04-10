@@ -71,7 +71,7 @@ public class MeleeWeapons : WeaponsClass
             }
 
             Array.Clear(enemies, 0, enemies.Length);
-            //Debug.Log("MeleeWeapons Attack() function used.");
+            
         }
         
     }
@@ -83,4 +83,6 @@ public class MeleeWeapons : WeaponsClass
 
         Debug.Log("MeleeWeapons Reload() function used.");
     }
+
+
 }
