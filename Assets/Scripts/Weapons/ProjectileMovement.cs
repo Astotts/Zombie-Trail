@@ -60,6 +60,7 @@ public class ProjectileMovement : MonoBehaviour
             }
             bloodFX = Instantiate(bloodFX);
             bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
+            bloodFX.transform.position = transform.position;
             bloodParticleSystem = bloodFX.GetComponent<ParticleSystem>();
             bloodParticleSystem.Play();   
         }

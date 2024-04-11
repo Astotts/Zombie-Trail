@@ -5076,6 +5076,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outOfBounds: 70
+  damage: 0
+  bloodFX: {fileID: 6936278794870743628, guid: 85226fd443aaa7a41b628172622dcd12, type: 3}
 --- !u!70 &-7615249880738863681
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

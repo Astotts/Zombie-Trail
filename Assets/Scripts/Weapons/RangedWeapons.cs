@@ -30,6 +30,7 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
+        transform.position = characterPos.transform.position;
         Vector2 moveDirection;
 
         if(characterPos.gameObject.tag == "Player"){
