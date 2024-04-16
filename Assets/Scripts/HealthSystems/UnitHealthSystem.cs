@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitHealthSystem : HealthSystem
@@ -20,7 +22,8 @@ public class UnitHealthSystem : HealthSystem
         SetSize(1f); //Size is normalized so 1 is 100% health
     }
 
-    public override void AlterHealth(int amount) {
+    [Rpc(SendTo.Server)]
+    public override void AlterHealthServerRpc(int amount) {
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         for(int i = 0; sprites.Length > i; i++){
@@ -40,7 +43,6 @@ public class UnitHealthSystem : HealthSystem
             Die();
         }    
     }
-
     public override void Die(){
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");

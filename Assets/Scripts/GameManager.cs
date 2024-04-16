@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance;                         // To keep track of one GameManager
     public WaveManager wm;
@@ -13,11 +14,14 @@ public class GameManager : MonoBehaviour
 
     public static event Action<GameState> OnStateChange;
     public static GameState currentState = GameState.WaveStart;
-    
+
 
     // This allows us to keep the GameManager script when scenes are reloading or changing
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
+        if (!IsHost || !IsServer) return;
+        base.OnNetworkSpawn();
+    
         zombiesInTheLevel = new List<GameObject>();
 
         wm = FindObjectOfType<WaveManager>();
@@ -33,6 +37,7 @@ public class GameManager : MonoBehaviour
         // This is the first, congrats, you live
         Instance = this;
         DontDestroyOnLoad(gameObject);      // Don't destroy you, you lucky
+        StateUpdate(GameState.WaitEnd);
     }
 
     public void AddZombieToList(GameObject zombie)

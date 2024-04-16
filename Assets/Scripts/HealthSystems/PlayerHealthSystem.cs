@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,8 +28,9 @@ public class PlayerHealthSystem : HealthSystem
         currentHealth = maxHealth;
         healthBar.value = maxHealth;
     }
-
-    public override void AlterHealth(int amount)
+    
+    [Rpc(SendTo.Server)]
+    public override void AlterHealthServerRpc(int amount)
     {
         StopCoroutine("ScreenEffect");
         //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));

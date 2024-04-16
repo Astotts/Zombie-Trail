@@ -20,14 +20,15 @@ public class MeleeWeapons : WeaponsClass
 
     void Update()
     {
+        if (!IsOwner) return;
         Vector2 moveDirection;
 
         attackHitBox.transform.position = characterPos.position;
         rb.transform.position = characterPos.position;
 
-        if(characterPos.gameObject.tag == "Player"){
-            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
-
+        if(characterPos.gameObject.CompareTag("Player"))
+        {
+            Vector2 mouseWorldPos = ((Vector2)Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z)) - (Vector2)characterPos.position) * -1;
             moveDirection = mouseWorldPos;
         }
         else{
@@ -50,6 +51,7 @@ public class MeleeWeapons : WeaponsClass
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
     {   
+        if (!IsOwner) return;
         if (elapsedTime > reloadSpeed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
             elapsedTime = 0;

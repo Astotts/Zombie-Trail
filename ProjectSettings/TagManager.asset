@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Enemy
   - Player bullet
+  - Bound
+  - Camera Manager
+  - Car
+  - Weapon
   layers:
   - Default
   - TransparentFX

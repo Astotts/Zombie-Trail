@@ -1,22 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class CameraTracking : MonoBehaviour
 {
     [SerializeField] Transform[] bounds;
     Vector3 pos;
-    [SerializeField] Transform player;
+    [SerializeField] Transform player = null;
     [SerializeField] float camSnapFloat;
 
     float vertical, horizontal;
     Vector3 lerpPosition;
 
+    public void SetPlayer(Transform player)
+    {
+        this.player = player;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        Vector3 topRight = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,0f)) - player.position;
-        Vector3 bottomLeft = Camera.main.ScreenToWorldPoint(Vector3.zero) - player.position;
+        Camera camera = GetComponent<Camera>();
+        Vector3 topRight = camera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,0f)) - player.position;
+        Vector3 bottomLeft = camera.ScreenToWorldPoint(Vector3.zero) - player.position;
 
         Debug.DrawRay(player.position, topRight, Color.green, 5f);
         Debug.DrawRay(player.position, bottomLeft, Color.green, 5f);
@@ -31,7 +40,8 @@ public class CameraTracking : MonoBehaviour
 
     // Update is called once per frame
     void LateUpdate()
-    {
+    {   
+        if (player == null) return;
         pos = player.position;
 
         pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat; 
@@ -42,7 +52,7 @@ public class CameraTracking : MonoBehaviour
         pos.z = Mathf.Clamp(pos.z, -10f, -10f);
         //mouseWheelLerpIncrement = Mathf.Lerp(mouseWheelLerpIncrement, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed, 10f * Time.deltaTime);
         //Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - mouseWheelLerpIncrement, zoomOutMin, zoomOutMax);
-        lerpPosition = Vector3.Lerp(lerpPosition, pos, Time.deltaTime * camSnapFloat);
+        lerpPosition = Vector3.Lerp(transform.position, pos, Time.deltaTime * camSnapFloat);
         transform.position = lerpPosition;
     }
 }

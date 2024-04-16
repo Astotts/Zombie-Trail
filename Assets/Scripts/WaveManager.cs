@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Multiplayer.Samples.Utilities;
+using Unity.Netcode;
 using UnityEngine;
 
 public class WaveManager : MonoBehaviour
@@ -18,7 +20,6 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         zombies = new GameObject[50];
-        StartCoroutine(SpawnWave(difficulity));
     }
 
     void OnEnable()
@@ -50,6 +51,7 @@ public class WaveManager : MonoBehaviour
             int randIndex = GenerateRandomIndex(zombiePrefabs);
             GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
             GameManager.Instance.AddZombieToList(newZomb);
+            newZomb.GetComponent<NetworkObject>().Spawn();
             //zombies[i] = newZomb; 
             yield return new WaitForSeconds(spawnRate);
         }

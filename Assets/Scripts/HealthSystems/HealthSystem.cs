@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthSystem : MonoBehaviour
+public class HealthSystem : NetworkBehaviour
 {
     //Declaration
     [SerializeField] protected int maxHealth;
@@ -14,8 +15,12 @@ public class HealthSystem : MonoBehaviour
         // Assigning currentHealth & healthBar to the value of maxHealth
         currentHealth = maxHealth;
     }
+    public void AlterHealth(int amount) {
+        AlterHealthServerRpc(amount);
+    }
 
-    public virtual void AlterHealth(int amount)
+    [Rpc(SendTo.Server)]
+    public virtual void AlterHealthServerRpc(int amount)
     {
         currentHealth += amount;
 

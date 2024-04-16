@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WeaponsClass : MonoBehaviour
+public class WeaponsClass : NetworkBehaviour
 {
     [SerializeField] protected Transform characterPos;
     [SerializeField] public float range;
@@ -11,6 +12,16 @@ public class WeaponsClass : MonoBehaviour
     public float weightOfWeapon; // decreases speed
 
     // Start is called before the first frame update
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (transform.CompareTag("Player") || transform.CompareTag("Weapon"))
+        {
+            gameObject.SetActive(IsOwner);
+            GetComponent<SpriteRenderer>().enabled = IsOwner;
+        }
+    }
     void Start()
     {
         // Get DirectionOfAttack from the player/zombie
