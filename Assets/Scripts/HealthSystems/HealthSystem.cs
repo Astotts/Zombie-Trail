@@ -8,12 +8,12 @@ public class HealthSystem : NetworkBehaviour
 {
     //Declaration
     [SerializeField] protected int maxHealth;
-    protected int currentHealth;
+    protected NetworkVariable<int> currentHealth = new();
 
-    public virtual void Awake()
+    public virtual void Start()
     {
-        // Assigning currentHealth & healthBar to the value of maxHealth
-        currentHealth = maxHealth;
+        // Assigning currentHealth.Value & healthBar to the value of maxHealth
+        currentHealth.Value = maxHealth;
     }
     public void AlterHealth(int amount) {
         AlterHealthServerRpc(amount);
@@ -22,10 +22,10 @@ public class HealthSystem : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public virtual void AlterHealthServerRpc(int amount)
     {
-        currentHealth += amount;
+        currentHealth.Value += amount;
 
         // Check for death
-        if (currentHealth <= 0)
+        if (currentHealth.Value <= 0)
         {
             Die();
         }

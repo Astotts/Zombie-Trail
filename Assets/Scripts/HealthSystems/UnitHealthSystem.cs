@@ -16,9 +16,9 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private float flashCycles;
     [SerializeField] private float fadeDuration;
     
-    public override void Awake()
+    public override void Start()
     {
-        currentHealth = maxHealth;
+        currentHealth.Value = maxHealth;
         SetSize(1f); //Size is normalized so 1 is 100% health
     }
 
@@ -30,9 +30,9 @@ public class UnitHealthSystem : HealthSystem
             sprites[i].color = displayColor[i];
         }
 
-        currentHealth += amount;
-        if(currentHealth > 0){
-            SetSize(((float)currentHealth / (float)maxHealth)); //Since health variables are ints must cast to float values
+        currentHealth.Value += amount;
+        if(currentHealth.Value > 0){
+            SetSize(((float)currentHealth.Value / (float)maxHealth)); //Since health variables are ints must cast to float values
             //for(int i = sprites.Length; i > 0; i--){
                 //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
             //}

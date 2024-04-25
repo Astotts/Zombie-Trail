@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Mono.Cecil;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,29 +23,37 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private float timeToFade;
 
 
-    public override void Awake()
+    public override void Start()
     {
-        // Assigning currentHealth & healthBar to the value of maxHealth
-        currentHealth = maxHealth;
+        GameObject healthBarGO = GameObject.FindGameObjectWithTag("PlayerHealth");
+        healthBar = healthBarGO.GetComponent<Slider>();
+        sprite = healthBarGO.transform.GetChild(0).GetComponent<Image>();
+        GameObject[] bloodEffectGO = GameObject.FindGameObjectsWithTag("BloodEffect");
+        for (int i = 0; i < bloodEffect.Length; i++) {
+            bloodEffect[i] = bloodEffectGO[i].GetComponent<Image>();
+        }
+        // Assigning currentHealth.Value & healthBar to the value of maxHealth
+        currentHealth.Value = maxHealth;
         healthBar.value = maxHealth;
+        
     }
     
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount)
     {
         StopCoroutine("ScreenEffect");
-        //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
+        //Debug.Log(-(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth));
         for(int i = 0; bloodEffect.Length > i; i++){
-            bloodEffect[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth - (float)maxHealth) / (float)maxHealth)); 
+            bloodEffect[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth)); 
         }
 
         StartCoroutine("HealthFlashing");
         StartCoroutine("ScreenEffect");
-        currentHealth += amount;
-        healthBar.value = (float)currentHealth / (float)maxHealth * 100f;
+        currentHealth.Value += amount;
+        healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
 
         // Check for death
-        if (currentHealth <= 0)
+        if (currentHealth.Value <= 0)
         {
             Die();
         }
@@ -60,7 +69,7 @@ public class PlayerHealthSystem : HealthSystem
         //Destroy(gameObject);
 
         //!DEBUG RESET TO HEALTH DELETE LATER
-        currentHealth = maxHealth;
+        currentHealth.Value = maxHealth;
     }
 
     IEnumerator HealthFlashing(){

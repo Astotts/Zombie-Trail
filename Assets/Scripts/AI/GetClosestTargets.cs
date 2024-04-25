@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GetClosestTargets : MonoBehaviour
@@ -50,10 +51,12 @@ public class GetClosestTargets : MonoBehaviour
     }
 
     private void FindClosest(){
+        colliders.RemoveAll(item => item == null);
+        destinations.RemoveAll(item => item == null);
         int closestEnemy = 0;
         
         for(int i = 0; destinations.Count > i; i++){
-            distances[i] = ((colliders[i].ClosestPoint((Vector2)transform.position) - (Vector2)transform.position).magnitude);
+            distances[i] = (colliders[i].ClosestPoint((Vector2)transform.position) - (Vector2)transform.position).magnitude;
             //Debug.DrawRay(transform.position, colliders[i].ClosestPoint((Vector2)transform.position) - (Vector2)transform.position, Color.green, 0.1f);
             //Debug.DrawRay(colliders[i].ClosestPoint((Vector2)transform.position), colliders[i].transform.up, Color.red, 0.1f);
             

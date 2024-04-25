@@ -10,6 +10,8 @@ TagManager:
   - Camera Manager
   - Car
   - Weapon
+  - PlayerHealth
+  - BloodEffect
   layers:
   - Default
   - TransparentFX

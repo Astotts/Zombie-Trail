@@ -16,10 +16,10 @@ public class BaseHealthSystem : HealthSystem
     [SerializeField] private float flashCycles;
 
 
-    public override void Awake()
+    public override void Start()
     {
-        // Assigning currentHealth & healthBar to the value of maxHealth
-        currentHealth = maxHealth;
+        // Assigning currentHealth.Value & healthBar to the value of maxHealth
+        currentHealth.Value = maxHealth;
         healthBar.value = maxHealth;
     }
 
@@ -27,11 +27,11 @@ public class BaseHealthSystem : HealthSystem
     public override void AlterHealthServerRpc(int amount)
     {
         StartCoroutine("HealthFlashing");
-        currentHealth += amount;
-        healthBar.value = (float)currentHealth / (float)maxHealth * 100f;
+        currentHealth.Value += amount;
+        healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
 
         // Check for death
-        if (currentHealth <= 0)
+        if (currentHealth.Value <= 0)
         {
             Die();
         }
@@ -47,7 +47,7 @@ public class BaseHealthSystem : HealthSystem
         //Destroy(gameObject);
 
         //!DEBUG RESET TO HEALTH DELETE LATER
-        currentHealth = maxHealth;
+        currentHealth.Value = maxHealth;
     }
 
     IEnumerator HealthFlashing()
