@@ -22,7 +22,13 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private float waitForFade;
     [SerializeField] private float timeToFade;
 
+    void Awake() {
+        currentHealth.OnValueChanged += AlterHealthClientRpc;
+    }
 
+    void OnDisable() {
+        currentHealth.OnValueChanged -= AlterHealthClientRpc;
+    }
     public override void Start()
     {
         GameObject healthBarGO = GameObject.FindGameObjectWithTag("PlayerHealth");
@@ -32,15 +38,23 @@ public class PlayerHealthSystem : HealthSystem
         for (int i = 0; i < bloodEffect.Length; i++) {
             bloodEffect[i] = bloodEffectGO[i].GetComponent<Image>();
         }
+        if (!IsServer) return;
         // Assigning currentHealth.Value & healthBar to the value of maxHealth
         currentHealth.Value = maxHealth;
         healthBar.value = maxHealth;
         
     }
-    
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount)
     {
+        currentHealth.Value += amount;
+    }
+
+    
+    [Rpc(SendTo.ClientsAndHost)]
+    private void AlterHealthClientRpc(int prev, int curr)
+    {
+        if (!IsOwner) return;
         StopCoroutine("ScreenEffect");
         //Debug.Log(-(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth));
         for(int i = 0; bloodEffect.Length > i; i++){
@@ -49,11 +63,10 @@ public class PlayerHealthSystem : HealthSystem
 
         StartCoroutine("HealthFlashing");
         StartCoroutine("ScreenEffect");
-        currentHealth.Value += amount;
-        healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
+        healthBar.value = (float)curr / (float)maxHealth * 100f;
 
         // Check for death
-        if (currentHealth.Value <= 0)
+        if (curr <= 0)
         {
             Die();
         }

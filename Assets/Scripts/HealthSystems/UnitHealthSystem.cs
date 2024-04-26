@@ -16,6 +16,12 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private float flashCycles;
     [SerializeField] private float fadeDuration;
     
+    void Awake() {
+        currentHealth.OnValueChanged += AlterHealthClientRpc;
+    }
+    void OnDisable() {
+        currentHealth.OnValueChanged -= AlterHealthClientRpc;
+    }
     public override void Start()
     {
         currentHealth.Value = maxHealth;
@@ -24,15 +30,17 @@ public class UnitHealthSystem : HealthSystem
 
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount) {
+        currentHealth.Value += amount;
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    private void AlterHealthClientRpc(int prev, int curr) {
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         for(int i = 0; sprites.Length > i; i++){
             sprites[i].color = displayColor[i];
         }
-
-        currentHealth.Value += amount;
-        if(currentHealth.Value > 0){
-            SetSize(((float)currentHealth.Value / (float)maxHealth)); //Since health variables are ints must cast to float values
+        if(curr > 0){
+            SetSize(((float)curr / (float)maxHealth)); //Since health variables are ints must cast to float values
             //for(int i = sprites.Length; i > 0; i--){
                 //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
             //}
@@ -43,6 +51,7 @@ public class UnitHealthSystem : HealthSystem
             Die();
         }    
     }
+
     public override void Die(){
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
@@ -54,7 +63,7 @@ public class UnitHealthSystem : HealthSystem
         bar.localScale = new Vector3(sizeNormalized, 1f);
     }
 
-
+    
     IEnumerator HealthFlashing(){
         float elapsed = 0f;
         for(int i = 0; i <= flashCycles; i++){

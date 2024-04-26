@@ -8,14 +8,14 @@ public class HealthSystem : NetworkBehaviour
 {
     //Declaration
     [SerializeField] protected int maxHealth;
-    protected NetworkVariable<int> currentHealth = new();
+    [SerializeField] protected NetworkVariable<int> currentHealth = new();
 
     public virtual void Start()
     {
         // Assigning currentHealth.Value & healthBar to the value of maxHealth
         currentHealth.Value = maxHealth;
     }
-    public void AlterHealth(int amount) {
+    public virtual void AlterHealth(int amount) {
         AlterHealthServerRpc(amount);
     }
 
