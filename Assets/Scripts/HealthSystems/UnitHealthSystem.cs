@@ -22,9 +22,10 @@ public class UnitHealthSystem : HealthSystem
     void OnDisable() {
         currentHealth.OnValueChanged -= AlterHealthClientRpc;
     }
-    public override void Start()
+    public override void OnNetworkSpawn()
     {
-        currentHealth.Value = maxHealth;
+        if (IsServer)
+            currentHealth.Value = maxHealth;
         SetSize(1f); //Size is normalized so 1 is 100% health
     }
 
@@ -53,6 +54,7 @@ public class UnitHealthSystem : HealthSystem
     }
 
     public override void Die(){
+        if (!IsServer) return;
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         GameManager.Instance.RemoveZombieFromList(gameObject);

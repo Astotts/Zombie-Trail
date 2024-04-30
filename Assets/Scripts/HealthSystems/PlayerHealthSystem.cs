@@ -29,8 +29,9 @@ public class PlayerHealthSystem : HealthSystem
     void OnDisable() {
         currentHealth.OnValueChanged -= AlterHealthClientRpc;
     }
-    public override void Start()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         GameObject healthBarGO = GameObject.FindGameObjectWithTag("PlayerHealth");
         healthBar = healthBarGO.GetComponent<Slider>();
         sprite = healthBarGO.transform.GetChild(0).GetComponent<Image>();
@@ -38,10 +39,10 @@ public class PlayerHealthSystem : HealthSystem
         for (int i = 0; i < bloodEffect.Length; i++) {
             bloodEffect[i] = bloodEffectGO[i].GetComponent<Image>();
         }
+        healthBar.value = maxHealth;
         if (!IsServer) return;
         // Assigning currentHealth.Value & healthBar to the value of maxHealth
         currentHealth.Value = maxHealth;
-        healthBar.value = maxHealth;
         
     }
     [Rpc(SendTo.Server)]

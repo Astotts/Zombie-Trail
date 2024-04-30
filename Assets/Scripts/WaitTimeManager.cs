@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.RenderGraphModule;
@@ -38,9 +39,10 @@ public class WaitTimeManager : MonoBehaviour
         if (state != GameState.WaveEnd)
             return;
         active = true;
-        StartCoroutine(WaitProcess());
+        StartCoroutine(WaitProcessNpc());
     }
-    IEnumerator WaitProcess()
+    [Rpc(SendTo.ClientsAndHost)]
+    IEnumerator WaitProcessNpc()
     {
         StartCoroutine(FadeOut());
         yield return new WaitUntil(() => fadeOutEnded);
