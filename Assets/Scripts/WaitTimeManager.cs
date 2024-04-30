@@ -1,16 +1,11 @@
 using System;
 using System.Collections;
-using System.Linq;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.RenderGraphModule;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
-public class WaitTimeManager : MonoBehaviour
+public class WaitTimeManager : NetworkBehaviour
 {
     [SerializeField] int waitTime = 60;
     [SerializeField] TMP_Text counter;
@@ -29,20 +24,24 @@ public class WaitTimeManager : MonoBehaviour
         GameManager.OnStateChange += ShoppingStart;
     }
     
-    void OnDestroy()
+    void OnDisable()
     {
         GameManager.OnStateChange -= ShoppingStart;
     }
-
+    
     void ShoppingStart(GameState state)
     {
         if (state != GameState.WaveEnd)
             return;
         active = true;
-        StartCoroutine(WaitProcessNpc());
+        WaitProcessClientRpc();
     }
     [Rpc(SendTo.ClientsAndHost)]
-    IEnumerator WaitProcessNpc()
+    void WaitProcessClientRpc() {
+        StartCoroutine(WaitProcess());
+    }
+
+    IEnumerator WaitProcess()
     {
         StartCoroutine(FadeOut());
         yield return new WaitUntil(() => fadeOutEnded);

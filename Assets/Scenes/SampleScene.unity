@@ -7082,6 +7082,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 250
+  currentHealth:
+    m_InternalValue: 0
   healthBar: {fileID: 1699800718}
   sprite: {fileID: 917453758}
   displayColor: {r: 0, g: 0.09011459, b: 1, a: 1}
@@ -7925,6 +7927,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 645131641435189120}
+  - component: {fileID: 4681862326464465506}
   - component: {fileID: 4681862326464465505}
   m_Layer: 0
   m_Name: WaitTimeManager
@@ -8075,6 +8078,27 @@ MonoBehaviour:
   waitingText: 'Until Next Wave
 
     Skip? Y'
+--- !u!114 &4681862326464465506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365419952145269091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3750916915
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &4742147510431230420
 GameObject:
   m_ObjectHideFlags: 0
