@@ -33,11 +33,11 @@ public class WaitTimeManager : NetworkBehaviour
     {
         if (state != GameState.WaveEnd)
             return;
-        active = true;
         WaitProcessClientRpc();
     }
     [Rpc(SendTo.ClientsAndHost)]
     void WaitProcessClientRpc() {
+        active = true;
         StartCoroutine(WaitProcess());
     }
 
@@ -123,6 +123,11 @@ public class WaitTimeManager : NetworkBehaviour
     void Update()
     {
         if (active && Input.GetKeyDown(KeyCode.Y))
-            active = false;
+            SetActiveClientRpc(false);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    private void SetActiveClientRpc(bool active) {
+        this.active = active;
     }
 }
