@@ -24,6 +24,7 @@ public class NetworkSetup : MonoBehaviour
         host.onClick.AddListener(delegate{StartGame(HostType.Host);});
         client.onClick.AddListener(delegate{StartGame(HostType.Client);});
         server.onClick.AddListener(delegate{StartGame(HostType.Server);});
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "wss"));
     }
 
     void StartGame(HostType type) {
