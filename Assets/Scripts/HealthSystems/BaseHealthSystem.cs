@@ -15,8 +15,15 @@ public class BaseHealthSystem : HealthSystem
     [SerializeField] private float singleFlashTime;
     [SerializeField] private float flashCycles;
 
+    void Awake() {
+        currentHealth.OnValueChanged += AlterHealthClientRpc;
+    }
 
-    public override void Start()
+    void OnDisable() {
+        currentHealth.OnValueChanged -= AlterHealthClientRpc;
+    }
+
+    public override void OnNetworkSpawn()
     {
         // Assigning currentHealth.Value & healthBar to the value of maxHealth
         currentHealth.Value = maxHealth;
@@ -26,12 +33,16 @@ public class BaseHealthSystem : HealthSystem
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount)
     {
-        StartCoroutine("HealthFlashing");
         currentHealth.Value += amount;
-        healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void AlterHealthClientRpc(int prev, int curr) {
+        StartCoroutine("HealthFlashing");
+        healthBar.value = (float)curr / (float)maxHealth * 100f;
 
         // Check for death
-        if (currentHealth.Value <= 0)
+        if (curr <= 0)
         {
             Die();
         }
