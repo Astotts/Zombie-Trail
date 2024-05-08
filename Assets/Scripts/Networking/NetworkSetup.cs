@@ -14,7 +14,8 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] Button host;
     [SerializeField] Button client;
     [SerializeField] Button server;
-    [SerializeField] TextMeshPro ipAddressText;
+    [SerializeField] TextMeshProUGUI ipAddressText;
+	[SerializeField] TMP_InputField ip;
     [SerializeField] string ipAddress;
 	[SerializeField] UnityTransport transport;
     void Awake() {
@@ -31,8 +32,11 @@ public class NetworkSetup : MonoBehaviour
         switch (type) {
             case HostType.Host:
                 NetworkManager.Singleton.StartHost();
+		        GetLocalIPAddress();
                 break;
             case HostType.Client:
+                ipAddress = ip.text;
+                SetIpAddress();
                 NetworkManager.Singleton.StartClient();
                 break;
             case HostType.Server:
@@ -45,7 +49,7 @@ public class NetworkSetup : MonoBehaviour
 		var host = Dns.GetHostEntry(Dns.GetHostName());
 		foreach (var ip in host.AddressList) {
 			if (ip.AddressFamily == AddressFamily.InterNetwork) {
-				ipAddressText.text = ip.ToString();
+				ipAddressText.text = "IP: " + ip.ToString();
 				ipAddress = ip.ToString();
 				return ip.ToString();
 			}
