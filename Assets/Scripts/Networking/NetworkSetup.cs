@@ -19,12 +19,11 @@ public class NetworkSetup : MonoBehaviour
     [SerializeField] string ipAddress;
 	[SerializeField] UnityTransport transport;
     void Awake() {
-		ipAddress = "0.0.0.0";
+		ipAddress = "0.0.0.0\n";
 		SetIpAddress(); // Set the Ip to the above address
         host.onClick.AddListener(delegate{StartGame(HostType.Host);});
         client.onClick.AddListener(delegate{StartGame(HostType.Client);});
         server.onClick.AddListener(delegate{StartGame(HostType.Server);});
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "wss"));
     }
 
     void StartGame(HostType type) {
@@ -50,16 +49,17 @@ public class NetworkSetup : MonoBehaviour
 		var host = Dns.GetHostEntry(Dns.GetHostName());
 		foreach (var ip in host.AddressList) {
 			if (ip.AddressFamily == AddressFamily.InterNetwork) {
-				ipAddressText.text = "IP: " + ip.ToString();
+				ipAddressText.text = ipAddressText.text + "IP: " + ip.ToString() + "\n";
 				ipAddress = ip.ToString();
-				return ip.ToString();
 			}
 		}
+		return "asda";
 		throw new System.Exception("No network adapters with an IPv4 address in the system!");
 	}
     
 	public void SetIpAddress() {
 		transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 		transport.ConnectionData.Address = ipAddress;
+        ipAddressText.text = "IP: " + ipAddress;
 	}
 }
