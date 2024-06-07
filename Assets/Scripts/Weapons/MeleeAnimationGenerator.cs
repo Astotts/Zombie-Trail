@@ -28,9 +28,38 @@ public class MeleeAnimationGenerator : AnimationGenerator
     [Range (0, 1)]
     [SerializeField] public float forwardOffset;
 
-void Update(){
-    
-    if(Input.GetMouseButton(0) && !animRunning){
+    void Update(){
+        if(Input.GetMouseButton(0) && !animRunning){
+            animRunning = true;
+            switch(type){
+                case AnimationClassType.AnimationType.Swing :
+                    if(oneSidedSwing){
+                        if(swingSide){
+                            swingSide = false;
+                            StartCoroutine("LeftSwingAnim");  
+                        }
+                        else{
+                            swingSide = true;
+                            StartCoroutine("RightSwingAnim");  
+                        }
+                    }
+                    else{
+                        StartCoroutine("SwingAnim");  
+                    }
+                break;
+                case AnimationClassType.AnimationType.Stab :
+                    StartCoroutine("StabAnim");  
+                break;
+                case AnimationClassType.AnimationType.Pound :
+                    StartCoroutine("PoundAnim");  
+                break;
+            }
+        }
+    }
+
+    public override void StartAnimation() {
+        if (animRunning)
+            return;
         animRunning = true;
         switch(type){
             case AnimationClassType.AnimationType.Swing :
@@ -56,32 +85,31 @@ void Update(){
             break;
         }
     }
-}
 
-public override void StopAnimating(){
-    if(!animRunning)
-    return;
-    
-    animRunning = false;
-    switch(type){
-        case AnimationClassType.AnimationType.Swing :
-            StopCoroutine("RightSwingAnim");
-            StopCoroutine("LeftSwingAnim");
-            StopCoroutine("SwingAnim");
-            centerPoint.localEulerAngles = new Vector3(0, 0, centerStartDegrees);
-            hingePoint.localEulerAngles = new Vector3(0, 0, hingeStartDegrees);
-        break;
-        case AnimationClassType.AnimationType.Stab :
-            StopCoroutine("StabAnim");
-            weaponTransform.position = startingTransform.position;
-        break;
-        case AnimationClassType.AnimationType.Pound :
-            StopCoroutine("PoundAnim");
-            centerPoint.localEulerAngles = new Vector3(0, 0, centerStartDegrees);
-            hingePoint.localEulerAngles = new Vector3(0, 0, hingeStartDegrees);
-        break;
+    public override void StopAnimating(){
+        if(!animRunning)
+        return;
+        
+        animRunning = false;
+        switch(type){
+            case AnimationClassType.AnimationType.Swing :
+                StopCoroutine("RightSwingAnim");
+                StopCoroutine("LeftSwingAnim");
+                StopCoroutine("SwingAnim");
+                centerPoint.localEulerAngles = new Vector3(0, 0, centerStartDegrees);
+                hingePoint.localEulerAngles = new Vector3(0, 0, hingeStartDegrees);
+            break;
+            case AnimationClassType.AnimationType.Stab :
+                StopCoroutine("StabAnim");
+                weaponTransform.position = startingTransform.position;
+            break;
+            case AnimationClassType.AnimationType.Pound :
+                StopCoroutine("PoundAnim");
+                centerPoint.localEulerAngles = new Vector3(0, 0, centerStartDegrees);
+                hingePoint.localEulerAngles = new Vector3(0, 0, hingeStartDegrees);
+            break;
+        }
     }
-}
     
     IEnumerator SwingAnim(){
         float elapsed = 0f;

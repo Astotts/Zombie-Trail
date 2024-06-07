@@ -30,6 +30,8 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
+        if (!IsOwner)
+            return;
         Vector2 moveDirection;
 
         if(characterPos.gameObject.tag == "Player"){

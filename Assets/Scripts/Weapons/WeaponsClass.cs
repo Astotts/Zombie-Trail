@@ -16,11 +16,11 @@ public class WeaponsClass : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (transform.CompareTag("Player") || transform.CompareTag("Weapon"))
-        {
-            gameObject.SetActive(IsOwner);
-            GetComponent<SpriteRenderer>().enabled = IsOwner;
-        }
+        // if (transform.CompareTag("Player") || transform.CompareTag("Weapon"))
+        // {
+        //     gameObject.SetActive(IsOwner);
+        //     GetComponent<SpriteRenderer>().enabled = IsOwner;
+        // }
     }
     void Start()
     {

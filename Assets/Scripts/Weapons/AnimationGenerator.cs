@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -11,7 +12,7 @@ public static class AnimationClassType{
     }
 }
 
-public class AnimationGenerator : MonoBehaviour
+public class AnimationGenerator : NetworkBehaviour
 {
     [SerializeField] public AnimationClassType.AnimationType type; 
 
@@ -23,6 +24,11 @@ public class AnimationGenerator : MonoBehaviour
     [SerializeField] public float tertiaryAnimationTime;
 
     public virtual void StopAnimating(){
+        
+    }
+
+
+    public virtual void StartAnimation() {
         
     }
 }
