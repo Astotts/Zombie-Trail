@@ -44,7 +44,8 @@ public class PlayerWeapon : NetworkBehaviour
 
     [Rpc(SendTo.ClientsAndHost)]
     void PlayerAttackClientRpc() {
-        animators[currentWeapon.Value].StartAnimation();
+        if (animators[currentWeapon.Value] != null)
+            animators[currentWeapon.Value].StartAnimation();
     }
     
     [Rpc(SendTo.Server)]

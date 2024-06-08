@@ -28,7 +28,7 @@ public class MeleeWeapons : WeaponsClass
 
         if(characterPos.gameObject.CompareTag("Player"))
         {
-            Vector2 mouseWorldPos = ((Vector2)Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z)) - (Vector2)characterPos.position) * -1;
+            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint((Vector2) Input.mousePosition) - (Vector2)characterPos.position;
             moveDirection = mouseWorldPos;
         }
         else{

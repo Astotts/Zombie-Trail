@@ -5,9 +5,4 @@ using UnityEngine;
 
 public class CameraSetup : NetworkBehaviour
 {
-    public override void OnNetworkSpawn() {
-        base.OnNetworkSpawn();
-        if (IsOwner)
-            Camera.main.GetComponent<CameraTracking>().SetPlayer(transform);
-    }
 }

@@ -10,6 +10,12 @@ public class ProjectileMovement : MonoBehaviour
     public float outOfBounds; // Maximum range the projectile can travel
     public int damage;
 
+    [SerializeField] GameObject bloodFX;
+    //[SerializeField] GameObject bulletTrail;
+
+    ParticleSystem bloodParticleSystem;
+    TrailRenderer bulletTrailRenderer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +44,7 @@ public class ProjectileMovement : MonoBehaviour
         if (distanceTraveled >= outOfBounds)
         {
             Destroy(gameObject); // Destroy the projectile when it goes out of range
+            
         }
     }
 
@@ -51,6 +58,11 @@ public class ProjectileMovement : MonoBehaviour
             else{
                 other.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
             }
+            bloodFX = Instantiate(bloodFX);
+            bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
+            bloodFX.transform.position = transform.position;
+            bloodParticleSystem = bloodFX.GetComponent<ParticleSystem>();
+            bloodParticleSystem.Play();   
         }
     }
 }

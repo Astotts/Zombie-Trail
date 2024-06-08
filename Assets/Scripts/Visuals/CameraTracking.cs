@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class CameraTracking : MonoBehaviour
+public class CameraTracking : NetworkBehaviour
 {
     [SerializeField] Transform[] bounds;
     Vector3 pos;
@@ -15,14 +15,15 @@ public class CameraTracking : MonoBehaviour
     float vertical, horizontal;
     Vector3 lerpPosition;
 
-    public void SetPlayer(Transform player)
-    {
-        this.player = player;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
+        if (!IsOwner)
+            Destroy(this);
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
+            if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
+                player = go.transform;
+        }
         Camera camera = GetComponent<Camera>();
         Vector3 topRight = camera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,0f)) - player.position;
         Vector3 bottomLeft = camera.ScreenToWorldPoint(Vector3.zero) - player.position;

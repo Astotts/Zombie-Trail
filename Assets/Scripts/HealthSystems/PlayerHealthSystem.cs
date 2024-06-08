@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHealthSystem : HealthSystem
@@ -22,15 +23,16 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private float timeToFade;
 
     void Awake() {
-        currentHealth.OnValueChanged += AlterHealthClientRpc;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnDisable() {
-        currentHealth.OnValueChanged -= AlterHealthClientRpc;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-    public override void OnNetworkSpawn()
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        base.OnNetworkSpawn();
+        if (scene.name != "SampleScene")
+            return;
         GameObject healthBarGO = GameObject.FindGameObjectWithTag("PlayerHealth");
         healthBar = healthBarGO.GetComponent<Slider>();
         sprite = healthBarGO.transform.GetChild(0).GetComponent<Image>();
@@ -48,13 +50,13 @@ public class PlayerHealthSystem : HealthSystem
     public override void AlterHealthServerRpc(int amount)
     {
         currentHealth.Value += amount;
+        AlterHealthClientRpc(currentHealth.Value);
     }
 
     
     [Rpc(SendTo.ClientsAndHost)]
-    private void AlterHealthClientRpc(int prev, int curr)
+    private void AlterHealthClientRpc(int curr)
     {
-        if (!IsOwner) return;
         StopCoroutine("ScreenEffect");
         //Debug.Log(-(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth));
         for(int i = 0; bloodEffect.Length > i; i++){

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.Users;
 
 public class RangedWeapons : WeaponsClass
 {
@@ -30,12 +31,11 @@ public class RangedWeapons : WeaponsClass
 
     void Update()
     {
-        if (!IsOwner)
-            return;
+        transform.position = characterPos.transform.position;
         Vector2 moveDirection;
 
         if(characterPos.gameObject.tag == "Player"){
-            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
+            Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint((Vector2) Input.mousePosition) - (Vector2)characterPos.position;
 
             moveDirection = mouseWorldPos;
         }
