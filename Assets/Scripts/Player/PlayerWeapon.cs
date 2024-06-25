@@ -15,6 +15,9 @@ public class PlayerWeapon : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+    }
+
+    void Start() {
         SetWeaponServerRpc(0);
     }
 
@@ -23,19 +26,21 @@ public class PlayerWeapon : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        SetWeapon();
+        SetWeaponServerRpc();
 
-        PlayerAttack();
+        PlayerAttackServerRpc();
     }
 
-    private void SetWeapon() {
+    [Rpc(SendTo.Server)]
+    private void SetWeaponServerRpc() {
         for (int i = 0; i < weapons.Capacity; i++) {
             if (Input.GetKey((KeyCode)(48 + i + 1)))
                 SetWeaponServerRpc(i);
         }
     }
 
-    private void PlayerAttack() {
+    [Rpc(SendTo.Server)]
+    private void PlayerAttackServerRpc() {
         if(Input.GetMouseButton(0) && weapons[currentWeapon.Value].isActiveAndEnabled){
             weapons[currentWeapon.Value].Attack();
             PlayerAttackClientRpc();
@@ -44,7 +49,7 @@ public class PlayerWeapon : NetworkBehaviour
 
     [Rpc(SendTo.ClientsAndHost)]
     void PlayerAttackClientRpc() {
-        if (animators[currentWeapon.Value] != null)
+        if (animators[currentWeapon.Value] != null && weapons[currentWeapon.Value].isActiveAndEnabled)
             animators[currentWeapon.Value].StartAnimation();
     }
     
