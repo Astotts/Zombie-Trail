@@ -6,12 +6,9 @@ using UnityEngine.Assertions.Comparers;
 using UnityEngine.Rendering.Universal.Internal;
 
 public class PlayerMovement : NetworkBehaviour
-{
+{   
     [SerializeField] float moveSpeed;
     [SerializeField] Animator animator;
-
-    float inputX;
-    float inputY;
 
     public override void OnNetworkSpawn()
     {

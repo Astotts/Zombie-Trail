@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.U2D;
 
-public class CameraTracking : NetworkBehaviour
+public class CameraTracking : MonoBehaviour
 {
     [SerializeField] Transform[] bounds;
     Vector3 pos;
@@ -15,11 +15,8 @@ public class CameraTracking : NetworkBehaviour
     float vertical, horizontal;
     Vector3 lerpPosition;
 
-    // Start is called before the first frame update
     void Start()
     {
-        if (!IsOwner)
-            Destroy(this);
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
             if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
                 player = go.transform;
@@ -41,8 +38,9 @@ public class CameraTracking : NetworkBehaviour
 
     // Update is called once per frame
     void LateUpdate()
-    {   
-        if (player == null) return;
+    {
+        if (player == null)
+            return;
         pos = player.position;
 
         pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat; 
