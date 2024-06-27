@@ -19,6 +19,7 @@ public class WaitTimeManager : NetworkBehaviour
     bool active = false;
     bool fadeInEnded = false;
     bool fadeOutEnded = false;
+
     void Start()
     {
         GameManager.OnStateChange += ShoppingStart;
@@ -47,7 +48,7 @@ public class WaitTimeManager : NetworkBehaviour
         yield return new WaitUntil(() => fadeOutEnded);
         fadeOutEnded = false;
         merchantGO.SetActive(true);
-        GameManager.StateUpdate(GameState.WaitStart);
+        GameManager.Instance.StateUpdateClientRpc(GameState.WaitStart);
         StartCoroutine(FadeIn());
         yield return new WaitUntil(() => fadeInEnded);
         fadeInEnded = false;
@@ -97,7 +98,7 @@ public class WaitTimeManager : NetworkBehaviour
         StartCoroutine(FadeOut());
         yield return new WaitUntil(() => fadeOutEnded);
         fadeOutEnded = false;
-        GameManager.StateUpdate(GameState.WaitEnd);
+        GameManager.Instance.StateUpdateClientRpc(GameState.WaitEnd);
         counter.gameObject.SetActive(false);
         StartCoroutine(FadeIn());
         fadeOutEnded = false;

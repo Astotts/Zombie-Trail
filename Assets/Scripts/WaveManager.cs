@@ -37,7 +37,7 @@ public class WaveManager : MonoBehaviour
         if (state != GameState.WaitEnd)
             return;
 
-        GameManager.StateUpdate(GameState.WaveStart);
+        GameManager.Instance.StateUpdateClientRpc(GameState.WaveStart);
         difficulity += 0;      // Update this later, testings
 
         StartCoroutine(SpawnWave(difficulity));     // Start wave

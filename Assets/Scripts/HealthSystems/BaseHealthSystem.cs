@@ -19,13 +19,17 @@ public class BaseHealthSystem : HealthSystem
         currentHealth.OnValueChanged += AlterHealthClientRpc;
     }
 
+    public override void Start() {
+        InitializeHealth();
+    }
+
     void OnDisable() {
         currentHealth.OnValueChanged -= AlterHealthClientRpc;
     }
 
-    public override void OnNetworkSpawn()
-    {
-        // Assigning currentHealth.Value & healthBar to the value of maxHealth
+    void InitializeHealth() {
+        if (!IsServer)
+            return;
         currentHealth.Value = maxHealth;
         healthBar.value = maxHealth;
     }
@@ -33,10 +37,11 @@ public class BaseHealthSystem : HealthSystem
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount)
     {
-        currentHealth.Value += amount;
+        if (IsSpawned)
+            currentHealth.Value += amount;
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.Owner)]
     public void AlterHealthClientRpc(int prev, int curr) {
         StartCoroutine("HealthFlashing");
         healthBar.value = (float)curr / (float)maxHealth * 100f;

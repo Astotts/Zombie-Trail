@@ -28,7 +28,7 @@ public class PlayerWeapon : NetworkBehaviour
 
         SetWeaponServerRpc();
 
-        PlayerAttackServerRpc();
+        PlayerAttack();
     }
 
     [Rpc(SendTo.Server)]
@@ -39,8 +39,7 @@ public class PlayerWeapon : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
-    private void PlayerAttackServerRpc() {
+    private void PlayerAttack() {
         if(Input.GetMouseButton(0) && weapons[currentWeapon.Value].isActiveAndEnabled){
             weapons[currentWeapon.Value].Attack();
             PlayerAttackClientRpc();

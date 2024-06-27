@@ -1,51 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerHealthSystem : HealthSystem
 {
-    //Declaration
-    public Slider healthBar;
-
     //Health Visuals
-    [SerializeField] private Image sprite; //Holds Health and Health Background
     [SerializeField] private Color displayColor; //Holds Health and Health Background
     [SerializeField] private float singleFlashTime;
     [SerializeField] private float flashCycles;
 
     //Screen Visuals
-    [SerializeField] private Image[] bloodEffect;
     [SerializeField] private Color bloodEffectColor; 
     [SerializeField] private float waitForFade;
     [SerializeField] private float timeToFade;
 
-    void Awake() {
+    Image[] bloodEffects;
+    Slider healthBar;
+    Image sprite;
+
+    public override void Start() {
         SceneManager.sceneLoaded += OnSceneLoaded;
+        NetworkManager.OnClientConnectedCallback += UpdateUIReference;
     }
 
     void OnDisable() {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        NetworkManager.OnClientConnectedCallback -= UpdateUIReference;
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != "SampleScene")
-            return;
-        GameObject healthBarGO = GameObject.FindGameObjectWithTag("PlayerHealth");
-        healthBar = healthBarGO.GetComponent<Slider>();
-        sprite = healthBarGO.transform.GetChild(0).GetComponent<Image>();
-        GameObject[] bloodEffectGO = GameObject.FindGameObjectsWithTag("BloodEffect");
-        for (int i = 0; i < bloodEffect.Length; i++) {
-            bloodEffect[i] = bloodEffectGO[i].GetComponent<Image>();
-        }
+        UpdateUIReference(0);
         healthBar.value = maxHealth;
         if (!IsServer) return;
         // Assigning currentHealth.Value & healthBar to the value of maxHealth
         currentHealth.Value = maxHealth;
-        
     }
+
+    void UpdateUIReference(ulong id) {
+        bloodEffects = PlayerUIManager.Instance.bloodEffects;
+        healthBar = PlayerUIManager.Instance.healthBar;
+        sprite = PlayerUIManager.Instance.healthBarSprite;
+    }
+
     [Rpc(SendTo.Server)]
     public override void AlterHealthServerRpc(int amount)
     {
@@ -54,13 +54,13 @@ public class PlayerHealthSystem : HealthSystem
     }
 
     
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.Owner)]
     private void AlterHealthClientRpc(int curr)
     {
         StopCoroutine("ScreenEffect");
-        //Debug.Log(-(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth));
-        for(int i = 0; bloodEffect.Length > i; i++){
-            bloodEffect[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth)); 
+        
+        for(int i = 0; bloodEffects.Length > i; i++){
+            bloodEffects[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth)); 
         }
 
         StartCoroutine("HealthFlashing");
@@ -116,11 +116,11 @@ public class PlayerHealthSystem : HealthSystem
             yield return null;
         }
         elapsed = 0f;
-        Color startingColor = bloodEffect[0].color;
+        Color startingColor = bloodEffects[0].color;
         while(elapsed <= timeToFade){
             elapsed += Time.deltaTime;
-            for(int i = 0; bloodEffect.Length > i; i++){
-                bloodEffect[i].color = Color.Lerp(startingColor, Color.clear, elapsed / timeToFade);
+            for(int i = 0; bloodEffects.Length > i; i++){
+                bloodEffects[i].color = Color.Lerp(startingColor, Color.clear, elapsed / timeToFade);
             }
             yield return null;
         }
