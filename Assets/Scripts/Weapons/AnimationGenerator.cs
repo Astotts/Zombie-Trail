@@ -12,7 +12,7 @@ public static class AnimationClassType{
     }
 }
 
-public class AnimationGenerator : NetworkBehaviour
+public class AnimationGenerator : MonoBehaviour
 {
     [SerializeField] public AnimationClassType.AnimationType type; 
 

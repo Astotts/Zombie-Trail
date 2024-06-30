@@ -26,13 +26,12 @@ public class PlayerWeapon : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        SetWeaponServerRpc();
+        SetWeapon();
 
         PlayerAttack();
     }
 
-    [Rpc(SendTo.Server)]
-    private void SetWeaponServerRpc() {
+    private void SetWeapon() {
         for (int i = 0; i < weapons.Capacity; i++) {
             if (Input.GetKey((KeyCode)(48 + i + 1)))
                 SetWeaponServerRpc(i);

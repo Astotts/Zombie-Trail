@@ -28,34 +28,34 @@ public class MeleeAnimationGenerator : AnimationGenerator
     [Range (0, 1)]
     [SerializeField] public float forwardOffset;
 
-    void Update(){
-        if(Input.GetMouseButton(0) && !animRunning){
-            animRunning = true;
-            switch(type){
-                case AnimationClassType.AnimationType.Swing :
-                    if(oneSidedSwing){
-                        if(swingSide){
-                            swingSide = false;
-                            StartCoroutine("LeftSwingAnim");  
-                        }
-                        else{
-                            swingSide = true;
-                            StartCoroutine("RightSwingAnim");  
-                        }
-                    }
-                    else{
-                        StartCoroutine("SwingAnim");  
-                    }
-                break;
-                case AnimationClassType.AnimationType.Stab :
-                    StartCoroutine("StabAnim");  
-                break;
-                case AnimationClassType.AnimationType.Pound :
-                    StartCoroutine("PoundAnim");  
-                break;
-            }
-        }
-    }
+    // void Update(){
+    //     if(Input.GetMouseButton(0) && !animRunning){
+    //         animRunning = true;
+    //         switch(type){
+    //             case AnimationClassType.AnimationType.Swing :
+    //                 if(oneSidedSwing){
+    //                     if(swingSide){
+    //                         swingSide = false;
+    //                         StartCoroutine("LeftSwingAnim");  
+    //                     }
+    //                     else{
+    //                         swingSide = true;
+    //                         StartCoroutine("RightSwingAnim");  
+    //                     }
+    //                 }
+    //                 else{
+    //                     StartCoroutine("SwingAnim");  
+    //                 }
+    //             break;
+    //             case AnimationClassType.AnimationType.Stab :
+    //                 StartCoroutine("StabAnim");  
+    //             break;
+    //             case AnimationClassType.AnimationType.Pound :
+    //                 StartCoroutine("PoundAnim");  
+    //             break;
+    //         }
+    //     }
+    // }
 
     public override void StartAnimation() {
         if (animRunning)

@@ -22,8 +22,9 @@ public class LightManager : MonoBehaviour
 
     void UpdateTime(GameState state)
     {
-        if (state == GameState.WaitStart)
+        if (state == GameState.WaitStart){
             AllLightsOff();
+        }
         else if (state == GameState.WaveStart)
             AllLightsOn();
     }

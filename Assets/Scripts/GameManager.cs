@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
-    public static GameManager Instance;                         // To keep track of one GameManager
+    public static GameManager Instance;                     // To keep track of one GameManager
     public WaveManager wm;
     //[SerializeField] float playerHealth;                      // Player's current health
     List<GameObject> zombiesInTheLevel;                         // Keeps track of the zombies in the level. Allows for wave start/end
@@ -15,14 +15,12 @@ public class GameManager : NetworkBehaviour
     public static event Action<GameState> OnStateChange;
     public static GameState currentState = GameState.WaveStart;
 
-    readonly NetworkVariable<int> networkState = new();
+    readonly NetworkVariable<int> networkState = new(3);
 
 
     // This allows us to keep the GameManager script when scenes are reloading or changing
-    public override void OnNetworkSpawn()
+    void Awake()
     {
-        base.OnNetworkSpawn();
-    
         zombiesInTheLevel = new List<GameObject>();
 
         wm = FindObjectOfType<WaveManager>();
@@ -37,16 +35,20 @@ public class GameManager : NetworkBehaviour
 
         // This is the first, congrats, you live
         Instance = this;
+        Debug.Log("GameManager awaken");
+    }
+
+    public override void OnNetworkSpawn()
+    {
         DontDestroyOnLoad(gameObject);      // Don't destroy you, you lucky
 
         // Not server? Well go ask the server for current state
-        if (!IsServer){
+        if (IsHost || IsServer)
+            StateUpdateClientRpc(GameState.WaitEnd);
+        else
             SyncGameState();
-            return;
-        }
-        StateUpdateClientRpc(GameState.WaitEnd);
+        Debug.Log("GameManager network spawned");
     }
-
 
     public void AddZombieToList(GameObject zombie)
     {
@@ -109,12 +111,12 @@ public class GameManager : NetworkBehaviour
                 OnStateChange?.Invoke(state);
                 break;
         }
-        Instance.networkState.Value = (int) currentState;
+
+        if (IsServer || IsHost)
+            networkState.Value = (int) currentState;
     }
 
     void SyncGameState() {
-        if (!IsClient)
-            return;
         Debug.Log("Synchronized gameState late join");
         StateUpdateClientRpc((GameState) networkState.Value);
     }
