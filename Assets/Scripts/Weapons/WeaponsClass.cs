@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WeaponsClass : MonoBehaviour
 {
-    [SerializeField] protected Transform characterPos;
+    [SerializeField] public Transform characterPos;
     [SerializeField] public float range;
-    [SerializeField] protected float reloadSpeed; // how long the reload / cooldown of attacks will take 
-    protected Vector2 directionOfAttack;
+    [SerializeField] public float reloadSpeed; // how long the reload / cooldown of attacks will take 
+    public Vector2 directionOfAttack;
     public float weightOfWeapon; // decreases speed
 
     // Start is called before the first frame update
