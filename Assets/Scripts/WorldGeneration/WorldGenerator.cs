@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -139,7 +140,9 @@ public class WorldGenerator : MonoBehaviour
                     continue;
                 TileBase decoTile = GetRandomRoadDecoration(random);
                 Vector3Int tilePos = new(x + offsetX, y + offsetY, 0);
+                Matrix4x4 matrix = Matrix4x4.TRS(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble()), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                 decorationTilemap.SetTile(tilePos, decoTile);
+                decorationTilemap.SetTransformMatrix(tilePos, matrix);
             }
         }
     }
@@ -186,7 +189,9 @@ public class WorldGenerator : MonoBehaviour
                     continue;
                 TileBase decoTile = GetRandomSidewalkDecoration(random);
                 Vector3Int tilePos = new(x + offsetX, y + offsetY, 0);
+                Matrix4x4 matrix = Matrix4x4.TRS(new Vector3((float)random.NextDouble(), (float)random.NextDouble(), (float)random.NextDouble()), Quaternion.Euler(0f, 0f, 0f), Vector3.one);
                 decorationTilemap.SetTile(tilePos, decoTile);
+                decorationTilemap.SetTransformMatrix(tilePos, matrix);
             }
         }
     }
