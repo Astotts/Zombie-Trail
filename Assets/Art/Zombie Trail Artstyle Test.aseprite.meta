@@ -121,15 +121,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: Zombie Trail Artstyle Test
     originalName: 
-    pivot: {x: 0.7012623, y: 0}
+    pivot: {x: 0.5, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 713
-      height: 647
+      width: 1000
+      height: 800
     spriteID: f2ea0529ca442c147a4969a73575afbb
     spriteBone: []
     spriteOutline: []
@@ -153,8 +153,8 @@ ScriptedImporter:
       cellRect:
         x: 0
         y: 0
-        width: 713
-        height: 647
+        width: 1000
+        height: 800
       spriteId: f2ea0529ca442c147a4969a73575afbb
     linkedCells: []
     parentIndex: -1

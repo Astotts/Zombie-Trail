@@ -7,7 +7,9 @@ public class RangedWeapons : WeaponsClass
     [SerializeField] private float projectileSpeed;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private float recoilTime; // the amount of time it takes between each shot - so the recoil of the weapon
-    [SerializeField] private int clipSize; 
+    [SerializeField] private int clipSize;
+    [SerializeField] private GameObject ammoPanel;
+    private List<GameObject> bulletUI;
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
     private int counter = 0;
     private bool reloaded = true;
@@ -23,9 +25,11 @@ public class RangedWeapons : WeaponsClass
 
     void Start()
     {
-        // get Ammo from wherever we're getting that
-        ammo = 100; // for testing
-        //clipSize = 25; // for testing
+        bulletUI = new List<GameObject>();
+        int children = ammoPanel.transform.childCount;
+        for(int i = 0; i < children; i++){
+            bulletUI.Add(ammoPanel.transform.GetChild(i).gameObject);
+        }
     }
 
     void Update()
@@ -66,29 +70,32 @@ public class RangedWeapons : WeaponsClass
     //Called from player controller
     public override void Attack()
     {
-        if (ammo > 0 && reloaded && 0 >= elapsed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
+        if (ammo >= 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {    
-            if (counter == clipSize){
+            if (ammo == 0){
+                Debug.Log("Calling first reload");
+                reloaded = false;
                 Reload();
-                counter = 0;
             } 
-            else{
+            else if(0 >= elapsed){
                 elapsed = recoilTime;
                 // get the mouse position
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 // current position to mouse position
                 directionOfAttack = (mousePos - characterPos.position).normalized;
 
-                // create the projectile 
+                // create & shoot the projectile 
                 GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
-                // shoot the projectile
                 newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
-                
-                //Debug.Log("RangedWeapons Attack() function used.");
-
-                // decreasing ammo and increasing amount of ammo used
-                counter += 1;
+                if(ammo > 0){
+                    bulletUI[ammo - 1].SetActive(false);
+                }
+                ammo -= 1;
             }
+        }
+        else{
+            reloaded = false;
+            Reload();
         }
     }
 
@@ -103,9 +110,12 @@ public class RangedWeapons : WeaponsClass
 
     IEnumerator Reloading()
     {
-        reloaded = false; 
+        Debug.Log("Reloading");
         yield return new WaitForSeconds(reloadSpeed);
-        ammo -= clipSize;
+        ammo = clipSize;
         reloaded = true; 
+        for(int i = 0; clipSize > i; i++){
+            bulletUI[i].SetActive(true);
+        }
     }
 }

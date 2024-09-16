@@ -311,10 +311,10 @@ ScriptedImporter:
     - name: TileMap
       frameIndex: 0
       cellRect:
-        x: 1
-        y: 1534
-        width: 131
-        height: 65
+        x: -299
+        y: 1264
+        width: 1147
+        height: 554
       spriteId: d9c4514fef24f6f488b48c3fab09ee00
     linkedCells: []
     parentIndex: -1
