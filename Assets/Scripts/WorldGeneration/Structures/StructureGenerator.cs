@@ -13,33 +13,32 @@ public class StructureGenerator : MonoBehaviour
     public StructureEntry[] structures;
     public void GenerateStructures(int seed, Vector2 chunkLocation)
     {
-        System.Random random = new System.Random((int)(seed + chunkLocation.x));
-        float[,] noiseMap = Noise.GenerateNoiseMap(chunkSize, chunkSize, 1, seed, 10, 1, 10, chunkLocation);
-        for (int x = 0; x < chunkSize; x++)
+        System.Random random = new System.Random((int)(seed + chunkLocation.x + chunkLocation.y));
+        for (int i = 0; i < chunkSize; i++)
         {
-            for (int y = 0; y < chunkSize; y++)
+            float x = chunkLocation.x + i;
+            float y = chunkLocation.y + random.Next(chunkSize / 2);
+            GameObject randomStructure = GetRandomStructure(random);
+            if (SpawnStructure(randomStructure, x, y))
             {
-                float height = noiseMap[x, y];
-                if (height < 0.5f)
-                {
-                    GameObject randomStructure = GetRandomStructure(random, y);
-                    if (SpawnStructure(randomStructure, (int)(x + chunkLocation.x), (int)(y + chunkLocation.y)))
-                    {
-                        return;
-                    }
-                }
+                BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
+                float structureXLength = boxCollider2D.size.x * randomStructure.transform.localScale.x;
+                i += (int)structureXLength - 1;
             }
         }
     }
 
-    private bool SpawnStructure(GameObject prefab, int x, int y)
+    private bool SpawnStructure(GameObject prefab, float x, float y)
     {
-        float yOffset = 1.5f;
-        float xOffset = 1f;
+        float xOffset = 2;
+        float yOffset = 2;
         Vector2 spawnLocation = new(x + xOffset, y + yOffset);
         BoxCollider2D boxCollider2D = prefab.GetComponent<BoxCollider2D>();
-        Vector2 size = boxCollider2D.size;
-        Collider2D hitCollider = Physics2D.OverlapBox(new Vector2(spawnLocation.x, spawnLocation.y + size.y), size * boxCollider2D.gameObject.transform.localScale, 0);
+        Vector3 scale = boxCollider2D.transform.localScale;
+        Vector3 size = boxCollider2D.size * scale;
+        Vector2 sizeOffset = boxCollider2D.offset * scale;
+        float sizeMultiplier = 0.98f;
+        Collider2D hitCollider = Physics2D.OverlapBox(spawnLocation + sizeOffset, size * sizeMultiplier, 0);
 
         if (hitCollider != null)
         {
@@ -51,7 +50,7 @@ public class StructureGenerator : MonoBehaviour
         return true;
     }
 
-    private GameObject GetRandomStructure(System.Random random, int y)
+    private GameObject GetRandomStructure(System.Random random)
     {
         int totalWeight = 0;
         foreach (StructureEntry entry in structures)
@@ -74,6 +73,5 @@ public class StructureGenerator : MonoBehaviour
 public class StructureEntry
 {
     public GameObject prefab;
-    public int yLevel;
     public int weight;
 }

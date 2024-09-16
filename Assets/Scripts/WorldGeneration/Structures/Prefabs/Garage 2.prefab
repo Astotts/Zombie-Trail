@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5037517774505566180}
   - component: {fileID: 5090689289655170563}
   - component: {fileID: 3909665407862454594}
+  - component: {fileID: 8265399819565068271}
   m_Layer: 0
   m_Name: Garage 2
   m_TagString: Untagged
@@ -118,18 +119,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.48}
+  m_Offset: {x: 0.4, y: 0.6}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.64, y: 0.96}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0.8, y: 1.2}
     newSize: {x: 3.3, y: 2.51}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.64, y: 0.96}
+  m_Size: {x: 0.8, y: 1.2}
   m_EdgeRadius: 0
 --- !u!50 &3909665407862454594
 Rigidbody2D:
@@ -158,3 +159,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &8265399819565068271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8996327206394020996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b105092a13b849d490c2a2aa9bc3a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
