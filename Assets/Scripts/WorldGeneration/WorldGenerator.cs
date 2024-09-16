@@ -17,7 +17,10 @@ public class WorldGenerator : MonoBehaviour
     public GameObject tilePrefab;
     public Tilemap tilemap;
     public Tilemap sidewalkTilemap;
+    public Tilemap decorationTilemap;
     public TileBase[] sidewalks;
+    public DecorationEntry[] roadDecorations;
+    public DecorationEntry[] sidewalkDecorations;
     public StructureGenerator structureGenerator;
     readonly Dictionary<Vector2Int, TileData> tiles = new();
     private Vector2Int currentLoadedRoadPos;
@@ -26,7 +29,7 @@ public class WorldGenerator : MonoBehaviour
     void Start()
     {
         gridSize = tilemap.transform.localScale.x;
-        SpawnTile(initialTile, 0, 0);
+        SpawnRoadTile(initialTile, 0, 0);
         currentLoadedRoadPos = new Vector2Int(0, 0);
         tiles[currentLoadedRoadPos] = initialTile;
     }
@@ -54,7 +57,7 @@ public class WorldGenerator : MonoBehaviour
         TileData newTileData = randomTileEntry.tileData;
 
         tiles[newPos] = newTileData;
-        SpawnTile(newTileData, x, y);
+        SpawnRoadTile(newTileData, x, y);
 
         GenerateVerticalTiles(newTileData, x, y);
 
@@ -66,7 +69,7 @@ public class WorldGenerator : MonoBehaviour
         System.Random random = new System.Random(seed + y);
 
         TileData newTileData = tileData;
-        for (int i = 1; i < (maxHeight + 1) / 2; i++)
+        for (int i = 1; i < maxHeight / 2 + 1; i++)
         {
             TileEntry[] tileEntries = newTileData.possibleNorthTiles;
             if (tileEntries == null || tileEntries.Length == 0)
@@ -80,18 +83,22 @@ public class WorldGenerator : MonoBehaviour
             int newYPos = y + i;
             TileEntry randomTileEntry = GetRandomTileEntries(tileEntries, random);
             newTileData = randomTileEntry.tileData;
-            SpawnTile(newTileData, x, newYPos);
+            SpawnRoadTile(newTileData, x, newYPos);
         }
 
-        for (int i = 1; i < (maxHeight + 1) / 2; i++)
+        for (int i = 1; i < maxHeight / 2 + 1; i++)
         {
             TileEntry[] tileEntries = newTileData.possibleSouthTiles;
             if (tileEntries == null || tileEntries.Length == 0)
-                break;
+            {
+                float scaledX = (x + offset.x) * gridSize - gridSize / 2;
+                float scaledY = (y + offset.y - i) * gridSize - gridSize / 2;
+                GenerateSidewalks((int)scaledX, (int)scaledY);
+                continue;
+            }
             int newYPos = y - i;
             TileEntry randomTileEntry = GetRandomTileEntries(tileEntries, random);
             newTileData = randomTileEntry.tileData;
-            SpawnTile(newTileData, x, newYPos);
         }
     }
     private TileEntry GetRandomTileEntries(TileEntry[] tileEntries, System.Random random)
@@ -112,18 +119,46 @@ public class WorldGenerator : MonoBehaviour
         return tileEntries[0];
     }
 
-    public void SpawnTile(TileData tileData, int x, int y)
+    public void SpawnRoadTile(TileData tileData, int x, int y)
     {
-        // Vector3 worldLocation = new Vector3(x, y, 0);
-        // worldLocation += offset;
-        // worldLocation *= gridSize;
-        // prefabSpriteRenderer.sprite = sprite;
-        // GameObject gameObject = Instantiate(tilePrefab, this.transform);
-        // gameObject.transform.position = worldLocation;
-
         Vector3Int position = new(x + (int)offset.x, y + (int)offset.y, (int)offset.z);
-
+        float scaledX = (x + offset.x) * gridSize - gridSize / 2;
+        float scaledY = (y + offset.y) * gridSize - gridSize / 2;
         tilemap.SetTile(position, tileData);
+        GenerateRoadDecorations((int)scaledX, (int)scaledY);
+    }
+    public void GenerateRoadDecorations(int x, int y)
+    {
+        System.Random random = new(seed + x + y);
+        for (int offsetX = 0; offsetX < gridSize; offsetX++)
+        {
+            for (int offsetY = 0; offsetY < gridSize; offsetY++)
+            {
+                double chance = random.NextDouble();
+                if (chance < 0.5)
+                    continue;
+                TileBase decoTile = GetRandomRoadDecoration(random);
+                Vector3Int tilePos = new(x + offsetX, y + offsetY, 0);
+                decorationTilemap.SetTile(tilePos, decoTile);
+            }
+        }
+    }
+    public TileBase GetRandomRoadDecoration(System.Random random)
+    {
+        int totalWeight = 0;
+        foreach (DecorationEntry entry in roadDecorations)
+        {
+            totalWeight += entry.weight;
+        }
+
+        foreach (DecorationEntry entry in roadDecorations)
+        {
+            int randomInt = random.Next(totalWeight);
+            if (randomInt < entry.weight)
+                return entry.tile;
+            totalWeight -= entry.weight;
+        }
+        return null;
     }
 
     public void GenerateSidewalks(int x, int y)
@@ -137,6 +172,40 @@ public class WorldGenerator : MonoBehaviour
                 sidewalkTilemap.SetTile(tilePos, sideWalkTile);
             }
         }
+        GenerateSidewalkDecorations(x, y);
+    }
+    public void GenerateSidewalkDecorations(int x, int y)
+    {
+        System.Random random = new(seed + x + y);
+        for (int offsetX = 0; offsetX < gridSize; offsetX++)
+        {
+            for (int offsetY = 0; offsetY < gridSize; offsetY++)
+            {
+                double chance = random.NextDouble();
+                if (chance < 0.5)
+                    continue;
+                TileBase decoTile = GetRandomSidewalkDecoration(random);
+                Vector3Int tilePos = new(x + offsetX, y + offsetY, 0);
+                decorationTilemap.SetTile(tilePos, decoTile);
+            }
+        }
+    }
+    public TileBase GetRandomSidewalkDecoration(System.Random random)
+    {
+        int totalWeight = 0;
+        foreach (DecorationEntry entry in sidewalkDecorations)
+        {
+            totalWeight += entry.weight;
+        }
+
+        foreach (DecorationEntry entry in sidewalkDecorations)
+        {
+            int randomInt = random.Next(totalWeight);
+            if (randomInt < entry.weight)
+                return entry.tile;
+            totalWeight -= entry.weight;
+        }
+        return null;
     }
 
     public TileBase GetRandomSidewalk()
@@ -144,4 +213,11 @@ public class WorldGenerator : MonoBehaviour
         System.Random random = new System.Random();
         return sidewalks[random.Next(sidewalks.Length)];
     }
+}
+
+[Serializable]
+public class DecorationEntry
+{
+    public TileBase tile;
+    public int weight;
 }

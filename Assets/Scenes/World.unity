@@ -406,6 +406,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 1832298729}
   tilemap: {fileID: 2120422779}
   sidewalkTilemap: {fileID: 1559624703}
+  decorationTilemap: {fileID: 1697651915}
   sidewalks:
   - {fileID: 11400000, guid: 614faf2bc32c44544a741b3a2e9da851, type: 2}
   - {fileID: 11400000, guid: d4adab5d804194a55b7afbb364db7582, type: 2}
@@ -414,6 +415,90 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9b7ed8f1d25734a8794e2cc5cdd4b6f9, type: 2}
   - {fileID: 11400000, guid: a1de0e8128fb44ab091c9b1ee6d6216b, type: 2}
   - {fileID: 11400000, guid: cde15ec2e470c4e598bbcbff351c8e97, type: 2}
+  roadDecorations:
+  - tile: {fileID: 11400000, guid: 940e7e3c3bd2741ab966c1737a60f70b, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 397c3e6e22a8340fab3b6bc868d508db, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 07803ac78059a4e95a222e316d029e2b, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 049d59f6578764c0080b04fb193f356f, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: fbcae77bdf16f4caf9259a8c49bbd411, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 9d67d01b00e51489a836bc4a7486b72a, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 2a23c2ed5559d4d0a89c23061dd07848, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 8c613e10c397848baac150a593075331, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 6a4edb59603a8470c95bfaf265cee970, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 058f3b4341f6e4d79b6aef398ce629e9, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 210d47d66c9cb4061bf3b01149f55a16, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: c09e546452f4143e3b02ac9db4e16b08, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 66007d79bb04549ad9e9e81bee400dc4, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 9c965521aa96a409085a56a9f5d7b60f, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 6e2989a2e19904a71840133b71d8346e, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 5ce89e5d4c0e34075b48285144654635, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 5590f6bec17f547839719a67fa30c7d6, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 17b9c531e60e346b992d424346bf958a, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 21b97aafccadf451d92d88fbc2ddfca4, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: ae918809a47f94ecf8a1c1155cb03e93, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: c36b42d0aa49c4438abcc629ec34167a, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: b278c5a4692f54c43b3d7e1f73f8c302, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 56955df4859d844a49fd3e82702bbe63, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: cdaaf1ca2613b4026b9761ff885ddbf5, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: baf6390504a484ee29719dc678124e5e, type: 2}
+    weight: 5
+  sidewalkDecorations:
+  - tile: {fileID: 11400000, guid: 6e2989a2e19904a71840133b71d8346e, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 5ce89e5d4c0e34075b48285144654635, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 5590f6bec17f547839719a67fa30c7d6, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 17b9c531e60e346b992d424346bf958a, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 21b97aafccadf451d92d88fbc2ddfca4, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: ae918809a47f94ecf8a1c1155cb03e93, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: c36b42d0aa49c4438abcc629ec34167a, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: b278c5a4692f54c43b3d7e1f73f8c302, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 56955df4859d844a49fd3e82702bbe63, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: cdaaf1ca2613b4026b9761ff885ddbf5, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: baf6390504a484ee29719dc678124e5e, type: 2}
+    weight: 5
+  - tile: {fileID: 11400000, guid: 058f3b4341f6e4d79b6aef398ce629e9, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 210d47d66c9cb4061bf3b01149f55a16, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: c09e546452f4143e3b02ac9db4e16b08, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 66007d79bb04549ad9e9e81bee400dc4, type: 2}
+    weight: 1
+  - tile: {fileID: 11400000, guid: 9c965521aa96a409085a56a9f5d7b60f, type: 2}
+    weight: 1
   structureGenerator: {fileID: 15363776}
 --- !u!4 &1279798312
 Transform:
@@ -473,6 +558,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1559624701}
+  - {fileID: 1697651917}
   - {fileID: 2120422777}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -596,6 +682,126 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1697651914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1697651917}
+  - component: {fileID: 1697651915}
+  - component: {fileID: 1697651916}
+  m_Layer: 0
+  m_Name: DecorationTilemap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1839735485 &1697651915
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697651914}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray: []
+  m_TileSpriteArray: []
+  m_TileMatrixArray: []
+  m_TileColorArray: []
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0, y: 0, z: 1}
+  m_TileAnchor: {x: 0, y: 0, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+--- !u!483693784 &1697651916
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697651914}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 0
+  m_Mode: 0
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
+--- !u!4 &1697651917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697651914}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1282842338}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1832298729
 GameObject:
   m_ObjectHideFlags: 0
