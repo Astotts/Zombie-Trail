@@ -13,11 +13,17 @@ MonoBehaviour:
   m_Name: T-IntersectionDown
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: bc48bac7472da43e9975a6916a3e3153, type: 3}
+  flags: 0
+  colliderType: 2
   possibleNorthTiles: []
-  possibleSouthTiles: []
+  possibleSouthTiles:
+  - tileData: {fileID: 11400000, guid: 7646592ffcda5459e91d1bb6a91b0dc0, type: 2}
+    weight: 5
+  - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}
+    weight: 1
   possibleWestTiles: []
   possibleEastTiles:
   - tileData: {fileID: 11400000, guid: 986df1c17dda249c2b7f699e16e36b85, type: 2}
-    weight: 50
+    weight: 5
   - tileData: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
     weight: 1

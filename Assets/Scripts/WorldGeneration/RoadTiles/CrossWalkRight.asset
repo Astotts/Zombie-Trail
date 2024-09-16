@@ -13,9 +13,17 @@ MonoBehaviour:
   m_Name: CrossWalkRight
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 213e1212af89b4539b7cd572805b71ad, type: 3}
+  flags: 0
+  colliderType: 2
   possibleNorthTiles: []
   possibleSouthTiles: []
-  possibleWestTiles: []
+  possibleWestTiles:
+  - tileData: {fileID: 11400000, guid: 1b175f9f7b44743fa82ace73a1906c96, type: 2}
+    weight: 10
+  - tileData: {fileID: 11400000, guid: 4a37305fb463f4478b742d3999381a67, type: 2}
+    weight: 5
+  - tileData: {fileID: 11400000, guid: ccbd105de8b8049fcba8a1a6ceec90a9, type: 2}
+    weight: 1
   possibleEastTiles:
   - tileData: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
     weight: 1

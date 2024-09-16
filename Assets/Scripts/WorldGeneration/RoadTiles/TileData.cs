@@ -2,8 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// [CreateAssetMenu(menuName = "TileData", fileName = "New TileData")]
-[Serializable]
+[CreateAssetMenu(menuName = "TileData", fileName = "New TileData")]
 public class TileData : TileBase
 {
     public Sprite sprite;

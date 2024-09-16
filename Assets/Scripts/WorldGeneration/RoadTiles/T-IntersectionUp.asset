@@ -13,7 +13,13 @@ MonoBehaviour:
   m_Name: T-IntersectionUp
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 88491a39ce3164c4fad4929620273ac9, type: 3}
-  possibleNorthTiles: []
+  flags: 0
+  colliderType: 2
+  possibleNorthTiles:
+  - tileData: {fileID: 11400000, guid: 6785bcfafb9d344579e47ae370ea8a9c, type: 2}
+    weight: 5
+  - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}
+    weight: 1
   possibleSouthTiles: []
   possibleWestTiles: []
   possibleEastTiles:

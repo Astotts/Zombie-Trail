@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -15,13 +16,16 @@ public class WorldGenerator : MonoBehaviour
     public SpriteRenderer prefabSpriteRenderer;
     public GameObject tilePrefab;
     public Tilemap tilemap;
-    Dictionary<Vector2Int, TileData> tiles = new();
+    public Tilemap sidewalkTilemap;
+    public TileBase[] sidewalks;
+    public StructureGenerator structureGenerator;
+    readonly Dictionary<Vector2Int, TileData> tiles = new();
     private Vector2Int currentLoadedRoadPos;
-    private float gridSize;
     private int seed;
+    private float gridSize;
     void Start()
     {
-        gridSize = prefabSpriteRenderer.bounds.size.x;
+        gridSize = tilemap.transform.localScale.x;
         SpawnTile(initialTile, 0, 0);
         currentLoadedRoadPos = new Vector2Int(0, 0);
         tiles[currentLoadedRoadPos] = initialTile;
@@ -29,8 +33,9 @@ public class WorldGenerator : MonoBehaviour
 
     void Update()
     {
-        int cameraScaledXPos = (int)(cam.transform.position.x + maxWidth);
-        int currentScaledXPos = (int)(currentLoadedRoadPos.x);
+        int cameraScaledXPos = (int)(cam.transform.position.x + maxWidth * gridSize);
+        int currentScaledXPos = (int)(currentLoadedRoadPos.x * gridSize);
+
         if (currentScaledXPos <= cameraScaledXPos)
         {
             GenerateHorizontalRoad();
@@ -60,25 +65,32 @@ public class WorldGenerator : MonoBehaviour
     {
         System.Random random = new System.Random(seed + y);
 
-        for (int i = 0; i < maxHeight / 2; i++)
+        TileData newTileData = tileData;
+        for (int i = 1; i < (maxHeight + 1) / 2; i++)
         {
-            int newYPos = y + i;
-            TileEntry[] tileEntries = tileData.possibleNorthTiles;
+            TileEntry[] tileEntries = newTileData.possibleNorthTiles;
             if (tileEntries == null || tileEntries.Length == 0)
-                return;
+            {
+                float scaledX = (x + offset.x) * gridSize - gridSize / 2;
+                float scaledY = (y + offset.y + i) * gridSize - gridSize / 2;
+                GenerateSidewalks(Mathf.CeilToInt(scaledX), Mathf.CeilToInt(scaledY));
+                structureGenerator.GenerateStructures(seed, new Vector2(scaledX, scaledY));
+                continue;
+            }
+            int newYPos = y + i;
             TileEntry randomTileEntry = GetRandomTileEntries(tileEntries, random);
-            TileData newTileData = randomTileEntry.tileData;
+            newTileData = randomTileEntry.tileData;
             SpawnTile(newTileData, x, newYPos);
         }
 
-        for (int i = 0; i < maxHeight / 2; i++)
+        for (int i = 1; i < (maxHeight + 1) / 2; i++)
         {
-            int newYPos = y - i;
-            TileEntry[] tileEntries = tileData.possibleSouthTiles;
+            TileEntry[] tileEntries = newTileData.possibleSouthTiles;
             if (tileEntries == null || tileEntries.Length == 0)
-                return;
+                break;
+            int newYPos = y - i;
             TileEntry randomTileEntry = GetRandomTileEntries(tileEntries, random);
-            TileData newTileData = randomTileEntry.tileData;
+            newTileData = randomTileEntry.tileData;
             SpawnTile(newTileData, x, newYPos);
         }
     }
@@ -109,8 +121,27 @@ public class WorldGenerator : MonoBehaviour
         // GameObject gameObject = Instantiate(tilePrefab, this.transform);
         // gameObject.transform.position = worldLocation;
 
-        Vector3Int position = new Vector3Int(x + (int)offset.x, y + (int)offset.y, (int)offset.z);
+        Vector3Int position = new(x + (int)offset.x, y + (int)offset.y, (int)offset.z);
 
         tilemap.SetTile(position, tileData);
+    }
+
+    public void GenerateSidewalks(int x, int y)
+    {
+        for (int offsetX = 0; offsetX < gridSize; offsetX++)
+        {
+            for (int offsetY = 0; offsetY < gridSize; offsetY++)
+            {
+                TileBase sideWalkTile = GetRandomSidewalk();
+                Vector3Int tilePos = new(x + offsetX, y + offsetY, 0);
+                sidewalkTilemap.SetTile(tilePos, sideWalkTile);
+            }
+        }
+    }
+
+    public TileBase GetRandomSidewalk()
+    {
+        System.Random random = new System.Random();
+        return sidewalks[random.Next(sidewalks.Length)];
     }
 }
