@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RangedWeapons : WeaponsClass
 {
@@ -10,6 +11,7 @@ public class RangedWeapons : WeaponsClass
     [SerializeField] private int clipSize;
     [SerializeField] private GameObject ammoPanel;
     private List<GameObject> bulletUI;
+    [SerializeField] private Slider reloadSlider;
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
     private int counter = 0;
     private bool reloaded = true;
@@ -93,7 +95,7 @@ public class RangedWeapons : WeaponsClass
                 ammo -= 1;
             }
         }
-        else{
+        else if(reloaded){
             reloaded = false;
             Reload();
         }
@@ -110,8 +112,14 @@ public class RangedWeapons : WeaponsClass
 
     IEnumerator Reloading()
     {
-        Debug.Log("Reloading");
-        yield return new WaitForSeconds(reloadSpeed);
+        reloadSlider.value = 0;
+        float elapsed = 0;
+        while (elapsed < reloadSpeed){
+            elapsed += Time.deltaTime;
+            reloadSlider.value = (elapsed / reloadSpeed);
+            Debug.Log(reloadSlider.value);
+            yield return null;
+        }
         ammo = clipSize;
         reloaded = true; 
         for(int i = 0; clipSize > i; i++){
