@@ -17,11 +17,15 @@ MonoBehaviour:
   colliderType: 2
   possibleNorthTiles:
   - tileData: {fileID: 11400000, guid: 6785bcfafb9d344579e47ae370ea8a9c, type: 2}
-    weight: 5
+    weight: 50
   - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}
     weight: 1
   possibleSouthTiles: []
-  possibleWestTiles: []
+  possibleWestTiles:
+  - tileData: {fileID: 11400000, guid: 7c62285223b2d4f55b245d91478364aa, type: 2}
+    weight: 50
+  - tileData: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
+    weight: 1
   possibleEastTiles:
   - tileData: {fileID: 11400000, guid: 986df1c17dda249c2b7f699e16e36b85, type: 2}
     weight: 50
