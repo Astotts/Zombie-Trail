@@ -18,7 +18,9 @@ public class DecorationGenerator : MonoBehaviour, ChunkGenerator
             {
                 int xPos = chunkX * chunkSize + x;
                 int yPos = chunkY * chunkSize + y;
-                SetRandomDecorationAt(random, xPos, yPos);
+                double chance = random.NextDouble();
+                if (chance < 0.4f)
+                    SetRandomDecorationAt(random, xPos, yPos);
             }
         }
     }

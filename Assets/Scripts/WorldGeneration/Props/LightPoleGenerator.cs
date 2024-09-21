@@ -14,36 +14,34 @@ public class LightPoleGenerator : MonoBehaviour, ChunkGenerator
     readonly Dictionary<Vector2Int, List<GameObject>> generatedObjects = new();
     public void LoadChunkAt(System.Random random, int chunkX, int chunkY, GenerateDirection generateDirection, RoadType roadType)
     {
-        if (roadType == RoadType.NONE)
-            return;
-
-        switch (generateDirection)
+        switch (roadType)
         {
-            case GenerateDirection.NORTH:
-            case GenerateDirection.SOUTH:
-                {
-                    float leftX = chunkX * chunkSize - 1.5f;
-                    float rightX = chunkX * chunkSize + 1.5f;
-                    float y = chunkY * chunkSize + 0.5f;
+            case RoadType.NONE:
+            case RoadType.CROSS_INTERSECTION:
+            case RoadType.CROSSWALK_EAST:
+            case RoadType.CROSSWALK_NORTH:
+            case RoadType.CROSSWALK_SOUTH:
+            case RoadType.CROSSWALK_WEST:
+                return;
+            case RoadType.ROAD_HORIZONTAL:
+                float topY = chunkY * chunkSize + chunkSize;
+                float bottomY = chunkY * chunkSize;
+                float x = chunkX * chunkSize + chunkSize / 2;
 
-                    SpawnLightPole(random, generateDirection, leftX, y);
-                    SpawnLightPole(random, generateDirection, rightX, y);
-                    break;
-                }
-            case GenerateDirection.EAST:
-            case GenerateDirection.WEST:
-                {
-                    float topY = chunkY * chunkSize + 1.5f;
-                    float bottomY = chunkY * chunkSize - 1.5f;
-                    float x = chunkX * chunkSize;
+                GameObject spawnedTopLightPole = SpawnLightPole(random, GenerateDirection.NORTH, x, topY);
+                GameObject spawnedBottomLightPole = SpawnLightPole(random, GenerateDirection.SOUTH, x, bottomY);
 
-                    GameObject spawnedTopLightPole = SpawnLightPole(random, generateDirection, x, topY);
-                    GameObject spawnedBottomLightPole = SpawnLightPole(random, generateDirection, x, bottomY);
+                AddLightPoleToDictionary(spawnedTopLightPole, chunkX, chunkY);
+                AddLightPoleToDictionary(spawnedBottomLightPole, chunkX, chunkY);
+                break;
+            case RoadType.ROAD_VERTICAL:
+                float leftX = chunkX * chunkSize;
+                float rightX = chunkX * chunkSize + chunkSize;
+                float y = chunkY * chunkSize + chunkSize / 2;
 
-                    AddLightPoleToDictionary(spawnedTopLightPole, chunkX, chunkY);
-                    AddLightPoleToDictionary(spawnedBottomLightPole, chunkX, chunkY);
-                    break;
-                }
+                SpawnLightPole(random, GenerateDirection.EAST, leftX, y);
+                SpawnLightPole(random, GenerateDirection.WEST, rightX, y);
+                break;
         }
     }
 

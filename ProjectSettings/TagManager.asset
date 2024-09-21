@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Road
+    uniqueID: 2142139185
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
