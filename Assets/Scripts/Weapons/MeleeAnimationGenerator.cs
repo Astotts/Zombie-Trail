@@ -29,7 +29,6 @@ public class MeleeAnimationGenerator : AnimationGenerator
     [SerializeField] public float forwardOffset;
 
 void Update(){
-    
     if(Input.GetMouseButton(0) && !animRunning){
         animRunning = true;
         switch(type){

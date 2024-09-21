@@ -81,7 +81,6 @@ public class MeleeWeapons : WeaponsClass
     public override void Reload()
     {
 
-        Debug.Log("MeleeWeapons Reload() function used.");
     }
 
 

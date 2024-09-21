@@ -51,7 +51,14 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        for(int i = 0; i <= 1; i++){
+            if (weapons[i] is RangedWeapons ranged){
+                ranged.reloading = false;
+                ranged.SetOpacity(0);
+            }
+            weapons[i].ui.SetActive(false);
+            weapons[i].gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -59,15 +66,21 @@ public class PlayerController : MonoBehaviour
     {    
         PlayerInputs();
         
-        for(int i = 0; i <= 3; i++){
+        for(int i = 0; i <= 1; i++){
             if(i != selectedWeapon){
-                /*if(animators[i] != null){
+                if(animators[i] != null){
                     animators[i].StopAnimating();
-                }*/
+                }
+                if (weapons[i] is RangedWeapons ranged){
+                    ranged.reloading = false;
+                    ranged.SetOpacity(0);
+                }
+                weapons[i].ui.SetActive(false);
                 weapons[i].gameObject.SetActive(false);
             }
         }
         weapons[selectedWeapon].gameObject.SetActive(true);
+        weapons[selectedWeapon].ui.SetActive(true);
 
         if(Input.GetMouseButton(0)){
             weapons[selectedWeapon].Attack();

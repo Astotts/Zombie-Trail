@@ -65,9 +65,9 @@ public class InventoryManager : MonoBehaviour
 
     public void AddToInventory(ItemCount itemToAdd)
     {
-        Debug.Log("Adding item: " + itemToAdd.itemType);
+        //Debug.Log("Adding item: " + itemToAdd.itemType);
         int index = allItemsInGame.FindIndex(x => x.itemType == itemToAdd.itemType);
-        Debug.Log("Current Amount: " + allItemsInGame[index].currentStored);
+        //Debug.Log("Current Amount: " + allItemsInGame[index].currentStored);
         allItemsInGame[index].AddCurrentStored(itemToAdd.amount);
         if (!playersItems.Contains(allItemsInGame[index]))
         {

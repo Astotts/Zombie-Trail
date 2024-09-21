@@ -9,6 +9,7 @@ public class WeaponsClass : MonoBehaviour
     [SerializeField] public float reloadSpeed; // how long the reload / cooldown of attacks will take 
     public Vector2 directionOfAttack;
     public float weightOfWeapon; // decreases speed
+    [SerializeField] public GameObject ui;
 
     // Start is called before the first frame update
     void Start()

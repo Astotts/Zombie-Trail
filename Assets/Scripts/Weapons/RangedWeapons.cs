@@ -14,16 +14,19 @@ public class RangedWeapons : WeaponsClass
     [SerializeField] private Slider reloadSlider;
     public int ammo; // the total amount of ammo this zombie/player has which is set at the beginning of the wave
     private int counter = 0;
-    private bool reloaded = true;
+    public bool reloading = true;
 
     private float elapsed = 0;
     public int damage;
 
-    private float elapsedTime;
     [SerializeField] Rigidbody2D rb;
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
     [SerializeField] SpriteRenderer sprite;
+
+    //Reload UI 
+    [SerializeField] Image[] sprites;
+    [SerializeField] float fadeDuration;
 
     void Start()
     {
@@ -56,8 +59,6 @@ public class RangedWeapons : WeaponsClass
         float rotateAmount = Vector3.Cross(moveDirection, transform.up).z;
         rb.angularVelocity = -(rotateAmount * 400f);
 
-        elapsedTime += Time.deltaTime;
-
         if(transform.eulerAngles.z > 180){
             sprite.flipY = false;
         }
@@ -72,58 +73,67 @@ public class RangedWeapons : WeaponsClass
     //Called from player controller
     public override void Attack()
     {
-        if (ammo >= 0 && reloaded) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
-        {    
-            if (ammo == 0){
-                Debug.Log("Calling first reload");
-                reloaded = false;
-                Reload();
-            } 
-            else if(0 >= elapsed){
-                elapsed = recoilTime;
-                // get the mouse position
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                // current position to mouse position
-                directionOfAttack = (mousePos - characterPos.position).normalized;
-
-                // create & shoot the projectile 
-                GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
-                newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
-                if(ammo > 0){
-                    bulletUI[ammo - 1].SetActive(false);
-                }
-                ammo -= 1;
-            }
-        }
-        else if(reloaded){
-            reloaded = false;
+        if (ammo == 0){
             Reload();
+        } 
+        else if(0 >= elapsed){
+            elapsed = recoilTime;
+            // get the mouse position
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // current position to mouse position
+            directionOfAttack = (mousePos - characterPos.position).normalized;
+
+            // create & shoot the projectile 
+            GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+            newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
+            if(ammo > 0){
+                bulletUI[ammo - 1].SetActive(false);
+            }
+            ammo -= 1;
         }
     }
 
-    // after a certain amount of ammo is used this function is called, and if there is no ammo left - you are done
-    // variables used from base(Parent): ReloadSpeed
     public override void Reload()
     {
-        StartCoroutine(Reloading());
-
-        //Debug.Log("RangedWeapons Reload() function used.");
+        if(!reloading){
+            reloading = true;
+            StartCoroutine(Reloading());
+        }
     }
 
     IEnumerator Reloading()
     {
+        SetOpacity(1);
         reloadSlider.value = 0;
-        float elapsed = 0;
-        while (elapsed < reloadSpeed){
-            elapsed += Time.deltaTime;
-            reloadSlider.value = (elapsed / reloadSpeed);
-            Debug.Log(reloadSlider.value);
+        float reloadElapsed = 0;
+        while (reloadElapsed < reloadSpeed){
+            reloadElapsed += Time.deltaTime;
+            reloadSlider.value = (reloadElapsed / reloadSpeed);
+            //Debug.Log(reloadSlider.value);
             yield return null;
         }
         ammo = clipSize;
-        reloaded = true; 
         for(int i = 0; clipSize > i; i++){
             bulletUI[i].SetActive(true);
+        }
+        reloading = false;
+        StartCoroutine(HideReloadStatus());
+    }
+
+    IEnumerator HideReloadStatus(){
+        float statusElapsed = 0f;
+        while(statusElapsed <= fadeDuration){
+            statusElapsed += Time.deltaTime;
+            SetOpacity(Mathf.Lerp(1f, 0f, (statusElapsed / fadeDuration)));
+            yield return null;
+        }
+        yield break;
+    }
+
+    public void SetOpacity(float a){
+        //Debug.Log("Setting Opacity to " + a);
+        for(int i = 0; i < sprites.Length; i++){
+            sprites[i].color = new Color(1f, 1f, 1f, a);
         }
     }
 }
