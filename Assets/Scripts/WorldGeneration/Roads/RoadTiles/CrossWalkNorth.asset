@@ -10,20 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8307432517cb14ec9838ca4a14b509e4, type: 3}
-  m_Name: RoadVertical
+  m_Name: CrossWalkNorth
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: f2d4339dea6e4437e8a365817c40b7db, type: 3}
+  sprite: {fileID: 21300000, guid: 4215a3ebf38fa401bbb133384298edb1, type: 3}
   flags: 0
   colliderType: 2
+  roadType: 0
   possibleNorthTiles:
-  - tileData: {fileID: 11400000}
-    weight: 100
-  - tileData: {fileID: 11400000, guid: 6785bcfafb9d344579e47ae370ea8a9c, type: 2}
+  - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}
     weight: 1
-  possibleSouthTiles:
-  - tileData: {fileID: 11400000}
-    weight: 100
-  - tileData: {fileID: 11400000, guid: 7646592ffcda5459e91d1bb6a91b0dc0, type: 2}
-    weight: 1
+  possibleSouthTiles: []
   possibleWestTiles: []
   possibleEastTiles: []

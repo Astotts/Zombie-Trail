@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8307432517cb14ec9838ca4a14b509e4, type: 3}
-  m_Name: CrossWalkDown
+  m_Name: CrossWalkSouth
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 307580ea4b7074c0cb889e17789e0906, type: 3}
   flags: 0
   colliderType: 2
+  roadType: 0
   possibleNorthTiles: []
   possibleSouthTiles:
   - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-public class StructureGenerator : MonoBehaviour
+public class StructureGenerator : MonoBehaviour, ChunkGenerator
 {
     public int chunkSize;
     public GameObject[] frontStructures;
@@ -15,59 +15,61 @@ public class StructureGenerator : MonoBehaviour
     private int midPoint;
     private int leftX;
     private int rightX;
-    public void GenerateStructuresRight(int seed, Vector2 chunkLocation)
+    public void GenerateStructuresRight(System.Random random, int chunkX, int chunkY)
     {
-        if (chunkLocation.x < rightX)
+        if (chunkX < rightX)
             return;
-        System.Random random = new((int)(seed + chunkLocation.x + chunkLocation.y));
         for (int i = 0; i < chunkSize; i++)
         {
-            float x = chunkLocation.x + i;
-            float y = chunkLocation.y + random.Next(chunkSize / 2);
+            float x = chunkX * chunkSize + i;
+            float y = chunkY * chunkSize + random.Next(chunkSize / 2);
             GameObject randomStructure;
-            if (chunkLocation.y > midPoint)
+            if (chunkY > midPoint)
+            {
                 randomStructure = GetRandomFrontStructure(random);
+            }
             else
             {
                 randomStructure = GetRandomBackStructure(random);
-                y += 1;
+                y++;
             }
             GameObject spawnedStructure = SpawnStructureRight(randomStructure, x, y);
             if (spawnedStructure != null)
             {
                 BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
-                float structureXLength = boxCollider2D.size.x * randomStructure.transform.localScale.x;
-                i += (int)structureXLength - 1;
+                int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
+                i += structureXLength - 1;
             }
         }
-        rightX = (int)chunkLocation.x;
+        rightX = chunkX;
     }
-    public void GenerateStructuresLeft(int seed, Vector2 chunkLocation)
+    public void GenerateStructuresLeft(System.Random random, int chunkX, int chunkY)
     {
-        if (leftX < chunkLocation.x)
+        if (chunkX > leftX)
             return;
-        System.Random random = new((int)(seed - chunkLocation.x - chunkLocation.y));
         for (int i = 0; i < chunkSize; i++)
         {
-            float x = chunkLocation.x - i;
-            float y = chunkLocation.y + random.Next(chunkSize / 2);
+            float x = chunkX * chunkSize - i;
+            float y = chunkY * chunkSize + random.Next(chunkSize / 2);
             GameObject randomStructure;
-            if (chunkLocation.y > midPoint)
+            if (chunkY > midPoint)
+            {
                 randomStructure = GetRandomFrontStructure(random);
+            }
             else
             {
                 randomStructure = GetRandomBackStructure(random);
-                y += 1;
+                y++;
             }
             GameObject spawnedStructure = SpawnStructureLeft(randomStructure, x, y);
             if (spawnedStructure != null)
             {
                 BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
-                float structureXLength = boxCollider2D.size.x * randomStructure.transform.localScale.x;
-                i += (int)structureXLength - 1;
+                int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
+                i += structureXLength - 1;
             }
         }
-        leftX = (int)chunkLocation.x;
+        leftX = chunkX;
     }
 
     private GameObject SpawnStructureRight(GameObject prefab, float x, float y)
@@ -109,7 +111,7 @@ public class StructureGenerator : MonoBehaviour
         }
 
         GameObject structure = Instantiate(prefab, this.transform);
-        structure.transform.SetPositionAndRotation(spawnLocation + new Vector2((int)boxCollider2D.size.x, 0), Quaternion.Euler(0, 180, 0));
+        structure.transform.SetPositionAndRotation(spawnLocation + new Vector2(0, 0), Quaternion.Euler(0, 180, 0));
         return structure;
     }
 
@@ -148,6 +150,25 @@ public class StructureGenerator : MonoBehaviour
         //     totalWeight -= entry.weight;
         // }
         // return null;
+    }
+
+    public void LoadChunkAt(System.Random random, int chunkX, int chunkY, GenerateDirection generateDirection, RoadType roadType)
+    {
+        if (roadType != RoadType.NONE)
+            return;
+
+        if (generateDirection == GenerateDirection.EAST)
+        {
+            GenerateStructuresRight(random, chunkX, chunkY);
+        }
+        else if (generateDirection == GenerateDirection.WEST)
+        {
+            GenerateStructuresLeft(random, chunkX, chunkY);
+        }
+    }
+
+    public void UnloadChunkAt(int chunkX, int chunkY)
+    {
     }
 }
 

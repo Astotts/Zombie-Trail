@@ -15,6 +15,7 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: bc48bac7472da43e9975a6916a3e3153, type: 3}
   flags: 0
   colliderType: 2
+  roadType: 0
   possibleNorthTiles: []
   possibleSouthTiles:
   - tileData: {fileID: 11400000, guid: 7646592ffcda5459e91d1bb6a91b0dc0, type: 2}

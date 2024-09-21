@@ -168,37 +168,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSize: 5
-  structures:
-  - prefab: {fileID: 740648670048081908, guid: f2e038790f8a84fac9be6f2e6e9bb711, type: 3}
-    weight: 1
-  - prefab: {fileID: 8996327206394020996, guid: c608862711fef4195a92037192023177, type: 3}
-    weight: 1
-  - prefab: {fileID: 3884386732067675575, guid: ec62864a2fe4543059d8adc2e40c4e7b, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 3437292155d094f5099277ab3a4e4329, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: ffb7b196e1c1d40afa9f6e62bac30b4c, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 605b37b2b9c1a4b2d9aed0e2ec1ee236, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 9f22d4dd7f9bb4388965c875d3163ebe, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 71cb059472a404ff2bf64b6a3ee138de, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 4e3e8f0d21b794ae099a2dd6c25d2863, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 73b259c86ddb641db9c0efa46e59f0a4, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 3ff9a2fcc4be647c28e9d88922629f0a, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 2b8bdcf244c954848acd866e86103cee, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: 46bd4cf7d6d484340b185818d99524dd, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: ede90f1e343804c7f9a671546697cf40, type: 3}
-    weight: 1
-  - prefab: {fileID: 4939125584803687428, guid: d2501393778c843c08d3985bf7e7d282, type: 3}
-    weight: 1
+  frontStructures:
+  - {fileID: 740648670048081908, guid: f2e038790f8a84fac9be6f2e6e9bb711, type: 3}
+  - {fileID: 8996327206394020996, guid: c608862711fef4195a92037192023177, type: 3}
+  - {fileID: 3884386732067675575, guid: ec62864a2fe4543059d8adc2e40c4e7b, type: 3}
+  - {fileID: 4939125584803687428, guid: 3437292155d094f5099277ab3a4e4329, type: 3}
+  - {fileID: 4939125584803687428, guid: ffb7b196e1c1d40afa9f6e62bac30b4c, type: 3}
+  - {fileID: 4939125584803687428, guid: 605b37b2b9c1a4b2d9aed0e2ec1ee236, type: 3}
+  - {fileID: 4939125584803687428, guid: 9f22d4dd7f9bb4388965c875d3163ebe, type: 3}
+  - {fileID: 4939125584803687428, guid: 71cb059472a404ff2bf64b6a3ee138de, type: 3}
+  - {fileID: 4939125584803687428, guid: 4e3e8f0d21b794ae099a2dd6c25d2863, type: 3}
+  - {fileID: 4939125584803687428, guid: 73b259c86ddb641db9c0efa46e59f0a4, type: 3}
+  - {fileID: 4939125584803687428, guid: 3ff9a2fcc4be647c28e9d88922629f0a, type: 3}
+  - {fileID: 4939125584803687428, guid: 2b8bdcf244c954848acd866e86103cee, type: 3}
+  - {fileID: 4939125584803687428, guid: 46bd4cf7d6d484340b185818d99524dd, type: 3}
+  - {fileID: 4939125584803687428, guid: ede90f1e343804c7f9a671546697cf40, type: 3}
+  - {fileID: 4939125584803687428, guid: d2501393778c843c08d3985bf7e7d282, type: 3}
+  backStructures:
+  - {fileID: 740648670048081908, guid: a34c6dea1262646dea587953d1dccda2, type: 3}
+  - {fileID: 740648670048081908, guid: 94e55221b8ce7426f8a1cf8b2f084790, type: 3}
+  - {fileID: 740648670048081908, guid: 9e56a6783d8ca49129fca0a8c80855f5, type: 3}
+  - {fileID: 740648670048081908, guid: 1d12af7b84bc54e699d1a27476436c58, type: 3}
+  - {fileID: 740648670048081908, guid: 7e4148bc0deeb47f58c82f7c694261fc, type: 3}
+  - {fileID: 740648670048081908, guid: 16b089d8f19024c08aa9a2d6d467e298, type: 3}
+  - {fileID: 740648670048081908, guid: 7797f6ba275aa403992e98e9a2d1059f, type: 3}
 --- !u!1 &799441789
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +261,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0, y: 0, z: 0}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
@@ -519,9 +512,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxWidth: 10
   maxHeight: 5
+  seed: 0
   sidewalkZLevel: 0
   decorationZLevel: 1
-  offset: {x: -5, y: 0, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   initialTile: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
   cam: {fileID: 1009907589}
   prefabSpriteRenderer: {fileID: 1832298730}
@@ -869,7 +863,7 @@ Tilemap:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: 0, y: 0, z: 0}
   m_Size: {x: 0, y: 0, z: 1}
-  m_TileAnchor: {x: 0, y: 0, z: 0}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
     e00: 1
