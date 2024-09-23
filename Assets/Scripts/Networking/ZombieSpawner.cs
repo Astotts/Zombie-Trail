@@ -7,7 +7,7 @@ using UnityEngine;
 public class ZombieSpawner : NetworkBehaviour
 {
     [SerializeField] GameObject zombiePrefab;
-    [SerializeField] float timePerZombie = 5.0f;
+    [SerializeField] float timePerZombie = 1.0f;
     [SerializeField] SpawnPointGenerator spawnPointGenerator;
     float time;
 

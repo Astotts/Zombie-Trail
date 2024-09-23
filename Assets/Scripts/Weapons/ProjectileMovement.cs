@@ -26,7 +26,7 @@ public class ProjectileMovement : MonoBehaviour
     {
         speed = spe;
         direction = dir;
-        damage = dam; 
+        damage = dam;
 
         // rotation angle in degrees
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -44,7 +44,7 @@ public class ProjectileMovement : MonoBehaviour
         if (distanceTraveled >= outOfBounds)
         {
             Destroy(gameObject); // Destroy the projectile when it goes out of range
-            
+
         }
     }
 
@@ -52,17 +52,24 @@ public class ProjectileMovement : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy") && this.CompareTag("Player bullet"))
         {
-            if(other.gameObject.transform.parent != null){
-                other.gameObject.transform.parent.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
+            if (other.gameObject.transform.parent != null)
+            {
+                if (other.gameObject.transform.parent.gameObject.TryGetComponent<HealthSystem>(out var healthSystem))
+                    healthSystem.AlterHealth(-damage);
             }
-            else{
+            else
+            {
                 other.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
             }
             bloodFX = Instantiate(bloodFX);
             bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
             bloodFX.transform.position = transform.position;
             bloodParticleSystem = bloodFX.GetComponent<ParticleSystem>();
-            bloodParticleSystem.Play();   
+            bloodParticleSystem.Play();
+        }
+        else if (other.CompareTag("Structure"))
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -27,7 +27,7 @@ public class CameraTracking : MonoBehaviour
         }
         Camera camera = Camera.main;
         float worldGeneratorYPos = worldGenerator.chunkSize / 2;
-        float worldGeneratorVerticalExtend = worldGenerator.maxWidth / 2;
+        float worldGeneratorVerticalExtend = worldGenerator.maxWidth;
 
         maxY = worldGeneratorYPos + worldGeneratorVerticalExtend + camera.orthographicSize / 2;
         minY = -worldGeneratorYPos - worldGeneratorVerticalExtend - camera.orthographicSize / 2;

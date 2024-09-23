@@ -16,13 +16,14 @@ public class PlayerHealthSystem : HealthSystem
 
     //Screen Visuals
     [SerializeField] private Image[] bloodEffect;
-    [SerializeField] private Color bloodEffectColor; 
+    [SerializeField] private Color bloodEffectColor;
     [SerializeField] private float waitForFade;
     [SerializeField] private float timeToFade;
 
 
     public override void Awake()
     {
+
         // Assigning currentHealth & healthBar to the value of maxHealth
         currentHealth = maxHealth;
         healthBar.value = maxHealth;
@@ -32,8 +33,9 @@ public class PlayerHealthSystem : HealthSystem
     {
         StopCoroutine("ScreenEffect");
         //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
-        for(int i = 0; bloodEffect.Length > i; i++){
-            bloodEffect[i].color = new Color(bloodEffectColor.r,bloodEffectColor.g,bloodEffectColor.b, -(((float)currentHealth - (float)maxHealth) / (float)maxHealth)); 
+        for (int i = 0; bloodEffect.Length > i; i++)
+        {
+            bloodEffect[i].color = new Color(bloodEffectColor.r, bloodEffectColor.g, bloodEffectColor.b, -(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
         }
 
         StartCoroutine("HealthFlashing");
@@ -61,39 +63,47 @@ public class PlayerHealthSystem : HealthSystem
         currentHealth = maxHealth;
     }
 
-    IEnumerator HealthFlashing(){
+    IEnumerator HealthFlashing()
+    {
         float elapsed = 0f;
-        for(int i = 0; i <= flashCycles; i++){
-            while(elapsed <= singleFlashTime){ //Turn to White
+        for (int i = 0; i <= flashCycles; i++)
+        {
+            while (elapsed <= singleFlashTime)
+            { //Turn to White
                 elapsed += Time.deltaTime;
                 Color color = Color.Lerp(displayColor, Color.white, (elapsed / (singleFlashTime / 2f)));
-                sprite.color = color;
+                // sprite.color = color;
                 yield return null;
             }
             elapsed = 0f;
-            while(elapsed <= singleFlashTime){ //Turn to Health Color
+            while (elapsed <= singleFlashTime)
+            { //Turn to Health Color
                 elapsed += Time.deltaTime;
                 Color color = Color.Lerp(Color.white, displayColor, (elapsed / (singleFlashTime / 2f)));
-                sprite.color = color;
+                // sprite.color = color;
                 yield return null;
             }
             elapsed = 0f;
         }
-        
+
         yield break;
     }
 
-    IEnumerator ScreenEffect(){
+    IEnumerator ScreenEffect()
+    {
         float elapsed = 0f;
-        while(elapsed <= waitForFade){
+        while (elapsed <= waitForFade)
+        {
             elapsed += Time.deltaTime;
             yield return null;
         }
         elapsed = 0f;
         Color startingColor = bloodEffect[0].color;
-        while(elapsed <= timeToFade){
+        while (elapsed <= timeToFade)
+        {
             elapsed += Time.deltaTime;
-            for(int i = 0; bloodEffect.Length > i; i++){
+            for (int i = 0; bloodEffect.Length > i; i++)
+            {
                 bloodEffect[i].color = Color.Lerp(startingColor, Color.clear, elapsed / timeToFade);
             }
             yield return null;

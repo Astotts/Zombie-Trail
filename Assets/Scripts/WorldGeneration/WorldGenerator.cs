@@ -84,7 +84,7 @@ public class WorldGenerator : MonoBehaviour
         tilemap5x5.SetTile(roadPos, null);
         UnloadChunkGenerators(pos.x, pos.y);
 
-        for (int i = 1; i < maxHeight / 2 + 1; i++)
+        for (int i = 1; i < maxHeight; i++)
         {
             int northY = pos.y + i;
             int southY = pos.y - i;
@@ -164,7 +164,7 @@ public class WorldGenerator : MonoBehaviour
     {
         RoadTile northRoadTile = roadTile;
         RoadTile southRoadTile = roadTile;
-        for (int i = 1; i < maxHeight / 2 + 1; i++)
+        for (int i = 1; i < maxHeight; i++)
         {
             int northY = y + i;
             int southY = y - i;

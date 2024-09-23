@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7085878823448268591}
   m_Layer: 0
   m_Name: Garage 4
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -91,5 +91,6 @@ public class LightPoleGenerator : MonoBehaviour, ChunkGenerator
         {
             Destroy(lightPoleGO);
         }
+        generatedObjects.Remove(chunkPos);
     }
 }
