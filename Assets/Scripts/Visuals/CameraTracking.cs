@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,51 +8,52 @@ using UnityEngine.U2D;
 
 public class CameraTracking : MonoBehaviour
 {
-    [SerializeField] Transform[] bounds;
-    Vector3 pos;
-    [SerializeField] Transform player = null;
     [SerializeField] float camSnapFloat;
+    [SerializeField] Transform player = null;
+    [SerializeField] Vector3 offset;
+    [SerializeField] WorldGenerator worldGenerator;
 
-    float vertical, horizontal;
+    float minY;
+    float maxY;
+
     Vector3 lerpPosition;
 
     void Start()
     {
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player")) {
+        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+        {
             if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
                 player = go.transform;
         }
-        Camera camera = GetComponent<Camera>();
-        Vector3 topRight = camera.ScreenToWorldPoint(new Vector3(Screen.width,Screen.height,0f)) - player.position;
-        Vector3 bottomLeft = camera.ScreenToWorldPoint(Vector3.zero) - player.position;
+        Camera camera = Camera.main;
+        float worldGeneratorYPos = worldGenerator.chunkSize / 2;
+        float worldGeneratorVerticalExtend = worldGenerator.maxWidth / 2;
 
-        Debug.DrawRay(player.position, topRight, Color.green, 5f);
-        Debug.DrawRay(player.position, bottomLeft, Color.green, 5f);
-        
-        
-        horizontal = Vector3.Distance(new Vector3(topRight.x,0f,0f),new Vector3(bottomLeft.x,0f,0f)) / 2;
-        vertical = Vector3.Distance(new Vector3(0f,topRight.y,0f),new Vector3(0f,bottomLeft.y,0f)) / 2;
+        maxY = worldGeneratorYPos + worldGeneratorVerticalExtend + camera.orthographicSize / 2;
+        minY = -worldGeneratorYPos - worldGeneratorVerticalExtend - camera.orthographicSize / 2;
+    }
 
-        //Debug.Log(horizontal);
-        //Debug.Log(vertical);
+    float BetweenMinMax(float y)
+    {
+        return Mathf.Max(minY, MathF.Min(y, maxY));
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
         if (player == null)
-            return;
-        pos = player.position;
+            gameObject.SetActive(false);
 
-        pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat; 
-        pos.y += Input.GetAxisRaw("Vertical") * camSnapFloat; 
+        // pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat;
+        // pos.y += Input.GetAxisRaw("Vertical") * camSnapFloat;
 
-        pos.x = Mathf.Clamp(pos.x, bounds[1].position.x + horizontal, bounds[0].position.x - horizontal);
-        pos.y = Mathf.Clamp(pos.y, bounds[1].position.y + vertical, bounds[0].position.y - vertical);    
-        pos.z = Mathf.Clamp(pos.z, -10f, -10f);
+        // pos.x = Mathf.Clamp(pos.x, bounds[1].position.x + horizontal, bounds[0].position.x - horizontal);
+        // pos.y = Mathf.Clamp(pos.y, bounds[1].position.y + vertical, bounds[0].position.y - vertical);
+        // pos.z = Mathf.Clamp(pos.z, -10f, -10f);
         //mouseWheelLerpIncrement = Mathf.Lerp(mouseWheelLerpIncrement, Input.GetAxis("Mouse ScrollWheel") * scrollSpeed, 10f * Time.deltaTime);
         //Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - mouseWheelLerpIncrement, zoomOutMin, zoomOutMax);
-        lerpPosition = Vector3.Lerp(transform.position, pos, Time.deltaTime * camSnapFloat);
+        lerpPosition = Vector3.Lerp(transform.position, player.position + offset, Time.deltaTime * camSnapFloat);
+        lerpPosition.y = BetweenMinMax(lerpPosition.y);
         transform.position = lerpPosition;
     }
 }

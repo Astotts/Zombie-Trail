@@ -12,6 +12,7 @@ TagManager:
   - Weapon
   - PlayerHealth
   - BloodEffect
+  - Road
   layers:
   - Default
   - TransparentFX

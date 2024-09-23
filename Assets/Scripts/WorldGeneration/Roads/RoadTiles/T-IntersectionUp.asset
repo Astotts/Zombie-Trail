@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8307432517cb14ec9838ca4a14b509e4, type: 3}
+  m_Name: T-IntersectionUp
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 88491a39ce3164c4fad4929620273ac9, type: 3}
+  flags: 0
+  colliderType: 2
+  roadType: 3
+  possibleNorthTiles:
+  - tileData: {fileID: 11400000, guid: 6785bcfafb9d344579e47ae370ea8a9c, type: 2}
+    weight: 50
+  - tileData: {fileID: 11400000, guid: b4b924af216374508961229d3f96d1b3, type: 2}
+    weight: 1
+  possibleSouthTiles: []
+  possibleWestTiles:
+  - tileData: {fileID: 11400000, guid: 7c62285223b2d4f55b245d91478364aa, type: 2}
+    weight: 50
+  - tileData: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
+    weight: 1
+  possibleEastTiles:
+  - tileData: {fileID: 11400000, guid: 986df1c17dda249c2b7f699e16e36b85, type: 2}
+    weight: 50
+  - tileData: {fileID: 11400000, guid: 1212a6da9131445eb82fc46bbd980404, type: 2}
+    weight: 1
