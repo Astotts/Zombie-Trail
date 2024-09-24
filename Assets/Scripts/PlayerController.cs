@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [SerializeField] float moveSpeed = 1f;
     PlayerInput playerInput;       // Use this to pull all the values needed for the inputs
@@ -24,11 +25,20 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Animator animator;
 
-
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false;
+            return;
+        }
+        base.OnNetworkSpawn();
+    }
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        if(weapons == null){
+        if (weapons == null)
+        {
             weapons = new List<WeaponsClass>();
         }
         playerControls = new PlayerControls();
@@ -51,8 +61,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i <= 1; i++){
-            if (weapons[i] is RangedWeapons ranged){
+        for (int i = 0; i <= 1; i++)
+        {
+            if (weapons[i] is RangedWeapons ranged)
+            {
                 ranged.reloading = false;
                 ranged.SetOpacity(0);
             }
@@ -63,15 +75,19 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {    
+    {
         PlayerInputs();
-        
-        for(int i = 0; i <= 1; i++){
-            if(i != selectedWeapon){
-                if(animators[i] != null){
+
+        for (int i = 0; i <= 1; i++)
+        {
+            if (i != selectedWeapon)
+            {
+                if (animators[i] != null)
+                {
                     animators[i].StopAnimating();
                 }
-                if (weapons[i] is RangedWeapons ranged){
+                if (weapons[i] is RangedWeapons ranged)
+                {
                     ranged.reloading = false;
                     ranged.SetOpacity(0);
                 }
@@ -82,7 +98,8 @@ public class PlayerController : MonoBehaviour
         weapons[selectedWeapon].gameObject.SetActive(true);
         weapons[selectedWeapon].ui.SetActive(true);
 
-        if(Input.GetMouseButton(0)){
+        if (Input.GetMouseButton(0))
+        {
             weapons[selectedWeapon].Attack();
         }
     }
@@ -129,25 +146,34 @@ public class PlayerController : MonoBehaviour
         //movement = playerInput.
         movement = playerControls.Movement.Move.ReadValue<Vector2>();
 
-        if (movement == Vector2.zero){
+        if (movement == Vector2.zero)
+        {
             animator.Play("Idle");
-        }else if(movement.x < 0f){
+        }
+        else if (movement.x < 0f)
+        {
             animator.Play("Player-Walk-Left");
-        }else if(movement.x > 0f){
+        }
+        else if (movement.x > 0f)
+        {
             animator.Play("Player-Walk-Right");
-        }else if(movement.y > 0f){
+        }
+        else if (movement.y > 0f)
+        {
             animator.Play("Player-Walk-Up");
-        }else if(movement.y < 0f){
+        }
+        else if (movement.y < 0f)
+        {
             animator.Play("Player-Walk-Down");
         }
         //Debug.Log("Movement x: " + movement.x);
         //Debug.Log("Movement y: " + movement.y);
 
         //Get Selected Slot
-        if((0 < playerControls.Equipment.FirstWeapon.ReadValue<float>())) selectedWeapon = 0;
-        if((0 < playerControls.Equipment.SecondWeapon.ReadValue<float>())) selectedWeapon = 1;
-        if((0 < playerControls.Equipment.ThirdWeapon.ReadValue<float>())) selectedWeapon = 2;
-        if((0 < playerControls.Equipment.FourthWeapon.ReadValue<float>())) selectedWeapon = 3; 
+        if ((0 < playerControls.Equipment.FirstWeapon.ReadValue<float>())) selectedWeapon = 0;
+        if ((0 < playerControls.Equipment.SecondWeapon.ReadValue<float>())) selectedWeapon = 1;
+        if ((0 < playerControls.Equipment.ThirdWeapon.ReadValue<float>())) selectedWeapon = 2;
+        if ((0 < playerControls.Equipment.FourthWeapon.ReadValue<float>())) selectedWeapon = 3;
     }
 
     void MovePlayer()

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class GenericEnemy : MonoBehaviour
+public class GenericEnemy : NetworkBehaviour
 {
 
     //Unit Movement
@@ -19,8 +20,19 @@ public class GenericEnemy : MonoBehaviour
     [SerializeField] Animator animator;
     private Vector2 lastPos;
 
-    void Update(){
-        transform.position = unitTransform.position;    
+    public override void OnNetworkSpawn()
+    {
+        if (!IsHost)
+        {
+            enabled = false;
+            return;
+        }
+        base.OnNetworkSpawn();
+    }
+
+    void Update()
+    {
+        transform.position = unitTransform.position;
         target = targetFinder.GetClosest();
 
         //Animator Variables
@@ -31,12 +43,14 @@ public class GenericEnemy : MonoBehaviour
 
         MoveTo(target.position);
         //Debug.Log(targetFinder.GetDistance());
-        if(targetFinder.GetDistance() < weapon.range){
+        if (targetFinder.GetDistance() < weapon.range)
+        {
             weapon.Attack();
         }
     }
 
-    void MoveTo(Vector3 position){
+    void MoveTo(Vector3 position)
+    {
         Vector3 moveDirection = unitTransform.position - position;
         RotateTowards((Vector2)moveDirection);
         //ToDo: Feature to speed up and slow down
@@ -44,7 +58,8 @@ public class GenericEnemy : MonoBehaviour
         rb.velocity = Vector2.zero;
     }
 
-    void RotateTowards(Vector2 moveDirection){
+    void RotateTowards(Vector2 moveDirection)
+    {
         moveDirection = moveDirection.normalized;
         float rotateAmount = Vector3.Cross(moveDirection, transform.up).z;
         rb.angularVelocity = rotateAmount * 400f;
