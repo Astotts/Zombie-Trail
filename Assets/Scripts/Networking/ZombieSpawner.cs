@@ -17,7 +17,10 @@ public class ZombieSpawner : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if (!IsHost)
+        {
+            enabled = false;
             return;
+        }
         base.OnNetworkSpawn();
         cameraVerticalExtend = Camera.main.orthographicSize;
         cameraHorizontalExtend = cameraVerticalExtend * Screen.width / Screen.height;

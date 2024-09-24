@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitHealthSystem : HealthSystem
@@ -13,15 +15,12 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private float singleFlashTime;
     [SerializeField] private float flashCycles;
     [SerializeField] private float fadeDuration;
-
-    public override void Awake()
-    {
-        currentHealth = maxHealth;
-        SetSize(1f); //Size is normalized so 1 is 100% health
-    }
+    [SerializeField] NetworkObject networkObject;
 
     public override void AlterHealth(int amount)
     {
+        if (!networkObject.IsSpawned)
+            return;
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         for (int i = 0; sprites.Length > i; i++)
@@ -29,19 +28,18 @@ public class UnitHealthSystem : HealthSystem
             sprites[i].color = displayColor[i];
         }
 
-        currentHealth += amount;
-        if (currentHealth > 0)
+        AlterHealthRpc(amount);
+        if (currentHealth.Value > 0)
         {
-            SetSize(((float)currentHealth / (float)maxHealth)); //Since health variables are ints must cast to float values
-                                                                //for(int i = sprites.Length; i > 0; i--){
-                                                                //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
-                                                                //}
+            SetSize(((float)currentHealth.Value / (float)maxHealth)); //Since health variables are ints must cast to float values
+                                                                      //for(int i = sprites.Length; i > 0; i--){
+                                                                      //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
+                                                                      //}
             StartCoroutine("HealthFlashing");
         }
         else
         {
             SetSize(0f); //Size is normalized so 0 is 0% health
-            Die();
         }
     }
 
@@ -49,7 +47,7 @@ public class UnitHealthSystem : HealthSystem
     {
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
-        Destroy(gameObject);
+        networkObject.Despawn();
     }
 
     private void SetSize(float sizeNormalized)

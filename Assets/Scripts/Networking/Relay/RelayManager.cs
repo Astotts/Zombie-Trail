@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using Unity.Netcode;
 using Unity.Netcode.Editor;
 using Unity.Netcode.Transports.UTP;
@@ -9,6 +10,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,7 +29,11 @@ public class RelayManager : MonoBehaviour
 
     async void Start()
     {
-        await UnityServices.InitializeAsync();
+        System.Random random = new();
+        InitializationOptions options = new();
+        options.SetProfile(random.Next(10000).ToString());
+
+        await UnityServices.InitializeAsync(options);
 
         AuthenticationService.Instance.SignedIn += () =>
         {

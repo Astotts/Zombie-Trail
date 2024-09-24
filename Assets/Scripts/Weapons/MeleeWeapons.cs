@@ -14,7 +14,8 @@ public class MeleeWeapons : WeaponsClass
     private Transform target;
     [SerializeField] private int damage;
 
-    void Awake(){
+    void Awake()
+    {
         enemies = new Collider2D[10];
     }
 
@@ -25,18 +26,20 @@ public class MeleeWeapons : WeaponsClass
         attackHitBox.transform.position = characterPos.position;
         rb.transform.position = characterPos.position;
 
-        if(characterPos.gameObject.tag == "Player"){
+        if (characterPos.gameObject.CompareTag("Player"))
+        {
             Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
 
             moveDirection = mouseWorldPos;
         }
-        else{
+        else
+        {
             target = targetFinder.GetClosest();
             moveDirection = (Vector2)target.position - (Vector2)characterPos.position;
             //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
-        
+
         }
-        
+
 
         //Debug.DrawRay(characterPos.position, mouseWorldPos, Color.red, 0.5f);
 
@@ -49,31 +52,37 @@ public class MeleeWeapons : WeaponsClass
 
     // variables used from base(Parent): RangeOfAttack and DirectionOfAttack
     public override void Attack()
-    {   
+    {
         if (elapsedTime > reloadSpeed) // NEED TO CHANGE LATER BC THIS WILL AFFECT EVERYONE WITH THIS SCRIPT!! ONLY FOR TESTING
         {
             elapsedTime = 0;
             attackHitBox.OverlapCollider(filter, enemies);
-            
-            if(characterPos.gameObject.tag == "Player" && Input.GetMouseButtonDown(0)){
-                foreach(Collider2D collider in enemies){
-                    if(collider != null && collider.tag == "Enemy"){
-                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);   
+
+            if (characterPos.gameObject.tag == "Player" && Input.GetMouseButtonDown(0))
+            {
+                foreach (Collider2D collider in enemies)
+                {
+                    if (collider != null && collider.tag == "Enemy")
+                    {
+                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);
                     }
                 }
             }
-            else{
-                foreach(Collider2D collider in enemies){
-                    if(collider != null && collider.tag == "Player"){
-                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);   
+            else
+            {
+                foreach (Collider2D collider in enemies)
+                {
+                    if (collider != null && collider.tag == "Player")
+                    {
+                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);
                     }
                 }
             }
 
             Array.Clear(enemies, 0, enemies.Length);
-            
+
         }
-        
+
     }
 
     // after each attack this function is called in order to serve as a cooldown between attacks

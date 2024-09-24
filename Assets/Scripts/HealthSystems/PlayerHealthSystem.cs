@@ -21,11 +21,11 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private float timeToFade;
 
 
-    public override void Awake()
+    void Awake()
     {
 
         // Assigning currentHealth & healthBar to the value of maxHealth
-        currentHealth = maxHealth;
+        // currentHealth = maxHealth;
         healthBar.value = maxHealth;
     }
 
@@ -35,19 +35,13 @@ public class PlayerHealthSystem : HealthSystem
         //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
         for (int i = 0; bloodEffect.Length > i; i++)
         {
-            bloodEffect[i].color = new Color(bloodEffectColor.r, bloodEffectColor.g, bloodEffectColor.b, -(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
+            bloodEffect[i].color = new Color(bloodEffectColor.r, bloodEffectColor.g, bloodEffectColor.b, -(((float)currentHealth.Value - (float)maxHealth) / (float)maxHealth));
         }
 
         StartCoroutine("HealthFlashing");
         StartCoroutine("ScreenEffect");
-        currentHealth += amount;
-        healthBar.value = (float)currentHealth / (float)maxHealth * 100f;
-
-        // Check for death
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
+        AlterHealthRpc(amount);
+        healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
     }
 
     public override void Die()
@@ -60,7 +54,7 @@ public class PlayerHealthSystem : HealthSystem
         //Destroy(gameObject);
 
         //!DEBUG RESET TO HEALTH DELETE LATER
-        currentHealth = maxHealth;
+        currentHealth.Value = maxHealth;
     }
 
     IEnumerator HealthFlashing()
