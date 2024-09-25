@@ -20,6 +20,8 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private float waitForFade;
     [SerializeField] private float timeToFade;
 
+    //Sound System
+    [SerializeField] private string[] sounds;
 
     void Awake()
     {
@@ -42,6 +44,7 @@ public class PlayerHealthSystem : HealthSystem
         StartCoroutine("ScreenEffect");
         AlterHealthRpc(amount);
         healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
+        AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(0, 3)], UnityEngine.Random.Range(0.7f, 1.1f));
     }
 
     public override void Die()

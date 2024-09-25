@@ -3552,6 +3552,11 @@ MonoBehaviour:
   bloodEffectColor: {r: 1, g: 1, b: 1, a: 1}
   waitForFade: 1
   timeToFade: 1
+  sounds:
+  - PlayerHurt0
+  - PlayerHurt1
+  - PlayerHurt2
+  - PlayerHurt3
 --- !u!95 &8697594637498151872
 Animator:
   serializedVersion: 5

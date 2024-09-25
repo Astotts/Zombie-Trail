@@ -1940,34 +1940,42 @@ PrefabInstance:
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[21].clip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: d03cb854194d8b948a9eff6065ea9728, type: 3}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[21].name
-      value: 
+      value: PlayerHurt0
       objectReference: {fileID: 0}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[22].clip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: e32ceafbe67c43646b3474d50a888d81, type: 3}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[22].name
-      value: 
+      value: PlayerHurt1
       objectReference: {fileID: 0}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[23].clip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: b1fc381d5d876f046b26c9df42b7e3fe, type: 3}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[23].name
-      value: 
+      value: PlayerHurt2
       objectReference: {fileID: 0}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[24].clip
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8300000, guid: 829dfe614e7bcf847ae519942fcb25dd, type: 3}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[24].name
+      value: PlayerHurt3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
+      propertyPath: sfxSounds.Array.data[25].clip
       value: 
+      objectReference: {fileID: 8300000, guid: 541dbe29cb83c7946956d52732c7701f, type: 3}
+    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
+      propertyPath: sfxSounds.Array.data[25].name
+      value: PlayerHurt4
       objectReference: {fileID: 0}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[31].clip
