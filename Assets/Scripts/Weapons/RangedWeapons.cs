@@ -18,6 +18,9 @@ public class RangedWeapons : WeaponsClass
 
     private float elapsed = 0;
     public int damage;
+    
+    // Sound Systems
+    [SerializeField] private string[] sounds;
 
     [SerializeField] Rigidbody2D rb;
     [SerializeField] GetClosestTargets targetFinder;
@@ -90,6 +93,7 @@ public class RangedWeapons : WeaponsClass
                 bulletUI[ammo - 1].SetActive(false);
             }
             ammo -= 1;
+            AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(0, 1)], UnityEngine.Random.Range(0.7f, 1.1f));
         }
     }
 
@@ -97,8 +101,19 @@ public class RangedWeapons : WeaponsClass
     {
         if(!reloading){
             reloading = true;
+            AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(2, 4)], UnityEngine.Random.Range(0.7f, 1.1f));
             StartCoroutine(Reloading());
         }
+    }
+
+    void OnEnable() //Executes on gameObject.SetActive(true)
+    {
+        AudioManager.Instance.PlaySFX(sounds[5], UnityEngine.Random.Range(1f, 1.2f));
+    }
+
+    void OnDisable() //Executes on gameObject.SetActive(false)
+    {
+        AudioManager.Instance.PlaySFX(sounds[6], UnityEngine.Random.Range(0.5f, 0.8f));
     }
 
     IEnumerator Reloading()
@@ -117,6 +132,7 @@ public class RangedWeapons : WeaponsClass
             bulletUI[i].SetActive(true);
         }
         reloading = false;
+        AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(2, 4)], UnityEngine.Random.Range(0.7f, 1.1f));
         StartCoroutine(HideReloadStatus());
     }
 

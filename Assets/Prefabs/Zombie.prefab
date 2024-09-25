@@ -403,7 +403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2876783517
+  GlobalObjectIdHash: 3679512753
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -533,6 +533,10 @@ MonoBehaviour:
   - ZombieHurt7
   - ZombieHurt8
   - ZombieHurt9
+  - ZombieImpact0
+  - ZombieImpact1
+  - ZombieImpact2
+  - ZombieImpact3
 --- !u!95 &3006633679670788099
 Animator:
   serializedVersion: 5

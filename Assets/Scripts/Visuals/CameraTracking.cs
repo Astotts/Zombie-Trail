@@ -20,6 +20,7 @@ public class CameraTracking : MonoBehaviour
 
     void Start()
     {
+        this.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing = true;
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
         {
             if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)

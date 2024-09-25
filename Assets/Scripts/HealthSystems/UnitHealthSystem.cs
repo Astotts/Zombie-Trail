@@ -24,7 +24,6 @@ public class UnitHealthSystem : HealthSystem
     {
         if (!networkObject.IsSpawned)
             return;
-        AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(0, 9)], UnityEngine.Random.Range(0.7f, 1.1f));
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         for (int i = 0; sprites.Length > i; i++)
@@ -35,14 +34,13 @@ public class UnitHealthSystem : HealthSystem
         AlterHealthRpc(amount);
         if (currentHealth.Value > 0)
         {
+            AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(10, 13)], UnityEngine.Random.Range(0.7f, 1.1f));
             SetSize(((float)currentHealth.Value / (float)maxHealth)); //Since health variables are ints must cast to float values
-                                                                      //for(int i = sprites.Length; i > 0; i--){
-                                                                      //sprite.color = new Color(displayColor.r, displayColor.g, displayColor.b, displayColor.a);
-                                                                      //}
             StartCoroutine("HealthFlashing");
         }
         else
         {
+            AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(0, 9)], UnityEngine.Random.Range(0.7f, 1.1f));
             SetSize(0f); //Size is normalized so 0 is 0% health
         }
     }

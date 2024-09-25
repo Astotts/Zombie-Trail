@@ -10,6 +10,7 @@ public class PlayerController : NetworkBehaviour
     PlayerInput playerInput;       // Use this to pull all the values needed for the inputs
     PlayerControls playerControls;          // Input Action Asset - This allows the controls for the player. Check the file out to see the set up. (This will be obsolete, will use PlayerInput)
     Vector2 movement;                       // Controls the player movement
+    Vector2 prevMovement;
     int weaponSelected;                     // Keeps track of what weapon is selected
 
     Rigidbody2D rb;                         // Controls the player rigidbody
@@ -24,6 +25,12 @@ public class PlayerController : NetworkBehaviour
     //----------------------------------------
 
     [SerializeField] Animator animator;
+
+    //----------------------------------------
+
+    [SerializeField] private AudioClip[] sounds;
+    [SerializeField] private AudioSource audioSource;
+    private float walkingElapsed;
 
     public override void OnNetworkSpawn()
     {
@@ -109,36 +116,6 @@ public class PlayerController : NetworkBehaviour
         MovePlayer();
     }
 
-    //private void OnMove(InputValue movementValue)
-    //{
-    //    movement = movementValue.Get<Vector2>();
-
-    //    // Move the player
-    //    rb.MovePosition(rb.position + movement * (moveSpeed * Time.fixedDeltaTime));  // Current position + where to move * (the movement speed * timing of movement)
-
-    //    // Get the animation to match the direction the player is going in
-    //    if (movement == Vector2.zero)
-    //    {
-    //        animator.Play("Idle");
-    //    }
-    //    else if (movement.x < 0f)
-    //    {
-    //        animator.Play("Player-Walk-Left");
-    //    }
-    //    else if (movement.x > 0f)
-    //    {
-    //        animator.Play("Player-Walk-Right");
-    //    }
-    //    else if (movement.y > 0f)
-    //    {
-    //        animator.Play("Player-Walk-Up");
-    //    }
-    //    else if (movement.y < 0f)
-    //    {
-    //        animator.Play("Player-Walk-Down");
-    //    }
-    //}
-
     void PlayerInputs()
     {
         // Get the x/y values from the "Input Action" asset, which has the keys assigned x +/-, y +/-
@@ -146,8 +123,20 @@ public class PlayerController : NetworkBehaviour
         //movement = playerInput.
         movement = playerControls.Movement.Move.ReadValue<Vector2>();
 
+        walkingElapsed += Time.deltaTime;
+
+        if(movement != prevMovement || audioSource.clip.length < walkingElapsed){
+            audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
+            audioSource.clip = sounds[UnityEngine.Random.Range(0, 3)];
+            walkingElapsed = 0f;
+            if(movement != Vector2.zero){
+                audioSource.Play();
+            }
+        }
+
         if (movement == Vector2.zero)
         {
+            audioSource.Stop();
             animator.Play("Idle");
         }
         else if (movement.x < 0f)
@@ -172,8 +161,8 @@ public class PlayerController : NetworkBehaviour
         //Get Selected Slot
         if ((0 < playerControls.Equipment.FirstWeapon.ReadValue<float>())) selectedWeapon = 0;
         if ((0 < playerControls.Equipment.SecondWeapon.ReadValue<float>())) selectedWeapon = 1;
-        if ((0 < playerControls.Equipment.ThirdWeapon.ReadValue<float>())) selectedWeapon = 2;
-        if ((0 < playerControls.Equipment.FourthWeapon.ReadValue<float>())) selectedWeapon = 3;
+
+        prevMovement = playerControls.Movement.Move.ReadValue<Vector2>();
     }
 
     void MovePlayer()
