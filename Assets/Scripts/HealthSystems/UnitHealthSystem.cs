@@ -17,10 +17,14 @@ public class UnitHealthSystem : HealthSystem
     [SerializeField] private float fadeDuration;
     [SerializeField] NetworkObject networkObject;
 
+    //Sound Functionality
+    [SerializeField] private string[] sounds;
+
     public override void AlterHealth(int amount)
     {
         if (!networkObject.IsSpawned)
             return;
+        AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(0, 9)], UnityEngine.Random.Range(0.7f, 1.1f));
         StopCoroutine("HealthFlashing");
         StopCoroutine("HideHealth");
         for (int i = 0; sprites.Length > i; i++)

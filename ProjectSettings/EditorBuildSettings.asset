@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scripts/WorldGeneration/World.unity
     guid: a43d7727238944d0883222cf2e7972b5
+  - enabled: 1
+    path: Assets/Scenes/SoundTestingWWorldGen.unity
+    guid: fe15ef6cc59863844a99768f2793274c
   m_configObjects: {}

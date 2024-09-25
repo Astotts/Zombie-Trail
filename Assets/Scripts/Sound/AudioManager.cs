@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            Debug.Log("MovedToNotDestroy");
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -31,33 +32,38 @@ public class AudioManager : MonoBehaviour
         PlayMusic("Music");
     }
     
-    public void PlayMusic(string name)
+    public float PlayMusic(string name)
     {
         Sound s = Array.Find(musicSounds, x => x.name == name);
 
         if (s == null)
         {
             Debug.Log("Sound Not Found");
+            return 0f;
         }
         else
         {
             musicSource.clip = s.clip; 
             musicSource.Play();
+            return s.clip.length;
         }
     }
 
-    public void PlaySFX(string name)
+    public float PlaySFX(string name, float pitch)
     {
         Sound s = Array.Find(sfxSounds, x => x.name == name);
 
         if (s == null)
         {
             Debug.Log("Sound Not Found");
+            return 0f;
         }
         else
         {
-            sfxSource.pitch = UnityEngine.Random.Range(0.7f, 1.3f);
+            //UnityEngine.Random.Range(0.7f, 1.3f);
+            sfxSource.pitch = pitch;
             sfxSource.PlayOneShot(s.clip);
+            return s.clip.length;
         }
     }
 }

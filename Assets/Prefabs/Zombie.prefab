@@ -522,6 +522,17 @@ MonoBehaviour:
   flashCycles: 3
   fadeDuration: 1
   networkObject: {fileID: 6212396530020576033}
+  sounds:
+  - ZombieHurt0
+  - ZombieHurt1
+  - ZombieHurt2
+  - ZombieHurt3
+  - ZombieHurt4
+  - ZombieHurt5
+  - ZombieHurt6
+  - ZombieHurt7
+  - ZombieHurt8
+  - ZombieHurt9
 --- !u!95 &3006633679670788099
 Animator:
   serializedVersion: 5
