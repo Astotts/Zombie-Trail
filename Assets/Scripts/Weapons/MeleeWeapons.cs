@@ -13,6 +13,15 @@ public class MeleeWeapons : WeaponsClass
     [SerializeField] GetClosestTargets targetFinder;
     private Transform target;
     [SerializeField] private int damage;
+    // public override void OnNetworkSpawn()
+    // {
+    //     if (!IsOwner)
+    //     {
+    //         enabled = false;
+    //         return;
+    //     }
+    //     base.OnNetworkSpawn();
+    // }
 
     void Awake()
     {
@@ -44,8 +53,11 @@ public class MeleeWeapons : WeaponsClass
         //Debug.DrawRay(characterPos.position, mouseWorldPos, Color.red, 0.5f);
 
         moveDirection = moveDirection.normalized;
-        float rotateAmount = Vector3.Cross(moveDirection, attackHitBox.transform.up).z;
-        rb.angularVelocity = -(rotateAmount * 400f);
+        // float rotateAmount = Vector3.Cross(moveDirection, attackHitBox.transform.up).z;
+        // rb.angularVelocity = -(rotateAmount * 400f);
+        float angle = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 90;
+        Quaternion rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rotation, 2 * Time.deltaTime);
 
         elapsedTime += Time.deltaTime;
     }

@@ -16,7 +16,7 @@ public class TrafficLightGenerator : MonoBehaviour, ChunkGenerator
     [SerializeField] GameObject[] eastTrafficLights;
     [SerializeField] GameObject[] westTrafficLights;
     private float chunkSize;
-    private readonly Dictionary<Vector2Int, List<GameObject>> generatedTrafficLights = new();
+    private readonly Dictionary<Vector2Int, List<GameObject>> loadedChunks = new();
     void Start()
     {
         chunkSize = worldGenerator.chunkSize;
@@ -79,6 +79,8 @@ public class TrafficLightGenerator : MonoBehaviour, ChunkGenerator
             default:
                 return;
         }
+        Vector2Int chunkPos = new(chunkX, chunkY);
+        loadedChunks.Add(chunkPos, trafficLightAtChunk);
     }
 
 
@@ -89,14 +91,6 @@ public class TrafficLightGenerator : MonoBehaviour, ChunkGenerator
         spawnedTrafficLight.transform.position = spawnLocation;
 
         return spawnedTrafficLight;
-    }
-
-    GameObject SpawnTrafficLightAt(GameObject prefab, Vector3 spawnLocation)
-    {
-        GameObject spawnedGO = Instantiate(prefab, transform);
-        spawnedGO.transform.position = spawnLocation;
-
-        return spawnedGO;
     }
 
     GameObject GetRandomTrafficLight(System.Random random, GenerateDirection direction)
@@ -113,6 +107,14 @@ public class TrafficLightGenerator : MonoBehaviour, ChunkGenerator
 
     public void UnloadChunkAt(int chunkX, int chunkY)
     {
+        Vector2Int chunkPos = new(chunkX, chunkY);
+        if (!loadedChunks.TryGetValue(chunkPos, out List<GameObject> loadedTrafficLights))
+            return;
 
+        foreach (GameObject trafficLightGO in loadedTrafficLights)
+        {
+            Destroy(trafficLightGO);
+        }
+        loadedChunks.Remove(chunkPos);
     }
 }
