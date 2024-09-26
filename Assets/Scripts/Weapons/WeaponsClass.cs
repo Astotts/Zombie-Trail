@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class WeaponsClass : MonoBehaviour
+public class WeaponsClass : NetworkBehaviour
 {
     [SerializeField] public Transform characterPos;
     [SerializeField] public float range;
@@ -10,6 +11,12 @@ public class WeaponsClass : MonoBehaviour
     public Vector2 directionOfAttack;
     public float weightOfWeapon; // decreases speed
     [SerializeField] public GameObject ui;
+
+    public override void OnNetworkSpawn()
+    {
+        gameObject.SetActive(false);
+        base.OnNetworkSpawn();
+    }
 
     // Start is called before the first frame update
     void Start()

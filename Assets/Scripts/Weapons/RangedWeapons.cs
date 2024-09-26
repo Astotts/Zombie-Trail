@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +19,7 @@ public class RangedWeapons : WeaponsClass
 
     private float elapsed = 0;
     public int damage;
-    
+
     // Sound Systems
     [SerializeField] private string[] sounds;
 
@@ -35,7 +36,8 @@ public class RangedWeapons : WeaponsClass
     {
         bulletUI = new List<GameObject>();
         int children = ammoPanel.transform.childCount;
-        for(int i = 0; i < children; i++){
+        for (int i = 0; i < children; i++)
+        {
             bulletUI.Add(ammoPanel.transform.GetChild(i).gameObject);
         }
     }
@@ -45,27 +47,31 @@ public class RangedWeapons : WeaponsClass
         transform.position = characterPos.position;
         Vector2 moveDirection;
 
-        if(characterPos.gameObject.tag == "Player"){
+        if (characterPos.gameObject.tag == "Player")
+        {
             Vector2 mouseWorldPos = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector2)characterPos.position;
 
             moveDirection = mouseWorldPos;
         }
 
-        else{
+        else
+        {
             target = targetFinder.GetClosest();
             moveDirection = (Vector2)target.position - (Vector2)characterPos.position;
             //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
-        
+
         }
 
         moveDirection = moveDirection.normalized;
         float rotateAmount = Vector3.Cross(moveDirection, transform.up).z;
         rb.angularVelocity = -(rotateAmount * 400f);
 
-        if(transform.eulerAngles.z > 180){
+        if (transform.eulerAngles.z > 180)
+        {
             sprite.flipY = false;
         }
-        else{
+        else
+        {
             sprite.flipY = true;
         }
 
@@ -76,10 +82,12 @@ public class RangedWeapons : WeaponsClass
     //Called from player controller
     public override void Attack()
     {
-        if (ammo == 0){
+        if (ammo == 0)
+        {
             Reload();
-        } 
-        else if(0 >= elapsed){
+        }
+        else if (0 >= elapsed)
+        {
             elapsed = recoilTime;
             // get the mouse position
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -87,9 +95,9 @@ public class RangedWeapons : WeaponsClass
             directionOfAttack = (mousePos - characterPos.position).normalized;
 
             // create & shoot the projectile 
-            GameObject newProjectile = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
-            newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(directionOfAttack, projectileSpeed, damage);
-            if(ammo > 0){
+            SpawnBulletsServerRpc(directionOfAttack);
+            if (ammo > 0)
+            {
                 bulletUI[ammo - 1].SetActive(false);
             }
             ammo -= 1;
@@ -97,9 +105,18 @@ public class RangedWeapons : WeaponsClass
         }
     }
 
+    [Rpc(SendTo.Server)]
+    public void SpawnBulletsServerRpc(Vector2 direction)
+    {
+        GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        newProjectile.GetComponent<NetworkObject>().Spawn();
+        newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(direction, projectileSpeed, damage);
+    }
+
     public override void Reload()
     {
-        if(!reloading){
+        if (!reloading)
+        {
             reloading = true;
             AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(2, 4)], UnityEngine.Random.Range(0.7f, 1.1f));
             StartCoroutine(Reloading());
@@ -121,14 +138,16 @@ public class RangedWeapons : WeaponsClass
         SetOpacity(1);
         reloadSlider.value = 0;
         float reloadElapsed = 0;
-        while (reloadElapsed < reloadSpeed){
+        while (reloadElapsed < reloadSpeed)
+        {
             reloadElapsed += Time.deltaTime;
             reloadSlider.value = (reloadElapsed / reloadSpeed);
             //Debug.Log(reloadSlider.value);
             yield return null;
         }
         ammo = clipSize;
-        for(int i = 0; clipSize > i; i++){
+        for (int i = 0; clipSize > i; i++)
+        {
             bulletUI[i].SetActive(true);
         }
         reloading = false;
@@ -136,9 +155,11 @@ public class RangedWeapons : WeaponsClass
         StartCoroutine(HideReloadStatus());
     }
 
-    IEnumerator HideReloadStatus(){
+    IEnumerator HideReloadStatus()
+    {
         float statusElapsed = 0f;
-        while(statusElapsed <= fadeDuration){
+        while (statusElapsed <= fadeDuration)
+        {
             statusElapsed += Time.deltaTime;
             SetOpacity(Mathf.Lerp(1f, 0f, (statusElapsed / fadeDuration)));
             yield return null;
@@ -146,9 +167,11 @@ public class RangedWeapons : WeaponsClass
         yield break;
     }
 
-    public void SetOpacity(float a){
+    public void SetOpacity(float a)
+    {
         //Debug.Log("Setting Opacity to " + a);
-        for(int i = 0; i < sprites.Length; i++){
+        for (int i = 0; i < sprites.Length; i++)
+        {
             sprites[i].color = new Color(1f, 1f, 1f, a);
         }
     }
