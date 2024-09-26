@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 
 public class SpawnTest : MonoBehaviour
@@ -89,7 +89,7 @@ public class SpawnTest : MonoBehaviour
     }
 }
 
-[CustomEditor(typeof(SpawnTest))]
+/*[CustomEditor(typeof(SpawnTest))]
 public class SpawnTestEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -101,4 +101,4 @@ public class SpawnTestEditor : Editor
             spawnTest.Spawn();
         }
     }
-}
+}*/
