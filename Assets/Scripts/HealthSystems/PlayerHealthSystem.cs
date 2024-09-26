@@ -53,6 +53,9 @@ public class PlayerHealthSystem : HealthSystem
         // Death animation, game over screen, etc.
         Debug.LogWarning("You Are Dead.");
 
+        GameObject spawnPoint = GameObject.FindWithTag("PlayerSpawn");
+        transform.position = spawnPoint.transform.position;
+
         //Removes gameObject
         //Destroy(gameObject);
 

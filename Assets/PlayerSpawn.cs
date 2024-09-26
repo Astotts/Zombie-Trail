@@ -34,4 +34,9 @@ public class PlayerSpawn : NetworkBehaviour
         transform.position = spawnPoint.transform.position;
         transform.rotation = spawnPoint.transform.rotation; // Optional: set rotation
     }
+
+    public void Update(){
+        if(spawnPoint != null && Vector2.Distance(transform.position, spawnPoint.transform.position) > 20f)
+            transform.position = spawnPoint.transform.position;
+    }
 }
