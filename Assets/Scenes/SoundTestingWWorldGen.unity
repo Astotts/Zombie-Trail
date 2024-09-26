@@ -1483,11 +1483,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1774470856}
   m_CullTransparentMesh: 1
---- !u!82 &1873043395 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 8913287165908135052, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-  m_PrefabInstance: {fileID: 2319660500692094934}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1952196981
 GameObject:
   m_ObjectHideFlags: 0
@@ -1842,10 +1837,6 @@ PrefabInstance:
       value: AudioManager
       objectReference: {fileID: 0}
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSource
-      value: 
-      objectReference: {fileID: 1873043395}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.size
       value: 46
       objectReference: {fileID: 0}
@@ -1976,66 +1967,6 @@ PrefabInstance:
     - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: sfxSounds.Array.data[25].name
       value: PlayerHurt4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[31].clip
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[31].name
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[46].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 9be71da04af2bc54f86d0d71e776b4f6, type: 3}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[46].name
-      value: Movement3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[47].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0b287ec04efddae49a2dc3b04bf01485, type: 3}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[47].name
-      value: Movement2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[48].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: d6ebde4a3ada7fb4cb40b4aee74b36d5, type: 3}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[48].name
-      value: Movement1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[49].clip
-      value: 
-      objectReference: {fileID: 8300000, guid: d9a50401294cf994db997588f91d42e3, type: 3}
-    - target: {fileID: 5332544796177129399, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: sfxSounds.Array.data[49].name
-      value: Movement0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7306829646519032173, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: m_Color.b
-      value: 0.2830189
-      objectReference: {fileID: 0}
-    - target: {fileID: 7306829646519032173, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: m_Color.g
-      value: 0.24004875
-      objectReference: {fileID: 0}
-    - target: {fileID: 7306829646519032173, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: m_Color.r
-      value: 0.14551443
-      objectReference: {fileID: 0}
-    - target: {fileID: 7306829646519032173, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: m_Intensity
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7306829646519032173, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
-      propertyPath: m_ApplyToSortingLayers.Array.size
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8906787985723562913, guid: 971ee6d714d05f542bc97ad3e1287aad, type: 3}
       propertyPath: m_LocalPosition.x
