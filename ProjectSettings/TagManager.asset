@@ -8,6 +8,7 @@ TagManager:
   - Player bullet
   - Road
   - Structure
+  - PlayerSpawn
   layers:
   - Default
   - TransparentFX

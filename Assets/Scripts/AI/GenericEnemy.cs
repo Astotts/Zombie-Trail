@@ -55,7 +55,7 @@ public class GenericEnemy : NetworkBehaviour
         RotateTowards((Vector2)moveDirection);
         //ToDo: Feature to speed up and slow down
         unitTransform.position = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)this.transform.position;
-        rb.velocity = Vector2.zero;
+        rb.velocity += Vector2.zero;
     }
 
     void RotateTowards(Vector2 moveDirection)

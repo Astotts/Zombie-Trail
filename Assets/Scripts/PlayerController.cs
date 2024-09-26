@@ -10,7 +10,7 @@ public class PlayerController : NetworkBehaviour
     PlayerInput playerInput;       // Use this to pull all the values needed for the inputs
     PlayerControls playerControls;          // Input Action Asset - This allows the controls for the player. Check the file out to see the set up. (This will be obsolete, will use PlayerInput)
     Vector2 movement;                       // Controls the player movement
-    Vector2 prevMovement;
+    Vector2 prevMovement = Vector2.zero;
     int weaponSelected;                     // Keeps track of what weapon is selected
 
     Rigidbody2D rb;                         // Controls the player rigidbody
@@ -125,7 +125,7 @@ public class PlayerController : NetworkBehaviour
 
         walkingElapsed += Time.deltaTime;
 
-        if(movement != prevMovement || audioSource.clip.length < walkingElapsed){
+        if(movement != prevMovement || (audioSource.clip != null && audioSource.clip.length < walkingElapsed)){
             audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
             audioSource.clip = sounds[UnityEngine.Random.Range(0, 3)];
             walkingElapsed = 0f;

@@ -14,7 +14,7 @@ public class WeaponsClass : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
         base.OnNetworkSpawn();
     }
 

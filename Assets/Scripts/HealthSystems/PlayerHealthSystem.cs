@@ -69,7 +69,7 @@ public class PlayerHealthSystem : HealthSystem
             { //Turn to White
                 elapsed += Time.deltaTime;
                 Color color = Color.Lerp(displayColor, Color.white, (elapsed / (singleFlashTime / 2f)));
-                // sprite.color = color;
+                sprite.color = color;
                 yield return null;
             }
             elapsed = 0f;
@@ -77,7 +77,7 @@ public class PlayerHealthSystem : HealthSystem
             { //Turn to Health Color
                 elapsed += Time.deltaTime;
                 Color color = Color.Lerp(Color.white, displayColor, (elapsed / (singleFlashTime / 2f)));
-                // sprite.color = color;
+                sprite.color = color;
                 yield return null;
             }
             elapsed = 0f;
