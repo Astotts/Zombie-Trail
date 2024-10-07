@@ -8,7 +8,7 @@ public class HealthSystem : NetworkBehaviour
 {
     //Declaration
     [SerializeField] protected int maxHealth;
-    protected NetworkVariable<int> currentHealth = new();
+    public NetworkVariable<int> currentHealth = new();
     public override void OnNetworkSpawn()
     {
         if (!IsHost)
@@ -23,7 +23,7 @@ public class HealthSystem : NetworkBehaviour
         AlterHealthRpc(amount);
     }
 
-    [Rpc(SendTo.ClientsAndHost)]
+    [Rpc(SendTo.Server)]
     public virtual void AlterHealthRpc(int amount)
     {
         currentHealth.Value += amount;

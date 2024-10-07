@@ -31,6 +31,7 @@ public class BaseHealthSystem : HealthSystem
         StartCoroutine("HealthFlashing");
         AlterHealthRpc(amount);
         healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
+        AlterBarRpc((float)currentHealth.Value / (float)maxHealth * 100f);
     }
 
     public override void Die()
@@ -44,6 +45,11 @@ public class BaseHealthSystem : HealthSystem
 
         //!DEBUG RESET TO HEALTH DELETE LATER
         currentHealth.Value = maxHealth;
+    }
+
+    [Rpc(SendTo.Server)]
+    private void AlterBarRpc(float amount){
+
     }
 
     IEnumerator HealthFlashing()
