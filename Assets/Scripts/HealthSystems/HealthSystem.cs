@@ -23,7 +23,7 @@ public class HealthSystem : NetworkBehaviour
         AlterHealthRpc(amount);
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.ClientsAndHost)]
     public virtual void AlterHealthRpc(int amount)
     {
         currentHealth.Value += amount;

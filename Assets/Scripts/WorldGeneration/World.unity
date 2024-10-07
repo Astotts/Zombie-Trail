@@ -293,7 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zombiePrefab: {fileID: 2792160428735217364, guid: 60d312d2035ab974fb8992f1f8f7cbb7, type: 3}
-  timePerZombie: 1
+  timePerZombie: 15
   spawnPointGenerator: {fileID: 496588502}
 --- !u!4 &416124465
 Transform:
@@ -1131,6 +1131,10 @@ PrefabInstance:
     - target: {fileID: 1745872516337207827, guid: 610addd11c4e5d34aaf6dc3078bd55a7, type: 3}
       propertyPath: m_LocalPosition.y
       value: -0.511
+      objectReference: {fileID: 0}
+    - target: {fileID: 5053031505632218386, guid: 610addd11c4e5d34aaf6dc3078bd55a7, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2292429178
       objectReference: {fileID: 0}
     - target: {fileID: 5300652569489851785, guid: 610addd11c4e5d34aaf6dc3078bd55a7, type: 3}
       propertyPath: m_AnchorMax.x
