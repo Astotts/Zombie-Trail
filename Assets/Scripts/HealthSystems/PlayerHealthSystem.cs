@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class PlayerHealthSystem : HealthSystem
 {
@@ -19,6 +20,7 @@ public class PlayerHealthSystem : HealthSystem
     [SerializeField] private Color bloodEffectColor;
     [SerializeField] private float waitForFade;
     [SerializeField] private float timeToFade;
+    [SerializeField] NetworkObject networkObject;
 
     //Sound System
     [SerializeField] private string[] sounds;
@@ -33,6 +35,8 @@ public class PlayerHealthSystem : HealthSystem
 
     public override void AlterHealth(int amount)
     {
+        if (!networkObject.IsSpawned)
+            return;
         StopCoroutine("ScreenEffect");
         //Debug.Log(-(((float)currentHealth - (float)maxHealth) / (float)maxHealth));
         for (int i = 0; bloodEffect.Length > i; i++)

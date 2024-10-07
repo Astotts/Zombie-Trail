@@ -11,8 +11,8 @@ public class HealthSystem : NetworkBehaviour
     protected NetworkVariable<int> currentHealth = new();
     public override void OnNetworkSpawn()
     {
-        //if (!IsHost)
-        //    return;
+        if (!IsHost)
+            return;
         base.OnNetworkSpawn();
         currentHealth.Value = maxHealth;
         currentHealth.OnValueChanged += OnHealthChanged;

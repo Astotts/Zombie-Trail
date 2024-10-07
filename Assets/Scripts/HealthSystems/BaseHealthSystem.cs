@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 public class BaseHealthSystem : HealthSystem
 {
@@ -13,6 +14,7 @@ public class BaseHealthSystem : HealthSystem
     [SerializeField] private Color displayColor; //Holds Health and Health Background
     [SerializeField] private float singleFlashTime;
     [SerializeField] private float flashCycles;
+    [SerializeField] NetworkObject networkObject;
 
 
     void Awake()
@@ -24,6 +26,8 @@ public class BaseHealthSystem : HealthSystem
 
     public override void AlterHealth(int amount)
     {
+        if (!networkObject.IsSpawned)
+            return;
         StartCoroutine("HealthFlashing");
         AlterHealthRpc(amount);
         healthBar.value = (float)currentHealth.Value / (float)maxHealth * 100f;
