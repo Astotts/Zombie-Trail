@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7072706537960204960}
   - component: {fileID: 8355394030007464729}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Backround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5584870544602991641}
   - component: {fileID: 6158726481333157422}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: BarSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -180,7 +180,7 @@ GameObject:
   - component: {fileID: 1903653426139474316}
   - component: {fileID: 6051568352734059872}
   - component: {fileID: 3756886327577811831}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Sprite
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -325,7 +325,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8377575769101618732}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Bar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,8 +365,7 @@ GameObject:
   - component: {fileID: 3006633679670788099}
   - component: {fileID: 6125487822850625641}
   - component: {fileID: -3306583592832489577}
-  - component: {fileID: -2135449418757371135}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: Zombie
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -403,7 +402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2876783517
+  GlobalObjectIdHash: 3679512753
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -438,7 +437,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDrag: 1000
   m_AngularDrag: 0.05
   m_GravityScale: 0
@@ -451,7 +450,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!61 &1831202880468665311
 BoxCollider2D:
@@ -641,18 +640,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &-2135449418757371135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2792160428735217364}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2935591226161160168
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,7 +651,7 @@ GameObject:
   - component: {fileID: 4585988089214325977}
   - component: {fileID: 1273153699892246799}
   - component: {fileID: 8732162010227487881}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: MovementSteering
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,7 +686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 8732162010227487881}
-  moveSpeed: 5
+  moveSpeed: 1
   unitRB: {fileID: 401849486956735802}
   targetFinder: {fileID: 1153253664133053637}
   weapon: {fileID: 7474044908196294609}
@@ -746,7 +733,7 @@ GameObject:
   - component: {fileID: 1857286193714345725}
   - component: {fileID: 7349714151622181449}
   - component: {fileID: 854062998789263492}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: StraightAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -980,7 +967,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8466035417553152777}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1014,7 +1001,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2712562716072327679}
   - component: {fileID: 5938517835084642246}
-  m_Layer: 6
+  m_Layer: 3
   m_Name: ZombieWalkerEye
   m_TagString: Untagged
   m_Icon: {fileID: 0}

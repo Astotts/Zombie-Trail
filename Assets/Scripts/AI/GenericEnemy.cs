@@ -30,7 +30,7 @@ public class GenericEnemy : NetworkBehaviour
         base.OnNetworkSpawn();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         transform.position = unitRB.transform.position;
         target = targetFinder.GetClosest();
@@ -54,8 +54,9 @@ public class GenericEnemy : NetworkBehaviour
         Vector3 moveDirection = unitRB.transform.position - position;
         RotateTowards(moveDirection);
         //ToDo: Feature to speed up and slow down
-        Vector3 newPos = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)unitRB.position;
+        Vector3 newPos = (Vector2)transform.up * moveSpeed * Time.fixedDeltaTime + (Vector2)unitRB.transform.position;
         unitRB.MovePosition(newPos);
+        Debug.Log(unitRB.collisionDetectionMode);
     }
 
     void RotateTowards(Vector2 moveDirection)

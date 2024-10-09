@@ -3324,7 +3324,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 1000
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -3472,7 +3472,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 678822d7a49c46d49a983d201b74a25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
   healthBar: {fileID: 3403209290591936008}
   sprite: {fileID: 6002299787626651156}
   displayColor: {r: 0.7075472, g: 0, b: 0, a: 1}
@@ -3492,6 +3491,7 @@ MonoBehaviour:
   - PlayerHurt1
   - PlayerHurt2
   - PlayerHurt3
+  maxHealth: 100
 --- !u!95 &8697594637498151872
 Animator:
   serializedVersion: 5
