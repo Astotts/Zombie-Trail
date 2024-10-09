@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class UnitHealthSystem : HealthSystem
+public class UnitHealthSystem : NetworkBehaviour, IDamageable
 {
     //Health Functionality
     [SerializeField] private Transform bar;
@@ -20,23 +18,37 @@ public class UnitHealthSystem : HealthSystem
     //Sound Functionality
     [SerializeField] private string[] sounds;
 
-    public override void AlterHealth(int amount)
+    //Variable
+    [SerializeField] private int maxHealth = 10;
+    private NetworkVariable<float> currentHealth = new();
+
+    private Coroutine healthFlashing;
+    private Coroutine hideHealth;
+    private bool isDead => currentHealth.Value <= 0;
+
+    public override void OnNetworkSpawn()
     {
-        if (!networkObject.IsSpawned)
-            return;
-        StopCoroutine("HealthFlashing");
-        StopCoroutine("HideHealth");
+        base.OnNetworkSpawn();
+        if (IsHost)
+            currentHealth.Value = maxHealth;
+
+        currentHealth.OnValueChanged += PlayOnDamagedEffect;
+    }
+
+    public void PlayOnDamagedEffect(float previous, float current)
+    {
+        StopCoroutine(healthFlashing);
+        StopCoroutine(hideHealth);
         for (int i = 0; sprites.Length > i; i++)
         {
             sprites[i].color = displayColor[i];
         }
-
-        AlterHealthRpc(amount);
+        
         if (currentHealth.Value > 0)
         {
             AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(10, 13)], UnityEngine.Random.Range(0.7f, 1.1f));
             SetSize(((float)currentHealth.Value / (float)maxHealth)); //Since health variables are ints must cast to float values
-            StartCoroutine("HealthFlashing");
+            StartCoroutine(HealthFlashing());
         }
         else
         {
@@ -45,10 +57,10 @@ public class UnitHealthSystem : HealthSystem
         }
     }
 
-    public override void Die()
+    public void Die()
     {
-        StopCoroutine("HealthFlashing");
-        StopCoroutine("HideHealth");
+        StopCoroutine(healthFlashing);
+        StopCoroutine(hideHealth);
         networkObject.Despawn();
     }
 
@@ -63,7 +75,7 @@ public class UnitHealthSystem : HealthSystem
         float elapsed = 0f;
         for (int i = 0; i <= flashCycles; i++)
         {
-            StopCoroutine("HideHealth");
+            StopCoroutine(hideHealth);
             while (elapsed <= singleFlashTime)
             { //Turn to White
                 elapsed += Time.deltaTime;
@@ -81,7 +93,7 @@ public class UnitHealthSystem : HealthSystem
             }
             elapsed = 0f;
         }
-        StartCoroutine("HideHealth");
+        StartCoroutine(HideHealth());
         yield break;
     }
 
@@ -98,5 +110,13 @@ public class UnitHealthSystem : HealthSystem
             yield return null;
         }
         yield break;
+    }
+
+    // Only host is allowed to run this
+    public void Damage(float amount)
+    {
+        currentHealth.Value -= amount;
+        if (isDead)
+            Die();
     }
 }

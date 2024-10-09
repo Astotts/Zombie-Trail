@@ -766,11 +766,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: afb4f2cb-e62c-4f71-a31f-a8b3a26327b1
+  cloudProjectId: 436efc4a-5fc0-4722-93f6-fa3ee9d4f637
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Zombie Trail
-  organizationId: stottscyan
+  organizationId: stilblue
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
