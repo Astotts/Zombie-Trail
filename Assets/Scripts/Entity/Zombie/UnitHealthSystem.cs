@@ -22,8 +22,8 @@ public class UnitHealthSystem : NetworkBehaviour, IDamageable
     [SerializeField] private int maxHealth = 10;
     private NetworkVariable<float> currentHealth = new();
 
-    private Coroutine healthFlashing;
-    private Coroutine hideHealth;
+    private IEnumerator healthFlashing;
+    private IEnumerator hideHealth;
     private bool isDead => currentHealth.Value <= 0;
 
     public override void OnNetworkSpawn()
@@ -35,6 +35,12 @@ public class UnitHealthSystem : NetworkBehaviour, IDamageable
         currentHealth.OnValueChanged += PlayOnDamagedEffect;
     }
 
+    void Start()
+    {
+        healthFlashing = HealthFlashing();
+        hideHealth = HideHealth();
+    }
+
     public void PlayOnDamagedEffect(float previous, float current)
     {
         StopCoroutine(healthFlashing);
@@ -43,7 +49,7 @@ public class UnitHealthSystem : NetworkBehaviour, IDamageable
         {
             sprites[i].color = displayColor[i];
         }
-        
+
         if (currentHealth.Value > 0)
         {
             AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(10, 13)], UnityEngine.Random.Range(0.7f, 1.1f));

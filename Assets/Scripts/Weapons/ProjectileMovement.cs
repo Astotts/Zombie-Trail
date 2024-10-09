@@ -65,12 +65,12 @@ public class ProjectileMovement : NetworkBehaviour
         {
             if (other.gameObject.transform.parent != null)
             {
-                if (other.gameObject.transform.parent.gameObject.TryGetComponent<HealthSystem>(out var healthSystem))
-                    healthSystem.AlterHealth(-damage);
+                if (other.gameObject.transform.parent.gameObject.TryGetComponent<IDamageable>(out var healthSystem))
+                    healthSystem.Damage(damage);
             }
             else
             {
-                other.gameObject.GetComponent<HealthSystem>().AlterHealth(-damage);
+                other.gameObject.GetComponent<IDamageable>().Damage(damage);
             }
             bloodFX = Instantiate(bloodFX);
             bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);

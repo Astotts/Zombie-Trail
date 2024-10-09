@@ -9,7 +9,7 @@ public class GenericEnemy : NetworkBehaviour
     //Unit Movement
     [SerializeField] Rigidbody2D rb;
     [SerializeField] float moveSpeed;
-    [SerializeField] Transform unitTransform;
+    [SerializeField] Rigidbody2D unitRB;
 
     //Tracking Destination
     [SerializeField] GetClosestTargets targetFinder;
@@ -32,7 +32,7 @@ public class GenericEnemy : NetworkBehaviour
 
     void Update()
     {
-        transform.position = unitTransform.position;
+        transform.position = unitRB.transform.position;
         target = targetFinder.GetClosest();
 
         //Animator Variables
@@ -51,11 +51,11 @@ public class GenericEnemy : NetworkBehaviour
 
     void MoveTo(Vector3 position)
     {
-        Vector3 moveDirection = unitTransform.position - position;
-        RotateTowards((Vector2)moveDirection);
+        Vector3 moveDirection = unitRB.transform.position - position;
+        RotateTowards(moveDirection);
         //ToDo: Feature to speed up and slow down
-        unitTransform.position = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)this.transform.position;
-        rb.velocity += Vector2.zero;
+        Vector3 newPos = (Vector2)transform.up * moveSpeed * Time.deltaTime + (Vector2)unitRB.position;
+        unitRB.MovePosition(newPos);
     }
 
     void RotateTowards(Vector2 moveDirection)

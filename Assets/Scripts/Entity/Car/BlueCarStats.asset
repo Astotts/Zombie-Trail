@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _carName: Blue Car
   _carDescription: Slowest Car Alived
-  _health: 20
+  _health: 100
   _capacity: 4
   _speed: 0.2

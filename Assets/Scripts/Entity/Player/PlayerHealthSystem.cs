@@ -29,7 +29,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     [SerializeField] private float maxHealth = 10;
     private readonly NetworkVariable<float> currentHealth = new();
 
-    private Coroutine healthFlashing;
+    private IEnumerator healthFlashing;
 
     private bool isDead => currentHealth.Value <= 0;
 
@@ -42,9 +42,17 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
         currentHealth.OnValueChanged += PlayOnDamagedEffect;
     }
 
+    void Start()
+    {
+        // Assigning currentHealth & healthBar to the value of maxHealth
+        // currentHealth = maxHealth;
+        healthBar.value = maxHealth;
+        healthFlashing = HealthFlashing();
+    }
+
     void PlayOnDamagedEffect(float preivous, float current)
     {
-        healthFlashing = StartCoroutine(HealthFlashing());
+        StartCoroutine(HealthFlashing());
         StopCoroutine(healthFlashing);
 
         for (int i = 0; bloodEffect.Length > i; i++)
@@ -58,13 +66,6 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
 
         healthBar.value = (maxHealth - current) / maxHealth * 100f;
         AudioManager.Instance.PlaySFX(sounds[Random.Range(0, 3)], Random.Range(0.7f, 1.1f));
-    }
-
-    void Awake()
-    {
-        // Assigning currentHealth & healthBar to the value of maxHealth
-        // currentHealth = maxHealth;
-        healthBar.value = maxHealth;
     }
 
     // public override void AlterHealth(int amount)

@@ -70,13 +70,13 @@ public class MeleeWeapons : WeaponsClass
             elapsedTime = 0;
             attackHitBox.OverlapCollider(filter, enemies);
 
-            if (characterPos.gameObject.tag == "Player" && Input.GetMouseButtonDown(0))
+            if (characterPos.CompareTag("Player") && Input.GetMouseButtonDown(0))
             {
                 foreach (Collider2D collider in enemies)
                 {
-                    if (collider != null && collider.tag == "Enemy")
+                    if (collider != null && collider.CompareTag("Enemy"))
                     {
-                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);
+                        collider.GetComponent<IDamageable>().Damage(damage);
                     }
                 }
             }
@@ -84,9 +84,9 @@ public class MeleeWeapons : WeaponsClass
             {
                 foreach (Collider2D collider in enemies)
                 {
-                    if (collider != null && collider.tag == "Player")
+                    if (collider != null && collider.CompareTag("Player"))
                     {
-                        collider.GetComponent<HealthSystem>().AlterHealth(-damage);
+                        collider.GetComponent<IDamageable>().Damage(damage);
                     }
                 }
             }

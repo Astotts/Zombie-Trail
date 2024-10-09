@@ -14,13 +14,20 @@ public class CarHealth : NetworkBehaviour, IDamageable
 
     private NetworkVariable<float> currentHealth = new();
     private bool isDestroyed => currentHealth.Value <= 0;
-    private Coroutine healthFlashing;
+    private IEnumerator healthFlashing;
+
+    void OnCollisionEnter2D(Collision2D collision2D)
+    {
+        if (collision2D.collider.CompareTag("Enemy"))
+            Debug.Log("Colliding with zombie");
+    }
 
     void Start()
     {
         if (!IsHost)
             return;
 
+        healthFlashing = HealthFlashing();
         currentHealth.Value = Stats.Health;
     }
 
@@ -32,7 +39,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
 
     void PlayOnDamagedEffect(float previousHealth, float currentHealth)
     {
-        healthFlashing = StartCoroutine(HealthFlashing());
+        StartCoroutine(HealthFlashing());
     }
 
     // Only host is allowed to use this

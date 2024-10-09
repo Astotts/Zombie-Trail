@@ -8,7 +8,7 @@ public class CarPassenger : NetworkBehaviour
     public CarStats Stats => _carStats;
 
     private NetworkVariable<int> currentPassengers = new();
-    private bool isFull => currentPassengers.Value >= 0;
+    private bool IsFull => currentPassengers.Value >= 0;
 
     public bool AddPassenger(int amount)
     {
@@ -16,6 +16,6 @@ public class CarPassenger : NetworkBehaviour
             return false;
 
         currentPassengers.Value += amount;
-        return isFull;
+        return IsFull;
     }
 }
