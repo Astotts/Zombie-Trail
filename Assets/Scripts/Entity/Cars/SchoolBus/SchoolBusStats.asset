@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14c654c38afdf489d87591136c6dfcb8, type: 3}
-  m_Name: BlueCarStats
+  m_Name: SchoolBusStats
   m_EditorClassIdentifier: 
-  _carName: Blue Car
-  _carDescription: Slowest Car Alived
-  _carSprite: {fileID: 21300000, guid: 4776c983f6ad343d983ec3e86b112ad0, type: 3}
+  _carName: School Bus
+  _carDescription: Can store many survivors
+  _carSprite: {fileID: 21300000, guid: 2bfebcf01dd1947c6ab042802c8b349c, type: 3}
   health:
-  - value: 25
+  - value: 200
     cost: 0
   damage:
   - value: 5
     cost: 0
   capacity:
-  - value: 8
+  - value: 50
     cost: 0
   speed:
-  - value: 10
+  - value: 5
     cost: 0

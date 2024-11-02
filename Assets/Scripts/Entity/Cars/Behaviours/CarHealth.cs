@@ -2,25 +2,19 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
+[RequireComponent(typeof(Car))]
 public class CarHealth : NetworkBehaviour, IDamageable
 {
     [SerializeField] int healthFlashCycles = 4;
     [SerializeField] float healthSingleFlashTime = 0.25f;
-    [SerializeField] CarStats _carStats;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] NetworkObject networkObject;
 
-    public CarStats Stats => _carStats;
+    int maxHealth;
 
-    private NetworkVariable<float> currentHealth = new();
-    private bool isDestroyed => currentHealth.Value <= 0;
+    private readonly NetworkVariable<float> currentHealth = new();
+    private bool IsDestroyed => currentHealth.Value <= 0;
     private IEnumerator healthFlashing;
-
-    void OnCollisionEnter2D(Collision2D collision2D)
-    {
-        if (collision2D.collider.CompareTag("Enemy"))
-            Debug.Log("Colliding with zombie");
-    }
 
     void Start()
     {
@@ -28,7 +22,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
             return;
 
         healthFlashing = HealthFlashing();
-        currentHealth.Value = Stats.Health;
+        currentHealth.Value = maxHealth;
     }
 
     public override void OnNetworkSpawn()
@@ -47,10 +41,16 @@ public class CarHealth : NetworkBehaviour, IDamageable
     {
         currentHealth.Value -= amount;
 
-        if (isDestroyed)
+        if (IsDestroyed)
         {
             DestroyVehicle();
         }
+    }
+
+    void DestroyVehicle()
+    {
+        StopCoroutine(healthFlashing);
+        networkObject.Despawn();
     }
 
     IEnumerator HealthFlashing()
@@ -78,9 +78,8 @@ public class CarHealth : NetworkBehaviour, IDamageable
         }
     }
 
-    void DestroyVehicle()
+    public void SetMaxHealth(int amount)
     {
-        StopCoroutine(healthFlashing);
-        networkObject.Despawn();
+        maxHealth = amount;
     }
 }

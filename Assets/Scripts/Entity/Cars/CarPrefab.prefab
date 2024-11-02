@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1745872516337207827}
   m_Layer: 0
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: PlayerSpawn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 6872313055147276681}
   - component: {fileID: 183117000059699950}
   m_Layer: 6
-  m_Name: BlueCar
+  m_Name: CarPrefab
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -728,12 +728,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: e99b63118c056ea4d962d08c4622d15f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 85d683f01222d4043a0664544d593d09, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.28, y: 0.55}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 39993417
+  GlobalObjectIdHash: 412011419
   InScenePlacedSourceGlobalObjectIdHash: 412011419
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -892,8 +892,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.23, y: 0.54}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 1.28, y: 0.55}
+    newSize: {x: 1.28, y: 0.55}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -983,7 +983,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0a3504ef29d94ec5a7a7ff838b23456, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _carStats: {fileID: 11400000, guid: 6c4340344a2de451e8ebecf2df010029, type: 2}
   rigid2D: {fileID: 4360908955493323232}
 --- !u!114 &6872313055147276681
 MonoBehaviour:
@@ -999,7 +998,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthFlashCycles: 4
   healthSingleFlashTime: 0.25
-  _carStats: {fileID: 11400000, guid: 6c4340344a2de451e8ebecf2df010029, type: 2}
   spriteRenderer: {fileID: 8834649198696571049}
   networkObject: {fileID: 1008094513965317768}
 --- !u!114 &183117000059699950
@@ -1015,7 +1013,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigid2D: {fileID: 4360908955493323232}
-  _carStats: {fileID: 11400000, guid: 6c4340344a2de451e8ebecf2df010029, type: 2}
 --- !u!1 &7379355691926010862
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 39993417
+  GlobalObjectIdHash: 1255009557
   InScenePlacedSourceGlobalObjectIdHash: 412011419
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1

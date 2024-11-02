@@ -6,18 +6,23 @@ using UnityEngine.Events;
 
 public class CarMovement : NetworkBehaviour
 {
-    [SerializeField] CarStats _carStats;
     [SerializeField] Rigidbody2D rigid2D;
-    public CarStats Stats => _carStats;
+
+    int speed;
 
 
     void FixedUpdate()
     {
-        Move(Vector2.right, Stats.Speed * Time.fixedDeltaTime);
+        Move(Vector2.right, speed * Time.fixedDeltaTime);
     }
 
     void Move(Vector2 direction, float speed)
     {
         rigid2D.MovePosition((Vector2)transform.position + direction * speed);
+    }
+
+    public void SetSpeed(int amount)
+    {
+        speed = amount;
     }
 }

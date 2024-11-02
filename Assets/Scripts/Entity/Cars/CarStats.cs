@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Unity.VisualStudio.Editor;
 using UnityEngine;
 
@@ -7,14 +9,56 @@ public class CarStats : ScriptableObject
     // These will show up in inspector for entering base stats
     [SerializeField] private string _carName;
     [SerializeField] private string _carDescription;
-    [SerializeField] private int _health;
-    [SerializeField] private int _capacity;
-    [SerializeField] private float _speed;
+    [SerializeField] private Sprite _carSprite;
+    [SerializeField] private List<UpgradableStat> health;
+    [SerializeField] private List<UpgradableStat> damage;
+    [SerializeField] private List<UpgradableStat> capacity;
+    [SerializeField] private List<UpgradableStat> speed;
 
-    // Other scripts can read these but can't modify
     public string CarName => _carName;
     public string CarDescription => _carDescription;
-    public int Health => _health;
-    public int Capacity => _capacity;
-    public float Speed => _speed;
+    public Sprite CarSprite => _carSprite;
+
+    // Other scripts can read these but can't modify
+    public int GetStat(ECarStatName statName, int upgradeLevel)
+    {
+        return statName switch
+        {
+            ECarStatName.HEALTH => health[upgradeLevel].Value,
+            ECarStatName.DAMAGE => damage[upgradeLevel].Value,
+            ECarStatName.SPEED => speed[upgradeLevel].Value,
+            ECarStatName.CAPACITY => capacity[upgradeLevel].Value,
+            _ => -1,
+        };
+    }
+
+    public int GetMaxLevel(ECarStatName statName)
+    {
+        return statName switch
+        {
+            ECarStatName.HEALTH => health.Count,
+            ECarStatName.DAMAGE => damage.Count,
+            ECarStatName.SPEED => speed.Count,
+            ECarStatName.CAPACITY => capacity.Count,
+            _ => -1,
+        };
+    }
+}
+
+[Serializable]
+public class UpgradableStat
+{
+    [SerializeField] int value;
+    [SerializeField] int cost;
+
+    public int Value => value;
+    public int Cost => cost;
+}
+
+public enum ECarStatName
+{
+    HEALTH,
+    DAMAGE,
+    SPEED,
+    CAPACITY
 }
