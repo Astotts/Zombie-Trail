@@ -3,12 +3,18 @@ using UnityEngine;
 
 public class Car
 {
-    CarStats stats;
-    Dictionary<ECarStatName, int> upgrades;
+    public bool IsUnlocked = false;
+    readonly CarStats stats;
+    readonly Dictionary<ECarStatName, int> upgrades = new();
 
     public Car(CarStats stats)
     {
         this.stats = stats;
+
+        upgrades[ECarStatName.HEALTH] = 0;
+        upgrades[ECarStatName.DAMAGE] = 0;
+        upgrades[ECarStatName.SPEED] = 0;
+        upgrades[ECarStatName.CAPACITY] = 0;
     }
 
     public bool Upgrade(ECarStatName statName)
@@ -26,8 +32,18 @@ public class Car
         return stats.GetStat(statName, upgrades[statName]);
     }
 
+    public int GetUpgradeLevel(ECarStatName statName)
+    {
+        return upgrades[statName];
+    }
+
     public Sprite GetSprite()
     {
         return stats.CarSprite;
+    }
+
+    public string GetName()
+    {
+        return stats.CarName;
     }
 }

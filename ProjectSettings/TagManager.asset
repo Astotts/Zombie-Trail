@@ -9,6 +9,7 @@ TagManager:
   - Road
   - Structure
   - PlayerSpawn
+  - Car
   layers:
   - Default
   - TransparentFX

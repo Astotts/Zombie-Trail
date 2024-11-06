@@ -12,6 +12,7 @@ public class CameraTracking : MonoBehaviour
     [SerializeField] Transform player = null;
     [SerializeField] Vector3 offset;
     [SerializeField] WorldGenerator worldGenerator;
+    [SerializeField] int findAttempts = 20;
 
     float minY;
     float maxY;
@@ -21,17 +22,36 @@ public class CameraTracking : MonoBehaviour
     void Start()
     {
         this.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing = true;
-        foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-        {
-            if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
-                player = go.transform;
-        }
+        StartCoroutine(FindPlayer());
         Camera camera = Camera.main;
         float worldGeneratorYPos = worldGenerator.chunkSize / 2;
         float worldGeneratorVerticalExtend = worldGenerator.maxWidth;
 
         maxY = worldGeneratorYPos + worldGeneratorVerticalExtend + camera.orthographicSize / 2;
         minY = -worldGeneratorYPos - worldGeneratorVerticalExtend - camera.orthographicSize / 2;
+    }
+
+    IEnumerator FindPlayer()
+    {
+        bool found = false;
+        for (int i = 0; i < findAttempts && !found; i++)
+        {
+            Debug.Log("Finding Owner, Atempt #" + i);
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
+            {
+                if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
+                {
+                    player = go.transform;
+                    found = true;
+                    Debug.Log("Is local");
+                    break;
+                }
+                Debug.Log("Is it?");
+            }
+            yield return new WaitForSecondsRealtime(1.0f);
+        }
+        if (!found)
+            gameObject.SetActive(false);
     }
 
     float BetweenMinMax(float y)
@@ -43,7 +63,7 @@ public class CameraTracking : MonoBehaviour
     void LateUpdate()
     {
         if (player == null)
-            gameObject.SetActive(false);
+            return;
 
         // pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat;
         // pos.y += Input.GetAxisRaw("Vertical") * camSnapFloat;

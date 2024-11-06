@@ -10,6 +10,9 @@ public class CarStats : ScriptableObject
     [SerializeField] private string _carName;
     [SerializeField] private string _carDescription;
     [SerializeField] private Sprite _carSprite;
+    [SerializeField] private Sprite _carUISprite;
+    [SerializeField] private Vector2 _colliderOffset;
+    [SerializeField] private Vector2 _colliderSize;
     [SerializeField] private List<UpgradableStat> health;
     [SerializeField] private List<UpgradableStat> damage;
     [SerializeField] private List<UpgradableStat> capacity;
@@ -18,6 +21,9 @@ public class CarStats : ScriptableObject
     public string CarName => _carName;
     public string CarDescription => _carDescription;
     public Sprite CarSprite => _carSprite;
+    public Sprite CarUISprite => _carUISprite;
+    public Vector2 ColliderOffset => _colliderOffset;
+    public Vector2 ColliderSize => _colliderSize;
 
     // Other scripts can read these but can't modify
     public int GetStat(ECarStatName statName, int upgradeLevel)

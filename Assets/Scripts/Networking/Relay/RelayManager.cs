@@ -18,6 +18,7 @@ public class RelayManager : MonoBehaviour
 {
     public static RelayManager Instance { get; private set; }
     public static string JoinCode;
+    bool IsLocked;
 
     public const int MAX_PLAYER = 4;
 
@@ -56,14 +57,22 @@ public class RelayManager : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
+            NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
+
             NetworkManager.Singleton.StartHost();
 
-            NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
+    }
+
+    public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
+    {
+        response.Approved = IsLocked;
+        response.Reason = "The owners is currently away from the base, please wait for them to return.";
     }
 
     public async void JoinRelay(string code)
@@ -82,5 +91,15 @@ public class RelayManager : MonoBehaviour
         {
             Debug.Log(e);
         }
+    }
+
+    public void LockRelay()
+    {
+        IsLocked = true;
+    }
+
+    public void UnLockRelay()
+    {
+        IsLocked = false;
     }
 }

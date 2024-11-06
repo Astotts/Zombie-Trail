@@ -8,21 +8,26 @@ public class CarMovement : NetworkBehaviour
 {
     [SerializeField] Rigidbody2D rigid2D;
 
-    int speed;
+    float speed;
 
 
     void FixedUpdate()
     {
-        Move(Vector2.right, speed * Time.fixedDeltaTime);
+        Move(Vector2.right, speed * Time.deltaTime);
     }
 
-    void Move(Vector2 direction, float speed)
+    void Move(Vector3 direction, float speed)
     {
-        rigid2D.MovePosition((Vector2)transform.position + direction * speed);
+        rigid2D.MovePosition(rigid2D.transform.position + direction * speed);
     }
 
     public void SetSpeed(int amount)
     {
-        speed = amount;
+        speed = (float)amount / 10;
+    }
+
+    public void OnCollisionStay(Collision collision)
+    {
+        Debug.Log("Colliding");
     }
 }

@@ -100,6 +100,6 @@ public class ZombieSpawner : NetworkBehaviour
 
         // Spawn on clients
         NetworkObject spawnedZombieNetworkObject = spawnedZombie.GetComponent<NetworkObject>();
-        spawnedZombieNetworkObject.Spawn();
+        spawnedZombieNetworkObject.Spawn(true);
     }
 }

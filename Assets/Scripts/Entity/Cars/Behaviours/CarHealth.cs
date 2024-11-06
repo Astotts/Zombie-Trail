@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Car))]
 public class CarHealth : NetworkBehaviour, IDamageable
@@ -40,6 +41,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
     public void Damage(float amount)
     {
         currentHealth.Value -= amount;
+        Debug.Log("Car Damaged: " + amount);
 
         if (IsDestroyed)
         {
@@ -51,6 +53,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
     {
         StopCoroutine(healthFlashing);
         networkObject.Despawn();
+        NetworkManager.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
     }
 
     IEnumerator HealthFlashing()

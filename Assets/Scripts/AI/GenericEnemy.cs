@@ -49,14 +49,14 @@ public class GenericEnemy : NetworkBehaviour
         }
     }
 
-    void MoveTo(Vector3 position)
+    void MoveTo(Vector2 position)
     {
-        Vector3 moveDirection = unitRB.transform.position - position;
+        Vector2 moveDirection = unitRB.position - position;
         RotateTowards(moveDirection);
         //ToDo: Feature to speed up and slow down
-        Vector3 newPos = (Vector2)transform.up * moveSpeed * Time.fixedDeltaTime + (Vector2)unitRB.transform.position;
+        Vector2 newPos = moveSpeed * Time.fixedDeltaTime * (Vector2)transform.up + unitRB.position;
         unitRB.MovePosition(newPos);
-        Debug.Log(unitRB.collisionDetectionMode);
+        // Debug.Log(unitRB.collisionDetectionMode);
     }
 
     void RotateTowards(Vector2 moveDirection)
