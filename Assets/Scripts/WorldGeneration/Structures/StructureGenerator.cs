@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
@@ -15,8 +16,10 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
     private int midPoint;
     private int leftX;
     private int rightX;
+    private readonly Dictionary<Vector2Int, List<GameObject>> spawnedStructures = new();
     public void GenerateStructuresRight(System.Random random, int chunkX, int chunkY)
     {
+        Vector2Int chunkPos = new(chunkX, chunkY);
         if (chunkX < rightX)
             return;
         for (int i = 0; i < chunkSize; i++)
@@ -36,6 +39,7 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
             GameObject spawnedStructure = SpawnStructureRight(randomStructure, x, y);
             if (spawnedStructure != null)
             {
+                spawnedStructures[chunkPos].Add(spawnedStructure);
                 BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
                 int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
                 i += structureXLength - 1;
@@ -45,6 +49,7 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
     }
     public void GenerateStructuresLeft(System.Random random, int chunkX, int chunkY)
     {
+        Vector2Int chunkPos = new(chunkX, chunkY);
         if (chunkX > leftX)
             return;
         for (int i = 0; i < chunkSize; i++)
@@ -64,6 +69,7 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
             GameObject spawnedStructure = SpawnStructureLeft(randomStructure, x, y);
             if (spawnedStructure != null)
             {
+                spawnedStructures[chunkPos].Add(spawnedStructure);
                 BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
                 int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
                 i += structureXLength - 1;
@@ -156,6 +162,18 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
     {
         if (roadType != RoadType.NONE)
             return;
+        Vector2Int chunkPos = new(chunkX, chunkY);
+        if (spawnedStructures.TryGetValue(chunkPos, out List<GameObject> spawnedStructureList))
+        {
+            foreach (GameObject structure in spawnedStructureList)
+            {
+                structure.SetActive(true);
+            }
+            return;
+        }
+
+        List<GameObject> structureList = new();
+        spawnedStructures[chunkPos] = structureList;
 
         if (generateDirection == GenerateDirection.EAST)
         {
@@ -169,6 +187,23 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
 
     public void UnloadChunkAt(int chunkX, int chunkY)
     {
+        Vector2Int chunkPos = new(chunkX, chunkY);
+        if (spawnedStructures.TryGetValue(chunkPos, out List<GameObject> spawnedStructureList))
+        {
+            foreach (GameObject structure in spawnedStructureList)
+            {
+                if (!structure.IsDestroyed())
+                {
+                    structure.SetActive(false);
+                }
+            }
+            spawnedStructureList.RemoveAll(IsGameObjectDestroyed);
+        }
+    }
+
+    bool IsGameObjectDestroyed(GameObject gameObject)
+    {
+        return gameObject.IsDestroyed();
     }
 }
 

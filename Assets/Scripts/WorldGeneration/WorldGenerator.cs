@@ -108,6 +108,7 @@ public class WorldGenerator : MonoBehaviour
 
     void LoadChunkAt(Vector2Int pos, GenerateDirection generateDirection)
     {
+        random = new(seed + pos.x * maxWidth * 2 + pos.y);
         if (!tiles.TryGetValue(pos, out RoadTile roadTile))
         {
             if (generateDirection == GenerateDirection.WEST)
@@ -156,7 +157,8 @@ public class WorldGenerator : MonoBehaviour
     {
         foreach (ChunkGenerator chunkGenerator in chunkGenerators)
         {
-            chunkGenerator.LoadChunkAt(random, chunkX, chunkY, generateDirection, roadType);
+            System.Random chunkRandom = new(seed + chunkX * maxWidth + chunkY);
+            chunkGenerator.LoadChunkAt(chunkRandom, chunkX, chunkY, generateDirection, roadType);
         }
     }
 
