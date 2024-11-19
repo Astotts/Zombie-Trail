@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Car))]
 public class CarHealth : NetworkBehaviour, IDamageable
@@ -10,6 +11,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
     [SerializeField] float healthSingleFlashTime = 0.25f;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] NetworkObject networkObject;
+    [SerializeField] Slider healthSlider;
 
     int maxHealth;
 
@@ -35,6 +37,7 @@ public class CarHealth : NetworkBehaviour, IDamageable
     void PlayOnDamagedEffect(float previousHealth, float currentHealth)
     {
         StartCoroutine(HealthFlashing());
+        healthSlider.value = currentHealth / maxHealth * 100;
     }
 
     // Only host is allowed to use this

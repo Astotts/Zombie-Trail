@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using JetBrains.Annotations;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,11 +25,13 @@ public class CarManager : NetworkBehaviour
     int currentSelectedCarIndex = 0;
     public Car CurrentSelectedCar { get; private set; }
 
-    readonly List<Car> cars = new();
+    List<Car> cars = new();
     SpriteRenderer prefabSpriteRender;
     CarMovement prefabMovement;
     CarHealth prefabHealth;
     CarPassenger prefabPassenger;
+
+    string savedPath;
 
     void Awake()
     {
@@ -41,6 +45,7 @@ public class CarManager : NetworkBehaviour
         }
         CurrentSelectedCar = cars[currentSelectedCarIndex];
         CurrentSelectedCar.IsUnlocked = true;
+        savedPath = Application.persistentDataPath + "/CarData.json";
     }
 
     public void SpawnCurrentSelectedCarAt(Vector2 location)
@@ -122,6 +127,18 @@ public class CarManager : NetworkBehaviour
             carPreviewUI.color = Color.white;
         else
             carPreviewUI.color = Color.black;
+    }
+
+    public void SaveData()
+    {
+        string json = JsonUtility.ToJson(cars);
+        File.WriteAllText(savedPath, json);
+    }
+
+    public void LoadData()
+    {
+        string text = File.ReadAllText(savedPath);
+        cars = JsonUtility.FromJson<List<Car>>(text);
     }
 
     int Modulo(int a, int b)

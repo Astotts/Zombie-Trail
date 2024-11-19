@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 412011419
+  GlobalObjectIdHash: 39993417
   InScenePlacedSourceGlobalObjectIdHash: 412011419
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -988,6 +988,7 @@ MonoBehaviour:
   healthSingleFlashTime: 0.25
   spriteRenderer: {fileID: 8834649198696571049}
   networkObject: {fileID: 1008094513965317768}
+  healthSlider: {fileID: 5464700747654760386}
 --- !u!114 &183117000059699950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1212,7 +1213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1255009557
+  GlobalObjectIdHash: 39993417
   InScenePlacedSourceGlobalObjectIdHash: 412011419
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
