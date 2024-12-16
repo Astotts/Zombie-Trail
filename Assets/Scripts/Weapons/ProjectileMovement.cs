@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
 public class ProjectileMovement : NetworkBehaviour
 {
-    private float speed;
-    private Vector3 direction;
-    private Vector2 initialPosition;
-    public float outOfBounds; // Maximum range the projectile can travel
-    public int damage;
-
-    [SerializeField] GameObject bloodFX;
+    [SerializeField] GameObject bloodFX;                    // Blood Splash sprites on screen
     //[SerializeField] GameObject bulletTrail;
+    [SerializeField] private NetworkObject networkObject;   // Assigned networkObject so this bullet can return to pool
+    private GameObject prefab;                              // Assigned prefab so this bullet can return to pool
+    private int currentPenetration;                         // Ammount of penetration left before disappear
+    private float speed;                                    // Current move speed
+    private Vector3 direction;                              // Current direction to travel
+    private Vector2 initialPosition;                        // Initial Position
+    public float outOfBounds;                               // Maximum range the projectile can travel
+    public int damage;                                      // Damage to deal
 
     ParticleSystem bloodParticleSystem;
     TrailRenderer bulletTrailRenderer;
@@ -33,30 +33,37 @@ public class ProjectileMovement : NetworkBehaviour
         initialPosition = this.transform.position; // Store the initial position of the projectile
     }
 
-    public void InitiateMovement(Vector3 dir, float spe, int dam)
+    public void InitiateMovement(GunStats gunStats, AmmoStats ammoStats, Vector3 direction)
     {
-        speed = spe;
-        direction = dir;
-        damage = dam;
+        this.direction = direction;
+        this.currentPenetration = ammoStats.penetration;
 
         // rotation angle in degrees
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        float spread = Random.Range(-gunStats.accuracy, gunStats.accuracy);
         // rotation of the object
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle - 90));
+        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle + spread));
     }
 
     void Update()
     {
         // since projectile was already rotated to face where mouse clicked all I have to do is shoot it.
-        this.transform.position += this.transform.up * speed * Time.deltaTime;
+        this.transform.position += speed * Time.deltaTime * this.transform.up;
 
         // Out of bounds code
         float distanceTraveled = Vector2.Distance(initialPosition, this.transform.position);
         if (distanceTraveled >= outOfBounds)
         {
-            Destroy(gameObject); // Destroy the projectile when it goes out of range
-
+            // Destroy the projectile when it goes out of range
+            DestroySelf();
         }
+    }
+
+    void DestroySelf() {
+        // Return to its network pool
+        NetworkObjectPool.Singleton.ReturnNetworkObject(this.networkObject, this.gameObject);
+        // Destroy and return to pool on client side
+        Destroy(gameObject); 
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -80,7 +87,7 @@ public class ProjectileMovement : NetworkBehaviour
         }
         else if (other.CompareTag("Structure"))
         {
-            Destroy(gameObject);
+            DestroySelf();
         }
     }
 }

@@ -110,7 +110,7 @@ public class RangedWeapons : WeaponsClass
     {
         GameObject newProjectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
         newProjectile.GetComponent<NetworkObject>().Spawn();
-        newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(direction, projectileSpeed, damage);
+        // newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(direction, projectileSpeed, damage);
     }
 
     public override void Reload()
