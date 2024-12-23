@@ -50,3 +50,6 @@ TagManager:
   - name: Unaffected
     uniqueID: 1385374429
     locked: 0
+  - name: Reload
+    uniqueID: 1120230839
+    locked: 0

@@ -158,10 +158,6 @@ public class PlayerController : NetworkBehaviour
         //Debug.Log("Movement x: " + movement.x);
         //Debug.Log("Movement y: " + movement.y);
 
-        //Get Selected Slot
-        if ((0 < playerControls.Equipment.FirstWeapon.ReadValue<float>())) selectedWeapon = 0;
-        if ((0 < playerControls.Equipment.SecondWeapon.ReadValue<float>())) selectedWeapon = 1;
-
         prevMovement = playerControls.Movement.Move.ReadValue<Vector2>();
     }
 

@@ -33,16 +33,16 @@ public class ProjectileMovement : NetworkBehaviour
         initialPosition = this.transform.position; // Store the initial position of the projectile
     }
 
-    public void InitiateMovement(GunStats gunStats, AmmoStats ammoStats, Vector3 direction)
+    public void InitiateMovement(Vector3 direction, float speed, int damage)
     {
         this.direction = direction;
-        this.currentPenetration = ammoStats.penetration;
+        this.damage = damage;
+        this.speed = speed;
 
         // rotation angle in degrees
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        float spread = Random.Range(-gunStats.accuracy, gunStats.accuracy);
         // rotation of the object
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle + spread));
+        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
     }
 
     void Update()
@@ -59,11 +59,12 @@ public class ProjectileMovement : NetworkBehaviour
         }
     }
 
-    void DestroySelf() {
+    void DestroySelf()
+    {
         // Return to its network pool
         NetworkObjectPool.Singleton.ReturnNetworkObject(this.networkObject, this.gameObject);
         // Destroy and return to pool on client side
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)
