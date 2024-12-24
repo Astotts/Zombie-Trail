@@ -26,11 +26,10 @@ public class GunStats : ScriptableObject
     [field: SerializeField] public float ReloadTime { get; private set; }           // Reload time in seconds
     [field: SerializeField] public float Penetration { get; private set; }          // Zombies to hit before bullet disappear
     [field: SerializeField] public float Weight { get; private set; }               // In case we implement a weight system
-    [field: SerializeField] public float FadeDuration { get; private set; }         // Fade time of reload UI
     [field: SerializeField] public string[] GunShotSFXs { get; private set; }       // Gun Shots Sound Effects
     [field: SerializeField] public string[] ReloadSFXs { get; private set; }        // Reload Sound Effects
     [field: SerializeField] public string[] EquipSFXs { get; private set; }         // Equip Sound Effect
-    [field: SerializeField] public string[] HolsterSFXs { get; private set; }         // Holster Sound Effect
+    [field: SerializeField] public string[] HolsterSFXs { get; private set; }       // Holster Sound Effect
 }
 
 public enum EAmmoType

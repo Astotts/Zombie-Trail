@@ -1,10 +1,12 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffect, IOnRightClickEffect, IOnSwapInEffect
+public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem
 {
+    public event EventHandler<int> OnAmmoChangeEvent;
+    public event EventHandler<float> OnReloadEvent;
     private int currentAmmo;
     public string ItemName => stats.GunName;
     public Sprite Icon => stats.Icon;
@@ -16,103 +18,95 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffect, IOnRightCli
     [SerializeField] private GunStats stats;
     [SerializeField] NetworkObject networkObject;
     [SerializeField] SpriteRenderer weaponSpriteRenderer;
-    [SerializeField] Image[] uiImage;
-    [SerializeField] GameObject reloadFill;
 
-    private float elapsed;
     private bool isReloading;
+    private bool isOnFireRateCooldown;
 
     void OnValidate()
     {
         networkObject = GetComponent<NetworkObject>();
     }
 
-    public void OnLeftClick(GameObject player)
+    void Start()
     {
-        if (currentAmmo == 0)
-        {
-            Reload();
-        }
-        else if (0 >= elapsed)
-        {
-            elapsed = stats.Recoil;
-            // get the mouse position
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // current position to mouse position
-            Vector2 directionOfAttack = (mousePos - transform.position).normalized;
-
-            // create & shoot the projectile 
-            SpawnBulletsServerRpc(directionOfAttack);
-            currentAmmo -= 1;
-            AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, 1)], UnityEngine.Random.Range(0.7f, 1.1f));
-        }
+        currentAmmo = UnityEngine.Random.Range(0, stats.MagazineSize);
     }
 
-    public void Reload()
+    public void OnLeftClick(NetworkObject player)
+    {
+        if (isReloading || isOnFireRateCooldown)
+            return;
+
+        if (currentAmmo == 0)
+        {
+            OnReload(player);
+            return;
+        }
+
+        // get the mouse position
+        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        // current position to mouse position
+        Vector2 directionOfAttack = (mousePos - transform.position).normalized;
+
+        // create & shoot the projectile 
+        SpawnBulletsServerRpc(directionOfAttack);
+        StartCoroutine(FireRateCooldown());
+        currentAmmo -= 1;
+        AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, stats.GunShotSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
+    }
+
+    IEnumerator FireRateCooldown()
+    {
+        isOnFireRateCooldown = true;
+        yield return new WaitForSecondsRealtime(stats.FireRate);
+        isOnFireRateCooldown = false;
+    }
+
+    public void OnReload(NetworkObject networkObject)
     {
         if (!isReloading)
         {
             isReloading = true;
-            AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, 2)], UnityEngine.Random.Range(0.7f, 1.1f));
+            AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
             StartCoroutine(Reloading());
         }
     }
+
     IEnumerator Reloading()
     {
-        SetOpacity(1);
-        reloadFill.transform.localScale = new Vector3(0, 1, 1);
-        float reloadElapsed = 0;
-        float reloadValue;
-        while (reloadElapsed < stats.ReloadTime)
-        {
-            reloadElapsed += Time.deltaTime;
-            reloadValue = reloadElapsed / stats.ReloadTime;
-            //Debug.Log(reloadSlider.value);
-            reloadFill.transform.localScale = new Vector3(reloadValue, 0, 0);
-            yield return null;
-        }
+        OnReloadEvent?.Invoke(this, stats.ReloadTime);
+        yield return new WaitForSecondsRealtime(stats.ReloadTime);
+        AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
         currentAmmo = stats.MagazineSize;
+        OnAmmoChange(currentAmmo);
         isReloading = false;
-        AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, 2)], UnityEngine.Random.Range(0.7f, 1.1f));
-        StartCoroutine(HideReloadStatus());
-    }
-
-    IEnumerator HideReloadStatus()
-    {
-        float statusElapsed = 0f;
-        while (statusElapsed <= stats.FadeDuration)
-        {
-            statusElapsed += Time.deltaTime;
-            SetOpacity(Mathf.Lerp(1f, 0f, statusElapsed / stats.FadeDuration));
-            yield return null;
-        }
-        yield break;
-    }
-
-    public void SetOpacity(float a)
-    {
-        //Debug.Log("Setting Opacity to " + a);
-        for (int i = 0; i < uiImage.Length; i++)
-        {
-            uiImage[i].color = new Color(1f, 1f, 1f, a);
-        }
     }
 
     [Rpc(SendTo.Server)]
     public void SpawnBulletsServerRpc(Vector2 direction)
     {
-        GameObject newProjectile = Instantiate(stats.BulletGO, transform.position, Quaternion.identity);
-        newProjectile.GetComponent<NetworkObject>().Spawn();
-        newProjectile.GetComponent<ProjectileMovement>().InitiateMovement(direction, stats.BulletVelocity, stats.Damage);
+        NetworkObject bulletNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(stats.BulletGO, transform.position, Quaternion.identity);
+        ProjectileMovement projectileMovement = bulletNetworkObject.GetComponent<ProjectileMovement>();
+        projectileMovement.IntializeInfo
+        (
+            stats.BulletGO,
+            direction,
+            stats.Damage,
+            stats.Accuracy,
+            stats.Penetration,
+            stats.BulletVelocity,
+            stats.Range
+        );
+        bulletNetworkObject.Spawn();
     }
 
-    public void OnRightClick(GameObject player)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnSwapIn(GameObject player)
+    public void OnSwapIn(NetworkObject player)
     {
         Cursor.SetCursor(stats.Cursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    void OnAmmoChange(int currentAmmo)
+    {
+        OnAmmoChangeEvent?.Invoke(this, currentAmmo);
     }
 }

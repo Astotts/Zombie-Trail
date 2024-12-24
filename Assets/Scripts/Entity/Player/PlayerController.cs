@@ -65,50 +65,10 @@ public class PlayerController : NetworkBehaviour
         playerControls.Disable();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        for (int i = 0; i <= 1; i++)
-        {
-            if (weapons[i] is RangedWeapons ranged)
-            {
-                ranged.reloading = false;
-                ranged.SetOpacity(0);
-            }
-            weapons[i].ui.SetActive(false);
-            weapons[i].gameObject.SetActive(false);
-        }
-    }
-
     // Update is called once per frame
     void Update()
     {
         PlayerInputs();
-
-        for (int i = 0; i <= 1; i++)
-        {
-            if (i != selectedWeapon)
-            {
-                if (animators[i] != null)
-                {
-                    animators[i].StopAnimating();
-                }
-                if (weapons[i] is RangedWeapons ranged)
-                {
-                    ranged.reloading = false;
-                    ranged.SetOpacity(0);
-                }
-                weapons[i].ui.SetActive(false);
-                weapons[i].gameObject.SetActive(false);
-            }
-        }
-        weapons[selectedWeapon].gameObject.SetActive(true);
-        weapons[selectedWeapon].ui.SetActive(true);
-
-        if (Input.GetMouseButton(0))
-        {
-            weapons[selectedWeapon].Attack();
-        }
     }
 
     private void FixedUpdate()
@@ -125,11 +85,13 @@ public class PlayerController : NetworkBehaviour
 
         walkingElapsed += Time.deltaTime;
 
-        if(movement != prevMovement || (audioSource.clip != null && audioSource.clip.length < walkingElapsed)){
+        if (movement != prevMovement || (audioSource.clip != null && audioSource.clip.length < walkingElapsed))
+        {
             audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
             audioSource.clip = sounds[UnityEngine.Random.Range(0, 3)];
             walkingElapsed = 0f;
-            if(movement != Vector2.zero){
+            if (movement != Vector2.zero)
+            {
                 audioSource.Play();
             }
         }

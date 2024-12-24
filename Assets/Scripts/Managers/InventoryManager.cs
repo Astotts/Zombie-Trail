@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using JetBrains.Annotations;
 using Unity.Netcode;
 using Unity.Netcode.Components;
@@ -18,9 +19,9 @@ public class InventoryManager : MonoBehaviour
 {
     public static int INVENTORY_SIZE = 4;
     public static InventoryManager Instance { get; private set; }
-    public static event EventHandler OnItemSwapEvent;
-    public static event EventHandler OnItemPickedUpEvent;
-    public static event EventHandler OnItemDroppedEvent;
+    public event EventHandler<ItemSwappedEventArgs> OnItemSwapEvent;
+    public event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
+    public event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
     [SerializeField] private AvailableItems availableItems;
 
     private readonly IItem[] inventory = new IItem[INVENTORY_SIZE];
@@ -29,11 +30,19 @@ public class InventoryManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        NetworkManager.Singleton.OnClientConnectedCallback += GetPlayerNetworkObject;
     }
 
     void Start()
     {
         player = NetworkManager.Singleton.LocalClient.PlayerObject;
+    }
+
+    void GetPlayerNetworkObject(ulong clientID)
+    {
+        player = NetworkManager.Singleton.LocalClient.PlayerObject;
+        if (player != null)
+            NetworkManager.Singleton.OnClientConnectedCallback -= GetPlayerNetworkObject;
     }
 
     public IItem GetItem(int slot)
@@ -49,12 +58,23 @@ public class InventoryManager : MonoBehaviour
         inventory[slot] = item;
         PickUpItemServerRpc(item.WeaponNetworkObject);
 
-        ItemPickedUpEventArgs eventArgs = new()
+
+        ItemSwappedEventArgs swappedEventArgs = new()
+        {
+            PreviousItem = null,
+            PreviousSlot = 0,
+            CurrentItem = item,
+            CurrentSlot = slot
+        };
+
+        OnItemSwapped(swappedEventArgs);
+
+        ItemPickedUpEventArgs pickedUpEventArgs = new()
         {
             Item = item,
             Slot = slot
         };
-        OnItemPickedUp(eventArgs);
+        OnItemPickedUp(pickedUpEventArgs);
     }
 
     public void DropItem(int slot)
@@ -72,6 +92,15 @@ public class InventoryManager : MonoBehaviour
         };
 
         OnItemDropped(eventArgs);
+    }
+
+    public void LeftCLickItem(int slot)
+    {
+        IOnLeftClickEffectItem itemWithLeftClickEffect = (IOnLeftClickEffectItem)inventory[slot];
+        if (itemWithLeftClickEffect == null)
+            return;
+
+        itemWithLeftClickEffect.OnLeftClick(player);
     }
 
     public bool SwapItem(int previousSlot, int newSlot)
@@ -107,15 +136,12 @@ public class InventoryManager : MonoBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void PickUpItemServerRpc(NetworkObject networkObject)
+    void PickUpItemServerRpc(NetworkObject newItem)
     {
-        networkObject.TrySetParent(player, false);
-        networkObject.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
-        networkObject.transform.localPosition = Vector2.zero;
-        networkObject.gameObject.SetActive(false);
+        newItem.TrySetParent(player.transform, false);
+        newItem.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
+        newItem.transform.localPosition = Vector2.zero;
     }
-
-
 
     #region ItemSwapEvent
 
@@ -133,7 +159,6 @@ public class InventoryManager : MonoBehaviour
     }
 
     #endregion
-
     #region ItemPickedUpEvent
 
     void OnItemPickedUp(ItemPickedUpEventArgs eventArgs)
@@ -148,7 +173,6 @@ public class InventoryManager : MonoBehaviour
     }
 
     #endregion
-
     #region ItemDroppedEvent
 
     void OnItemDropped(ItemDroppedEventArgs eventArgs)
@@ -174,29 +198,35 @@ public interface IItem
     int Capacity { get; }
 }
 
-public interface IOnLeftClickEffect
+public interface IOnLeftClickEffectItem
 {
-    void OnLeftClick(GameObject player);
+    void OnLeftClick(NetworkObject player);
 }
-public interface IOnRightClickEffect
+public interface IOnRightClickEffectItem
 {
-    void OnRightClick(GameObject player);
+    void OnRightClick(NetworkObject player);
 }
-public interface IOnSwapInEffect
+public interface IOnSwapInEffectItem
 {
-    void OnSwapIn(GameObject player);
+    void OnSwapIn(NetworkObject player);
 }
-public interface IOnSwapOutEffect
+public interface IOnSwapOutEffectItem
 {
-    void OnSwapOut(GameObject player);
-}
-
-public interface IOnPickupEffect
-{
-    void OnPickUp(GameObject player);
+    void OnSwapOut(NetworkObject player);
 }
 
-public interface IOnDropEffect
+public interface IOnPickupEffectItem
 {
-    void OnDrop(GameObject player);
+    void OnPickUp(NetworkObject player);
+}
+
+public interface IOnDropEffectItem
+{
+    void OnDrop(NetworkObject player);
+}
+
+public interface IOnReloadEffectItem
+{
+    event EventHandler<float> OnReloadEvent;
+    void OnReload(NetworkObject player);
 }

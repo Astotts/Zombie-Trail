@@ -27,11 +27,10 @@ MonoBehaviour:
   <MagazineSize>k__BackingField: 30
   <Capacity>k__BackingField: 10
   <BulletVelocity>k__BackingField: 5
-  <FireRate>k__BackingField: 10
+  <FireRate>k__BackingField: 0.1
   <ReloadTime>k__BackingField: 5
   <Penetration>k__BackingField: 5
   <Weight>k__BackingField: 50
-  <FadeDuration>k__BackingField: 0
   <GunShotSFXs>k__BackingField:
   - GunShot0
   - GunShot1

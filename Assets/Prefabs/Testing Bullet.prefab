@@ -5098,9 +5098,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636886bd60024984baafe08271896467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outOfBounds: 70
-  damage: 0
   bloodFX: {fileID: 6936278794870743628, guid: 85226fd443aaa7a41b628172622dcd12, type: 3}
+  trailRenderer: {fileID: 9170371002332746904}
+  networkObject: {fileID: 1951912538175213208}
+  range: 0
+  damage: 0
 --- !u!70 &-7615249880738863681
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

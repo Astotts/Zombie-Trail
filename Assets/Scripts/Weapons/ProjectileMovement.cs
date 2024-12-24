@@ -1,21 +1,22 @@
 using Unity.Netcode;
+using Unity.Networking.Transport;
 using UnityEngine;
 
 public class ProjectileMovement : NetworkBehaviour
 {
     [SerializeField] GameObject bloodFX;                    // Blood Splash sprites on screen
     //[SerializeField] GameObject bulletTrail;
-    [SerializeField] private NetworkObject networkObject;   // Assigned networkObject so this bullet can return to pool
+    [SerializeField] TrailRenderer trailRenderer;
+    [SerializeField] NetworkObject networkObject;   // Assigned networkObject so this bullet can return to pool
     private GameObject prefab;                              // Assigned prefab so this bullet can return to pool
-    private int currentPenetration;                         // Ammount of penetration left before disappear
+    private int penetration;                                // Ammount of penetration left before disappear
     private float speed;                                    // Current move speed
     private Vector3 direction;                              // Current direction to travel
     private Vector2 initialPosition;                        // Initial Position
-    public float outOfBounds;                               // Maximum range the projectile can travel
+    public float range;                                     // Maximum range the projectile can travel
     public int damage;                                      // Damage to deal
 
     ParticleSystem bloodParticleSystem;
-    TrailRenderer bulletTrailRenderer;
 
     public override void OnNetworkSpawn()
     {
@@ -33,16 +34,13 @@ public class ProjectileMovement : NetworkBehaviour
         initialPosition = this.transform.position; // Store the initial position of the projectile
     }
 
-    public void InitiateMovement(Vector3 direction, float speed, int damage)
+    void SetupDirection(Vector3 direction, float accuracy)
     {
-        this.direction = direction;
-        this.damage = damage;
-        this.speed = speed;
-
         // rotation angle in degrees
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         // rotation of the object
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+        float marginOfError = Random.Range(-accuracy, accuracy);
+        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle + marginOfError));
     }
 
     void Update()
@@ -52,19 +50,32 @@ public class ProjectileMovement : NetworkBehaviour
 
         // Out of bounds code
         float distanceTraveled = Vector2.Distance(initialPosition, this.transform.position);
-        if (distanceTraveled >= outOfBounds)
+        if (distanceTraveled >= range)
         {
             // Destroy the projectile when it goes out of range
-            DestroySelf();
+            DestroySelfServerRpc();
         }
     }
 
-    void DestroySelf()
+    public void IntializeInfo(GameObject prefab, Vector3 direction, int damage, int penetration, float accuracy, float speed, float range)
     {
-        // Return to its network pool
-        NetworkObjectPool.Singleton.ReturnNetworkObject(this.networkObject, this.gameObject);
-        // Destroy and return to pool on client side
-        Destroy(gameObject);
+        this.prefab = prefab;
+        this.direction = direction;
+        this.damage = damage;
+        this.penetration = penetration;
+        this.speed = speed;
+        this.range = range;
+
+        SetupDirection(direction, accuracy);
+        trailRenderer.Clear();
+    }
+
+    [Rpc(SendTo.Server)]
+    void DestroySelfServerRpc()
+    {
+        // Return to its network pool (Probably Destroyed, need to check this soon)
+        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
+        networkObject.Despawn(false);
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -74,11 +85,15 @@ public class ProjectileMovement : NetworkBehaviour
             if (other.gameObject.transform.parent != null)
             {
                 if (other.gameObject.transform.parent.gameObject.TryGetComponent<IDamageable>(out var healthSystem))
+                {
                     healthSystem.Damage(damage);
+                    penetration--;
+                }
             }
             else
             {
                 other.gameObject.GetComponent<IDamageable>().Damage(damage);
+                penetration--;
             }
             bloodFX = Instantiate(bloodFX);
             bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
@@ -88,7 +103,12 @@ public class ProjectileMovement : NetworkBehaviour
         }
         else if (other.CompareTag("Structure"))
         {
-            DestroySelf();
+            float initialY = initialPosition.y;
+            float buildingY = other.transform.position.y;
+            if (initialY < buildingY || initialY > buildingY + other.GetComponent<SpriteRenderer>().size.y)
+                return;
+
+            DestroySelfServerRpc();
         }
     }
 }

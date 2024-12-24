@@ -134,6 +134,33 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""8c882cf4-473b-460a-88f6-9e6025feb03a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemLeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""2c356376-efd5-476e-a09c-1dff46216dc1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemRightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""352d037b-aa55-490a-9d9f-b3ae20542a2a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -206,11 +233,44 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e3df24c6-c236-4dcc-97ba-13ee7e790d51"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""PickUpItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0dddca8b-d15b-4ea2-9170-bc6238404e72"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""034215d7-8323-4fb9-9dd1-16086560b248"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemLeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""591cf045-880b-41c6-bcfe-81976c3485b7"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ItemRightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -228,6 +288,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Equipment_ChangeWeapon = m_Equipment.FindAction("ChangeWeapon", throwIfNotFound: true);
         m_Equipment_WeaponHotbar = m_Equipment.FindAction("WeaponHotbar", throwIfNotFound: true);
         m_Equipment_PickUpItem = m_Equipment.FindAction("PickUpItem", throwIfNotFound: true);
+        m_Equipment_DropItem = m_Equipment.FindAction("DropItem", throwIfNotFound: true);
+        m_Equipment_ItemLeftClick = m_Equipment.FindAction("ItemLeftClick", throwIfNotFound: true);
+        m_Equipment_ItemRightClick = m_Equipment.FindAction("ItemRightClick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -339,6 +402,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Equipment_ChangeWeapon;
     private readonly InputAction m_Equipment_WeaponHotbar;
     private readonly InputAction m_Equipment_PickUpItem;
+    private readonly InputAction m_Equipment_DropItem;
+    private readonly InputAction m_Equipment_ItemLeftClick;
+    private readonly InputAction m_Equipment_ItemRightClick;
     public struct EquipmentActions
     {
         private @PlayerControls m_Wrapper;
@@ -347,6 +413,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @ChangeWeapon => m_Wrapper.m_Equipment_ChangeWeapon;
         public InputAction @WeaponHotbar => m_Wrapper.m_Equipment_WeaponHotbar;
         public InputAction @PickUpItem => m_Wrapper.m_Equipment_PickUpItem;
+        public InputAction @DropItem => m_Wrapper.m_Equipment_DropItem;
+        public InputAction @ItemLeftClick => m_Wrapper.m_Equipment_ItemLeftClick;
+        public InputAction @ItemRightClick => m_Wrapper.m_Equipment_ItemRightClick;
         public InputActionMap Get() { return m_Wrapper.m_Equipment; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -368,6 +437,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @PickUpItem.started += instance.OnPickUpItem;
             @PickUpItem.performed += instance.OnPickUpItem;
             @PickUpItem.canceled += instance.OnPickUpItem;
+            @DropItem.started += instance.OnDropItem;
+            @DropItem.performed += instance.OnDropItem;
+            @DropItem.canceled += instance.OnDropItem;
+            @ItemLeftClick.started += instance.OnItemLeftClick;
+            @ItemLeftClick.performed += instance.OnItemLeftClick;
+            @ItemLeftClick.canceled += instance.OnItemLeftClick;
+            @ItemRightClick.started += instance.OnItemRightClick;
+            @ItemRightClick.performed += instance.OnItemRightClick;
+            @ItemRightClick.canceled += instance.OnItemRightClick;
         }
 
         private void UnregisterCallbacks(IEquipmentActions instance)
@@ -384,6 +462,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @PickUpItem.started -= instance.OnPickUpItem;
             @PickUpItem.performed -= instance.OnPickUpItem;
             @PickUpItem.canceled -= instance.OnPickUpItem;
+            @DropItem.started -= instance.OnDropItem;
+            @DropItem.performed -= instance.OnDropItem;
+            @DropItem.canceled -= instance.OnDropItem;
+            @ItemLeftClick.started -= instance.OnItemLeftClick;
+            @ItemLeftClick.performed -= instance.OnItemLeftClick;
+            @ItemLeftClick.canceled -= instance.OnItemLeftClick;
+            @ItemRightClick.started -= instance.OnItemRightClick;
+            @ItemRightClick.performed -= instance.OnItemRightClick;
+            @ItemRightClick.canceled -= instance.OnItemRightClick;
         }
 
         public void RemoveCallbacks(IEquipmentActions instance)
@@ -411,5 +498,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnChangeWeapon(InputAction.CallbackContext context);
         void OnWeaponHotbar(InputAction.CallbackContext context);
         void OnPickUpItem(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
+        void OnItemLeftClick(InputAction.CallbackContext context);
+        void OnItemRightClick(InputAction.CallbackContext context);
     }
 }
