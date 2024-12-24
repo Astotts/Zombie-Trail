@@ -58,6 +58,9 @@ public class InventoryManager : MonoBehaviour
         inventory[slot] = item;
         PickUpItemServerRpc(item.WeaponNetworkObject);
 
+        IOnPickupEffectItem pickupEffectItem = (IOnPickupEffectItem)item;
+        if (pickupEffectItem != null)
+            pickupEffectItem.OnPickUp(player);
 
         ItemSwappedEventArgs swappedEventArgs = new()
         {
