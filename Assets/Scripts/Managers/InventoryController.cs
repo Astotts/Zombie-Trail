@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,40 +13,41 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private float pickUpRadius;
     [SerializeField] private GameObject pickUpButtonGO;
     [SerializeField] private LayerMask layerToDetect;
-    private PlayerInput playerInput;
+    private PlayerControls playerControls;
     private int currentSlot = 0;
-    private InputAction itemSwapAction;
-    private InputAction itemPickUpAction;
-    private InputAction itemDropAction;
-    private InputAction itemLeftClick;
-    private InputAction itemRightClick;
     private GameObject closestGO = null;
-    void Start()
+    void Awake()
     {
-        playerInput = GetComponent<PlayerInput>();
-        itemSwapAction = playerInput.actions.FindAction("WeaponHotbar");
-        itemSwapAction.Enable();
-        itemSwapAction.performed += OnWeaponHotbarPressed;
+        playerControls = new PlayerControls();
 
-        itemPickUpAction = playerInput.actions.FindAction("PickUpItem");
-        itemPickUpAction.Enable();
-        itemPickUpAction.performed += OnPickUpButtonPressed;
+        playerControls.Equipment.WeaponHotbar.performed += OnWeaponHotbarPressed;
+        playerControls.Equipment.PickUpItem.performed += OnPickUpButtonPressed;
+        playerControls.Equipment.DropItem.performed += OnDropButtonPressed;
+        playerControls.Equipment.ItemLeftClick.started += OnItemLeftClickPressed;
+        playerControls.Equipment.ItemLeftClick.canceled += OnItemLeftClickReleased;
+        playerControls.Equipment.ItemRightClick.started += OnItemRightClickPressed;
+        playerControls.Equipment.ItemRightClick.canceled += OnItemRightClickReleased;
+    }
 
-        itemDropAction = playerInput.actions.FindAction("Dropitem");
-        itemDropAction.Enable();
-        itemDropAction.performed += OnDropButtonPressed;
-
-        itemLeftClick = playerInput.actions.FindAction("ItemLeftClick");
-        itemLeftClick.Enable();
-        itemLeftClick.performed += OnItemLeftClick;
+    void OnEnable()
+    {
+        playerControls.Equipment.Enable();
     }
 
     void OnDisable()
     {
-        itemSwapAction.performed -= OnWeaponHotbarPressed;
-        itemPickUpAction.performed -= OnPickUpButtonPressed;
-        itemDropAction.performed -= OnDropButtonPressed;
-        itemLeftClick.performed -= OnItemLeftClick;
+        playerControls.Equipment.Disable();
+    }
+
+    void OnDestroy()
+    {
+        playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
+        playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
+        playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
+        playerControls.Equipment.ItemLeftClick.started -= OnItemLeftClickPressed;
+        playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
+        playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
+        playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
     }
 
     void Update()
@@ -96,9 +98,22 @@ public class InventoryController : MonoBehaviour
         pickUpButtonGO.SetActive(true);
     }
 
-    void OnItemLeftClick(InputAction.CallbackContext context)
+    void OnItemLeftClickPressed(InputAction.CallbackContext context)
     {
-        InventoryManager.Instance.LeftCLickItem(currentSlot);
+        InventoryManager.Instance.LeftCLickItemPressed(currentSlot);
+    }
+    void OnItemLeftClickReleased(InputAction.CallbackContext context)
+    {
+        InventoryManager.Instance.LeftCLickItemReleased(currentSlot);
+    }
+
+    void OnItemRightClickPressed(InputAction.CallbackContext context)
+    {
+        InventoryManager.Instance.RightClickItemPressed(currentSlot);
+    }
+    void OnItemRightClickReleased(InputAction.CallbackContext context)
+    {
+        InventoryManager.Instance.RightClickItemReleased(currentSlot);
     }
 
     void OnPickUpButtonPressed(InputAction.CallbackContext context)

@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
+using System.Linq;
+using TreeEditor;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem
+public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, IOnLeftClickReleasedEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem
 {
     [SerializeField] private float GLOBAL_ROTATE_SPEED = 5000;         // Only change when you want to change rotation speed for other gun too
 
@@ -25,6 +27,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
     private bool isReloading;                                       // Inner variable so we know when the gun is reloading (can't shoot)
     private bool isOnFireRateCooldown;                              // Inner variable so we know when to shoot
     private bool isPickedUp;                                        // Inner variable so that gun can rotate
+    private bool isShooting;                                        // Inner variable so we know left click is down
 
     void OnValidate()
     {
@@ -72,16 +75,27 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
             weaponSpriteRenderer.flipY = true;
         }
 
+        if (isShooting)
+            Shoot();
     }
 
-    public void OnLeftClick(NetworkObject player)
+    public void OnLeftClickPressed(NetworkObject player)
+    {
+        isShooting = true;
+    }
+    public void OnLeftClickReleased(NetworkObject player)
+    {
+        isShooting = false;
+    }
+
+    public void Shoot()
     {
         if (isReloading || isOnFireRateCooldown)
             return;
 
         if (currentAmmo == 0)
         {
-            OnReload(player);
+            Reload();
             return;
         }
 
@@ -92,6 +106,15 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
         AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, stats.GunShotSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
 
         HandleRecoil();
+    }
+
+    private void Reload()
+    {
+        if (isReloading)
+            return;
+        isReloading = true;
+        AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
+        StartCoroutine(Reloading());
     }
 
     void HandleRecoil()
@@ -109,12 +132,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
 
     public void OnReload(NetworkObject networkObject)
     {
-        if (!isReloading)
-        {
-            isReloading = true;
-            AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
-            StartCoroutine(Reloading());
-        }
+        Reload();
     }
 
     IEnumerator Reloading()
@@ -130,7 +148,12 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
     [Rpc(SendTo.Server)]
     public void SpawnBulletsServerRpc(Quaternion rotation)
     {
-        NetworkObject bulletNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(stats.BulletGO, transform.position, Quaternion.identity);
+        float thetaInDeg = transform.eulerAngles.z;
+        float thetaInRadian = Mathf.Deg2Rad * thetaInDeg;
+        float xOffset = transform.position.x + stats.BulletSpawnOffset * Mathf.Cos(thetaInRadian);
+        float yOffset = transform.position.y + stats.BulletSpawnOffset * Mathf.Sin(thetaInRadian);
+
+        NetworkObject bulletNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(stats.BulletGO, new Vector3(xOffset, yOffset, 0), Quaternion.identity);
         ProjectileMovement projectileMovement = bulletNetworkObject.GetComponent<ProjectileMovement>();
         projectileMovement.IntializeInfo
         (

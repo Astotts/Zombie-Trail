@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
+using Unity.VisualScripting.ReorderableList;
 using UnityEditor;
 using UnityEditor.PackageManager;
 using UnityEditor.Search;
@@ -97,13 +98,34 @@ public class InventoryManager : MonoBehaviour
         OnItemDropped(eventArgs);
     }
 
-    public void LeftCLickItem(int slot)
+    public void LeftCLickItemPressed(int slot)
     {
-        IOnLeftClickEffectItem itemWithLeftClickEffect = (IOnLeftClickEffectItem)inventory[slot];
-        if (itemWithLeftClickEffect == null)
+        if (inventory[slot] is not IOnLeftClickPressedEffectItem itemWithLeftClickPressedEffect)
             return;
 
-        itemWithLeftClickEffect.OnLeftClick(player);
+        itemWithLeftClickPressedEffect.OnLeftClickPressed(player);
+    }
+    public void LeftCLickItemReleased(int slot)
+    {
+        if (inventory[slot] is not IOnLeftClickReleasedEffectItem itemWithLeftClickReleaseEffect)
+            return;
+
+        itemWithLeftClickReleaseEffect.OnLeftClickReleased(player);
+    }
+
+    public void RightClickItemPressed(int slot)
+    {
+        if (inventory[slot] is not IOnRightClickPressedEffectItem itemWithRightClickPressedEffect)
+            return;
+
+        itemWithRightClickPressedEffect.OnRightClickPressed(player);
+    }
+    public void RightClickItemReleased(int slot)
+    {
+        if (inventory[slot] is not IOnRightClickReleasedEffectItem itemWithRightClickReleaseEffect)
+            return;
+
+        itemWithRightClickReleaseEffect.OnRightClickReleased(player);
     }
 
     public bool SwapItem(int previousSlot, int newSlot)
@@ -201,13 +223,21 @@ public interface IItem
     int Capacity { get; }
 }
 
-public interface IOnLeftClickEffectItem
+public interface IOnLeftClickPressedEffectItem
 {
-    void OnLeftClick(NetworkObject player);
+    void OnLeftClickPressed(NetworkObject player);
 }
-public interface IOnRightClickEffectItem
+public interface IOnLeftClickReleasedEffectItem
 {
-    void OnRightClick(NetworkObject player);
+    void OnLeftClickReleased(NetworkObject player);
+}
+public interface IOnRightClickPressedEffectItem
+{
+    void OnRightClickPressed(NetworkObject player);
+}
+public interface IOnRightClickReleasedEffectItem
+{
+    void OnRightClickReleased(NetworkObject player);
 }
 public interface IOnSwapInEffectItem
 {
