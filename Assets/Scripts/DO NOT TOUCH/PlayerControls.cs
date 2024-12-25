@@ -146,21 +146,21 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""ItemLeftClick"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""2c356376-efd5-476e-a09c-1dff46216dc1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""ItemRightClick"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""352d037b-aa55-490a-9d9f-b3ae20542a2a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [

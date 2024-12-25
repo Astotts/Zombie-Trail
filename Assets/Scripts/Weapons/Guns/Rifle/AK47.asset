@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 6cba9aea5b75f426298fa18fc9781f7f, type: 3}
   m_Name: AK47
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   <Icon>k__BackingField: {fileID: 21300000, guid: 64fa0edddd2a2324bbc7d1a4f29d8e2d, type: 3}
@@ -19,7 +19,7 @@ MonoBehaviour:
   <BulletGO>k__BackingField: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
   <Cursor>k__BackingField: {fileID: 2800000, guid: 124423d4ac55143d4b9249daabd30de1, type: 3}
   <BulletSpawnOffset>k__BackingField: 1
-  <GunName>k__BackingField: AK-47
+  <GunName>k__BackingField: AK 47
   <Damage>k__BackingField: 20
   <Recoil>k__BackingField: 10
   <Accuracy>k__BackingField: 10
@@ -28,8 +28,8 @@ MonoBehaviour:
   <Capacity>k__BackingField: 10
   <BulletVelocity>k__BackingField: 5
   <FireRate>k__BackingField: 0.1
-  <ReloadTime>k__BackingField: 5
-  <Penetration>k__BackingField: 5
+  <ReloadTime>k__BackingField: 4
+  <Penetration>k__BackingField: 2
   <Weight>k__BackingField: 50
   <GunShotSFXs>k__BackingField:
   - GunShot0

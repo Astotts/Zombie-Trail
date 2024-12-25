@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using Unity.Networking.Transport;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ProjectileMovement : NetworkBehaviour
 {
@@ -11,7 +13,7 @@ public class ProjectileMovement : NetworkBehaviour
     private GameObject prefab;                              // Assigned prefab so this bullet can return to pool
     private int penetration;                                // Ammount of penetration left before disappear
     private float speed;                                    // Current move speed
-    private Vector3 direction;                              // Current direction to travel
+    private Quaternion rotation;                            // Current direction to travel
     private Vector2 initialPosition;                        // Initial Position
     public float range;                                     // Maximum range the projectile can travel
     public int damage;                                      // Damage to deal
@@ -34,13 +36,12 @@ public class ProjectileMovement : NetworkBehaviour
         initialPosition = this.transform.position; // Store the initial position of the projectile
     }
 
-    void SetupDirection(Vector3 direction, float accuracy)
+    void SetupDirection(Quaternion rotation, float accuracy)
     {
         // rotation angle in degrees
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         // rotation of the object
         float marginOfError = Random.Range(-accuracy, accuracy);
-        this.transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle + marginOfError));
+        this.transform.rotation = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, rotation.eulerAngles.z + marginOfError - 90);
     }
 
     void Update()
@@ -57,16 +58,16 @@ public class ProjectileMovement : NetworkBehaviour
         }
     }
 
-    public void IntializeInfo(GameObject prefab, Vector3 direction, int damage, int penetration, float accuracy, float speed, float range)
+    public void IntializeInfo(GameObject prefab, Quaternion rotation, int damage, int penetration, float accuracy, float speed, float range)
     {
         this.prefab = prefab;
-        this.direction = direction;
+        this.rotation = rotation;
         this.damage = damage;
         this.penetration = penetration;
         this.speed = speed;
         this.range = range;
 
-        SetupDirection(direction, accuracy);
+        SetupDirection(rotation, accuracy);
         trailRenderer.Clear();
     }
 

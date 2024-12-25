@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
-using System.Linq;
-using System.Net;
 using Unity.Netcode;
-using UnityEditor.Callbacks;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem
 {
-    private static readonly float GLOBAL_ROTATE_SPEED = 10;         // Only change when you want to change rotation speed for other gun too
+    [SerializeField] private float GLOBAL_ROTATE_SPEED = 5000;         // Only change when you want to change rotation speed for other gun too
 
     public event EventHandler<int> OnAmmoChangeEvent;               // Event for UI (mostly)
     public event EventHandler<float> OnReloadEvent;                 // Event for UI (mostly)
@@ -56,11 +54,13 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
         // rotate that vector by 90 degrees around the Z axis
         Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * vectorToTarget;
 
+        float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime / stats.Weight;
+
         // get the rotation that points the Z axis forward, and the Y axis 90 degrees away from the target
         // (resulting in the X axis facing the target)
         Quaternion targetRotation = Quaternion.LookRotation(forward: Vector3.forward, upwards: rotatedVectorToTarget);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, GLOBAL_ROTATE_SPEED / stats.Weight);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, singleStep);
 
 
         if (transform.eulerAngles.z < 90 || transform.eulerAngles.z > 270)
@@ -71,6 +71,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
         {
             weaponSpriteRenderer.flipY = true;
         }
+
     }
 
     public void OnLeftClick(NetworkObject player)
@@ -84,20 +85,19 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
             return;
         }
 
-        // get the mouse position
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        // current position to mouse position
-        // vector from this object towards the target location
-        Vector3 vectorToTarget = mousePos - (Vector2)transform.position;
-        // rotate that vector by 90 degrees around the Z axis
-        Vector3 accurateDirection = Quaternion.Euler(0, 0, -90) * vectorToTarget;
-        Vector2 directionOfAttack = accurateDirection.normalized;
-
         // create & shoot the projectile 
-        SpawnBulletsServerRpc(directionOfAttack);
+        SpawnBulletsServerRpc(transform.rotation);
         StartCoroutine(FireRateCooldown());
         currentAmmo -= 1;
         AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, stats.GunShotSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
+
+        HandleRecoil();
+    }
+
+    void HandleRecoil()
+    {
+        Vector2 currentMousePos = Input.mousePosition;
+        Mouse.current.WarpCursorPosition(new Vector2(currentMousePos.x, currentMousePos.y + stats.Recoil));
     }
 
     IEnumerator FireRateCooldown()
@@ -128,14 +128,14 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickEffectItem, IOnSwap
     }
 
     [Rpc(SendTo.Server)]
-    public void SpawnBulletsServerRpc(Vector2 direction)
+    public void SpawnBulletsServerRpc(Quaternion rotation)
     {
         NetworkObject bulletNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(stats.BulletGO, transform.position, Quaternion.identity);
         ProjectileMovement projectileMovement = bulletNetworkObject.GetComponent<ProjectileMovement>();
         projectileMovement.IntializeInfo
         (
             stats.BulletGO,
-            direction,
+            rotation,
             stats.Damage,
             stats.Accuracy,
             stats.Penetration,

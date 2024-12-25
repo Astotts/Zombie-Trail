@@ -555,7 +555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d159c92a68f452a85bb79e879b6dea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stats: {fileID: 11400000, guid: e705c3e4e153d4f769efb0a292bb1989, type: 2}
+  GLOBAL_ROTATE_SPEED: 4000
+  stats: {fileID: 11400000, guid: 2fe3fb05d69604b4ab77fcf90558b643, type: 2}
   networkObject: {fileID: 1865381499}
   weaponSpriteRenderer: {fileID: 2134761898}
 --- !u!114 &1865381499
