@@ -20,9 +20,9 @@ public class InventoryManager : MonoBehaviour
 {
     public static int INVENTORY_SIZE = 4;
     public static InventoryManager Instance { get; private set; }
-    public event EventHandler<ItemSwappedEventArgs> OnItemSwapEvent;
-    public event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
-    public event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
+    public static event EventHandler<ItemSwappedEventArgs> OnItemSwapEvent;
+    public static event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
+    public static event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
     [SerializeField] private AvailableItems availableItems;
 
     private readonly IItem[] inventory = new IItem[INVENTORY_SIZE];
@@ -215,12 +215,7 @@ public class InventoryManager : MonoBehaviour
 
 public interface IItem
 {
-    string ItemName { get; }
     NetworkObject WeaponNetworkObject { get; }
-    Sprite Icon { get; }
-    Sprite WeaponSprite { get; }
-    int CurrentUses { get; }
-    int Capacity { get; }
 }
 
 public interface IOnLeftClickPressedEffectItem

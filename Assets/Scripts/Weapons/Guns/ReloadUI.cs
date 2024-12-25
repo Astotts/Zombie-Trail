@@ -21,13 +21,13 @@ public class ReloadUI : MonoBehaviour
 
     void Start()
     {
-        InventoryManager.Instance.OnItemSwapEvent += OnItemSwap;
+        InventoryManager.OnItemSwapEvent += OnItemSwap;
     }
 
     void Destroy()
     {
         Instance = null;
-        InventoryManager.Instance.OnItemSwapEvent -= OnItemSwap;
+        InventoryManager.OnItemSwapEvent -= OnItemSwap;
         reloadableItem.OnReloadEvent -= OnItemReload;
     }
 

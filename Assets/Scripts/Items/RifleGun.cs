@@ -13,10 +13,12 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
     public event EventHandler<int> OnAmmoChangeEvent;               // Event for UI (mostly)
     public event EventHandler<float> OnReloadEvent;                 // Event for UI (mostly)
     private int currentAmmo;                                        // Current Ammo before reload
-    public string ItemName => stats.GunName;                        // Variables for Inventory and UIs to read
+    public string GunName => stats.GunName;                         // Variables for Inventory and UIs to read
     public Sprite Icon => stats.Icon;                               // Variables for Inventory and UIs to read
-    public Sprite WeaponSprite => stats.WeaponSprite;               // Variables for Inventory and UIs to read
-    public int CurrentUses => currentAmmo;                          // Variables for Inventory and UIs to read
+    public int CurrentAmmo => currentAmmo;                          // Variables for Inventory and UIs to read
+    public Sprite AmmoIcon => stats.AmmoIcon;                       // Variables for Inventory and UIs to read
+    public Sprite EmptyAmmoIcon => stats.EmptyAmmoIcon;             // Variables for Inventory and UIs to read
+    public int MagazineSize => stats.MagazineSize;                  // Variables for Inventory and UIs to read
     public int Capacity => stats.Capacity;                          // Variables for Inventory and UIs to read
     public NetworkObject WeaponNetworkObject => networkObject;      // Variables for Inventory and UIs to read
 
@@ -57,7 +59,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         // rotate that vector by 90 degrees around the Z axis
         Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * vectorToTarget;
 
-        float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime / stats.Weight;
+        float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime;
 
         // get the rotation that points the Z axis forward, and the Y axis 90 degrees away from the target
         // (resulting in the X axis facing the target)
@@ -103,6 +105,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         SpawnBulletsServerRpc(transform.rotation);
         StartCoroutine(FireRateCooldown());
         currentAmmo -= 1;
+        OnAmmoChange(currentAmmo);
         AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, stats.GunShotSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
 
         HandleRecoil();
@@ -182,4 +185,5 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
     {
         isPickedUp = true;
     }
+
 }
