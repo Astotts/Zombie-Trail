@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 
 public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, IOnLeftClickReleasedEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem, IOnDropEffectItem
 {
-    [SerializeField] private float GLOBAL_ROTATE_SPEED = 5000;         // Only change when you want to change rotation speed for other gun too
+    private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;         // Only change when you want to change rotation speed for other gun too
+    private static readonly float GLOBAL_ROTATE_SPEED = 1000;         // Only change when you want to change rotation speed for other gun too
 
     public event EventHandler<int> OnAmmoChangeEvent;               // Event for UI (mostly)
     public event EventHandler<float> OnReloadEvent;                 // Event for UI (mostly)
@@ -25,6 +26,8 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
     [SerializeField] private GunStats stats;                        // Stats for guns (this script would be use for rifles GameObject)
     [SerializeField] NetworkObject networkObject;                   // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;           // Sprite render so we can flip it
+
+    private NetworkObject owner;                                   // Owner of the gun
 
     private bool isReloading;                                       // Inner variable so we know when the gun is reloading (can't shoot)
     private bool isOnFireRateCooldown;                              // Inner variable so we know when to shoot
@@ -59,7 +62,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         // rotate that vector by 90 degrees around the Z axis
         Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * vectorToTarget;
 
-        float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime;
+        float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime / stats.Weight;
 
         // get the rotation that points the Z axis forward, and the Y axis 90 degrees away from the target
         // (resulting in the X axis facing the target)
@@ -122,8 +125,12 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
 
     void HandleRecoil()
     {
-        Vector2 currentMousePos = Input.mousePosition;
-        Mouse.current.WarpCursorPosition(new Vector2(currentMousePos.x, currentMousePos.y + stats.Recoil));
+        Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 playerPos = owner.transform.position;
+
+        Vector2 fromMouseToPlayer = playerPos - currentMousePos;
+        Vector2 recoilVector = fromMouseToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
+        owner.transform.position = playerPos + recoilVector;
     }
 
     IEnumerator FireRateCooldown()
@@ -163,8 +170,8 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
             stats.BulletGO,
             rotation,
             stats.Damage,
-            stats.Accuracy,
             stats.Penetration,
+            stats.Accuracy,
             stats.BulletVelocity,
             stats.Range
         );
@@ -184,11 +191,13 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
     public void OnPickUp(NetworkObject player)
     {
         isPickedUp = true;
+        owner = player;
     }
 
     public void OnDrop(NetworkObject player)
     {
         isPickedUp = false;
+        owner = null;
         transform.rotation = Quaternion.identity;
     }
 }
