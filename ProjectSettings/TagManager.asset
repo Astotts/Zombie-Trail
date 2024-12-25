@@ -20,7 +20,7 @@ TagManager:
   - Allies
   - 'Attackable '
   - Projectile
-  - PickUpRayCast
+  - PickUpRaycast
   - IgnorePickUpRaycast
   - 
   - 

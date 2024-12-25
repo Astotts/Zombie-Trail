@@ -59,8 +59,7 @@ public class InventoryManager : MonoBehaviour
         inventory[slot] = item;
         PickUpItemServerRpc(item.WeaponNetworkObject);
 
-        IOnPickupEffectItem pickupEffectItem = (IOnPickupEffectItem)item;
-        if (pickupEffectItem != null)
+        if (item is IOnPickupEffectItem pickupEffectItem)
             pickupEffectItem.OnPickUp(player);
 
         ItemSwappedEventArgs swappedEventArgs = new()
@@ -88,6 +87,9 @@ public class InventoryManager : MonoBehaviour
             return;
         inventory[slot] = null;
         DropItemServerRpc(item.WeaponNetworkObject);
+
+        if (item is IOnDropEffectItem dropEffectItem)
+            dropEffectItem.OnDrop(player);
 
         ItemDroppedEventArgs eventArgs = new()
         {

@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, IOnLeftClickReleasedEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem
+public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, IOnLeftClickReleasedEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem, IOnDropEffectItem
 {
     [SerializeField] private float GLOBAL_ROTATE_SPEED = 5000;         // Only change when you want to change rotation speed for other gun too
 
@@ -186,4 +186,9 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         isPickedUp = true;
     }
 
+    public void OnDrop(NetworkObject player)
+    {
+        isPickedUp = false;
+        transform.rotation = Quaternion.identity;
+    }
 }
