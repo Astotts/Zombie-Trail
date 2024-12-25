@@ -40,8 +40,7 @@ public class ProjectileMovement : NetworkBehaviour
     {
         // rotation angle in degrees
         // rotation of the object
-        float marginOfError = Random.Range(-10 / accuracy, 10 / accuracy);
-        Debug.Log(marginOfError);
+        float marginOfError = Random.Range(-100 / accuracy, 100 / accuracy);
         this.transform.rotation = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, rotation.eulerAngles.z - 90 + marginOfError);
     }
 

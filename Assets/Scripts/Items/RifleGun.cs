@@ -125,11 +125,15 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
 
     void HandleRecoil()
     {
-        Vector2 currentMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        float thetaInDeg = transform.eulerAngles.z;
+        float thetaInRadian = Mathf.Deg2Rad * thetaInDeg;
+        float xOffset = transform.position.x + stats.BulletSpawnOffset * Mathf.Cos(thetaInRadian);
+        float yOffset = transform.position.y + stats.BulletSpawnOffset * Mathf.Sin(thetaInRadian);
+        Vector2 bulletOffset = new(xOffset, yOffset);
         Vector2 playerPos = owner.transform.position;
 
-        Vector2 fromMouseToPlayer = playerPos - currentMousePos;
-        Vector2 recoilVector = fromMouseToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
+        Vector2 fromBulletToPlayer = playerPos - bulletOffset;
+        Vector2 recoilVector = fromBulletToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
         owner.transform.position = playerPos + recoilVector;
     }
 
