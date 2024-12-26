@@ -6,7 +6,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, IOnLeftClickReleasedEffectItem, IOnSwapInEffectItem, IOnReloadEffectItem, IOnPickupEffectItem, IOnDropEffectItem
+public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
 {
     private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;         // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 1000;         // Only change when you want to change rotation speed for other gun too
@@ -84,15 +84,6 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
             Shoot();
     }
 
-    public void OnLeftClickPressed(NetworkObject player)
-    {
-        isShooting = true;
-    }
-    public void OnLeftClickReleased(NetworkObject player)
-    {
-        isShooting = false;
-    }
-
     public void Shoot()
     {
         if (isReloading || isOnFireRateCooldown)
@@ -116,7 +107,7 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
 
     private void Reload()
     {
-        if (isReloading)
+        if (isReloading || currentAmmo == stats.MagazineSize)
             return;
         isReloading = true;
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
@@ -142,11 +133,6 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         isOnFireRateCooldown = true;
         yield return new WaitForSecondsRealtime(stats.FireRate);
         isOnFireRateCooldown = false;
-    }
-
-    public void OnReload(NetworkObject networkObject)
-    {
-        Reload();
     }
 
     IEnumerator Reloading()
@@ -182,26 +168,45 @@ public class RifleGun : NetworkBehaviour, IItem, IOnLeftClickPressedEffectItem, 
         bulletNetworkObject.Spawn();
     }
 
-    public void OnSwapIn(NetworkObject player)
-    {
-        Cursor.SetCursor(stats.Cursor, Vector2.zero, CursorMode.Auto);
-    }
-
     void OnAmmoChange(int currentAmmo)
     {
         OnAmmoChangeEvent?.Invoke(this, currentAmmo);
     }
 
-    public void OnPickUp(NetworkObject player)
+    public void OnPickUp(InventoryHandler playerInventory)
     {
         isPickedUp = true;
-        owner = player;
+        owner = playerInventory.owner;
+        playerInventory.OnItemLeftClickPressedEvent += OnLeftClickPressed;
+        playerInventory.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
+        playerInventory.OnitemReloadEvent += OnReloadPressed;
+        playerInventory.OnItemSwapEvent += OnSwapIn;
     }
 
-    public void OnDrop(NetworkObject player)
+    public void OnDrop(InventoryHandler playerInventory)
     {
         isPickedUp = false;
         owner = null;
         transform.rotation = Quaternion.identity;
+    }
+
+
+    void OnLeftClickPressed(object sender, InventoryHandler.ItemLeftClickPressedEventArgs e)
+    {
+        isShooting = true;
+    }
+    void OnLeftClickReleased(object sender, InventoryHandler.ItemLeftClickReleasedEventArgs e)
+    {
+        isShooting = false;
+    }
+
+    void OnReloadPressed(object sender, InventoryHandler.ItemReloadEventArgs e)
+    {
+        Reload();
+    }
+
+    public void OnSwapIn(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    {
+        Cursor.SetCursor(stats.Cursor, Vector2.zero, CursorMode.Auto);
     }
 }

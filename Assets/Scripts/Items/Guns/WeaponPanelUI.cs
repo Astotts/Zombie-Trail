@@ -1,4 +1,6 @@
+using System;
 using TMPro;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,25 +15,43 @@ public class WeaponPanelUI : MonoBehaviour
     [SerializeField] Image ammoImage;
     [SerializeField] Image emptyAmmoImage;
 
+    InventoryHandler localPlayerInventory;
     RifleGun gun;
     float ammoIconWidth;
     float emptyAmmoIconWidth;
 
+    void Awake()
+    {
+        localPlayerInventory = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<InventoryHandler>();
+    }
+
     void OnEnable()
     {
-        InventoryManager.OnItemSwapEvent += OnItemSwap;
+        localPlayerInventory.OnItemSwapEvent += OnItemSwap;
+        localPlayerInventory.OnItemPickedUpEvent += OnItemPickUp;
     }
 
     void OnDisable()
     {
-        InventoryManager.OnItemSwapEvent -= OnItemSwap;
+        localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
         if (gun != null)
             gun.OnAmmoChangeEvent -= OnGunShot;
     }
 
-    private void OnItemSwap(object sender, InventoryManager.ItemSwappedEventArgs e)
+
+    private void OnItemPickUp(object sender, InventoryHandler.ItemPickedUpEventArgs e)
     {
-        if (e.CurrentItem is not RifleGun gun)
+        HandleItem(e.Item);
+    }
+
+    private void OnItemSwap(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    {
+        HandleItem(e.CurrentItem);
+    }
+
+    void HandleItem(IItem item)
+    {
+        if (item is not RifleGun gun)
         {
             DisableUI();
             this.gun.OnAmmoChangeEvent -= OnGunShot;

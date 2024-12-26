@@ -61,7 +61,8 @@ public class RelayManager : MonoBehaviour
 
             NetworkManager.Singleton.StartHost();
 
-            NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
+            // NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene("WeaponSystemTest", LoadSceneMode.Single);
         }
         catch (RelayServiceException e)
         {

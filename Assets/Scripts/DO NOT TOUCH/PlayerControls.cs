@@ -161,6 +161,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ReloadItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""bf92c1ca-e24c-4d4e-a014-284ec661876f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -273,6 +282,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""ItemRightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c69847c4-5cff-4ae1-b091-8eafbcd3aa08"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ReloadItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -291,6 +311,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Equipment_DropItem = m_Equipment.FindAction("DropItem", throwIfNotFound: true);
         m_Equipment_ItemLeftClick = m_Equipment.FindAction("ItemLeftClick", throwIfNotFound: true);
         m_Equipment_ItemRightClick = m_Equipment.FindAction("ItemRightClick", throwIfNotFound: true);
+        m_Equipment_ReloadItem = m_Equipment.FindAction("ReloadItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -405,6 +426,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Equipment_DropItem;
     private readonly InputAction m_Equipment_ItemLeftClick;
     private readonly InputAction m_Equipment_ItemRightClick;
+    private readonly InputAction m_Equipment_ReloadItem;
     public struct EquipmentActions
     {
         private @PlayerControls m_Wrapper;
@@ -416,6 +438,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @DropItem => m_Wrapper.m_Equipment_DropItem;
         public InputAction @ItemLeftClick => m_Wrapper.m_Equipment_ItemLeftClick;
         public InputAction @ItemRightClick => m_Wrapper.m_Equipment_ItemRightClick;
+        public InputAction @ReloadItem => m_Wrapper.m_Equipment_ReloadItem;
         public InputActionMap Get() { return m_Wrapper.m_Equipment; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -446,6 +469,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ItemRightClick.started += instance.OnItemRightClick;
             @ItemRightClick.performed += instance.OnItemRightClick;
             @ItemRightClick.canceled += instance.OnItemRightClick;
+            @ReloadItem.started += instance.OnReloadItem;
+            @ReloadItem.performed += instance.OnReloadItem;
+            @ReloadItem.canceled += instance.OnReloadItem;
         }
 
         private void UnregisterCallbacks(IEquipmentActions instance)
@@ -471,6 +497,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @ItemRightClick.started -= instance.OnItemRightClick;
             @ItemRightClick.performed -= instance.OnItemRightClick;
             @ItemRightClick.canceled -= instance.OnItemRightClick;
+            @ReloadItem.started -= instance.OnReloadItem;
+            @ReloadItem.performed -= instance.OnReloadItem;
+            @ReloadItem.canceled -= instance.OnReloadItem;
         }
 
         public void RemoveCallbacks(IEquipmentActions instance)
@@ -501,5 +530,6 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnDropItem(InputAction.CallbackContext context);
         void OnItemLeftClick(InputAction.CallbackContext context);
         void OnItemRightClick(InputAction.CallbackContext context);
+        void OnReloadItem(InputAction.CallbackContext context);
     }
 }

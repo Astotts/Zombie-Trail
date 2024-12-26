@@ -53,3 +53,6 @@ TagManager:
   - name: Reload
     uniqueID: 1120230839
     locked: 0
+  - name: PickUp
+    uniqueID: 1785130139
+    locked: 0

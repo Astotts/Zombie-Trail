@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1785130139
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 6d6f47f7d2aad414db88d0ae626a3563, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -160,9 +160,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingLayerID: 1785130139
+  m_SortingLayer: 3
+  m_SortingOrder: 1
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &4959402880895581432
 MonoBehaviour:
@@ -186,7 +186,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: F
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 0}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 0}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -217,7 +217,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
   m_fontSizeMax: 0
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -253,7 +253,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_renderer: {fileID: 1124021409759875481}
   m_maskType: 0
 --- !u!1 &4382690585860579029
@@ -277,7 +277,7 @@ GameObject:
   - component: {fileID: 8008272600805333272}
   - component: {fileID: 6769822138697203935}
   - component: {fileID: 1046991761784965028}
-  - component: {fileID: 1092635634456326864}
+  - component: {fileID: 3620888271258052386}
   m_Layer: 6
   m_Name: Player 1
   m_TagString: Player
@@ -740,7 +740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 0}
---- !u!114 &1092635634456326864
+--- !u!114 &3620888271258052386
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -749,10 +749,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4382690585860579029}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf42921613c7f1842a570c7a38f6c636, type: 3}
+  m_Script: {fileID: 11500000, guid: ca1f97fbf83344844a63405eab970fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickUpRadius: 2
+  pickUpRadius: 1
   pickUpButtonGO: {fileID: 3677575104414240289}
   layerToDetect:
     serializedVersion: 2
@@ -833,7 +833,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 403322090, guid: f25a6ea6330fb9c46a262ee1526b7405, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -933,7 +933,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 9a0db422e366c4a1fb0368060599b5aa, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

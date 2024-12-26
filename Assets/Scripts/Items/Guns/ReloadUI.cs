@@ -1,42 +1,60 @@
 using System.Collections;
 using System.Runtime.InteropServices;
+using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ReloadUI : MonoBehaviour
 {
-    public static ReloadUI Instance { get; private set; }
     [SerializeField] SpriteRenderer reloadBarRenderer;
     [SerializeField] SpriteRenderer fillRenderer;
     [SerializeField] GameObject reloadFill;
     [SerializeField] float fadeDuration;
-
-    private IOnReloadEffectItem reloadableItem;
+    private InventoryHandler localPlayerInventory;
+    private IReloadableItem reloadableItem;
 
     void Awake()
     {
-        Instance = this;
+        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
     }
 
-    void Start()
+    void OnPlayerJoined(ulong clientID)
     {
-        InventoryManager.OnItemSwapEvent += OnItemSwap;
+        localPlayerInventory = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<InventoryHandler>();
+        localPlayerInventory.OnItemSwapEvent += OnItemSwap;
+        localPlayerInventory.OnItemPickedUpEvent += OnItemPickedUp;
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnPlayerJoined;
     }
 
-    void Destroy()
+    void OnDestroy()
     {
-        Instance = null;
-        InventoryManager.OnItemSwapEvent -= OnItemSwap;
+        localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
+        localPlayerInventory.OnItemPickedUpEvent -= OnItemPickedUp;
         reloadableItem.OnReloadEvent -= OnItemReload;
     }
 
-    private void OnItemSwap(object sender, InventoryManager.ItemSwappedEventArgs e)
+    void OnItemPickedUp(object sender, InventoryHandler.ItemPickedUpEventArgs e)
     {
-        if (reloadableItem != null)
-            reloadableItem.OnReloadEvent -= OnItemReload;
-        reloadableItem = (IOnReloadEffectItem)e.CurrentItem;
-        reloadableItem.OnReloadEvent += OnItemReload;
+        CheckItem(e.Item);
+    }
+
+    void OnItemSwap(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    {
+        CheckItem(e.CurrentItem);
+    }
+
+    void CheckItem(IItem item)
+    {
+        if (this.reloadableItem != null)
+            this.reloadableItem.OnReloadEvent -= OnItemReload;
+
+        if (item is not IReloadableItem reloadableItem)
+            return;
+
+        this.reloadableItem = reloadableItem;
+        this.reloadableItem.OnReloadEvent += OnItemReload;
     }
 
     void OnItemReload(object sender, float reloadTime)
