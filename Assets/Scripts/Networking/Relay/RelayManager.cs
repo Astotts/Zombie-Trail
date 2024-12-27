@@ -62,7 +62,7 @@ public class RelayManager : MonoBehaviour
             NetworkManager.Singleton.StartHost();
 
             // NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
-            NetworkManager.Singleton.SceneManager.LoadScene("WeaponSystemTest", LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
         }
         catch (RelayServiceException e)
         {
@@ -72,7 +72,7 @@ public class RelayManager : MonoBehaviour
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {
-        response.Approved = IsLocked;
+        response.Approved = true;
         response.Reason = "The owners is currently away from the base, please wait for them to return.";
     }
 

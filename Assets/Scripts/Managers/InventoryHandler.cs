@@ -51,6 +51,19 @@ public class InventoryHandler : MonoBehaviour
         playerControls.Equipment.ItemRightClick.started += OnItemRightClickPressed;
         playerControls.Equipment.ItemRightClick.canceled += OnItemRightClickReleased;
     }
+    void OnDestroy()
+    {
+        Debug.Log("Inventory Handler Unsubscribing...");
+        playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
+        playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
+        playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
+        playerControls.Equipment.ReloadItem.performed -= OnReloadButtonPressed;
+        playerControls.Equipment.ItemLeftClick.started -= OnItemLeftClickPressed;
+        playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
+        playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
+        playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
+        Debug.Log("Inventory Handler Unsubscribed Sucessfully");
+    }
 
     void OnEnable()
     {
@@ -100,18 +113,6 @@ public class InventoryHandler : MonoBehaviour
     private void OnWeaponHotbarPressed(InputAction.CallbackContext context)
     {
         SwapItemToNewSlot((int)context.ReadValue<float>());
-    }
-
-    void OnDestroy()
-    {
-        playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
-        playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
-        playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
-        playerControls.Equipment.ReloadItem.performed -= OnReloadButtonPressed;
-        playerControls.Equipment.ItemLeftClick.started -= OnItemLeftClickPressed;
-        playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
-        playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
-        playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
     }
 
     void Update()

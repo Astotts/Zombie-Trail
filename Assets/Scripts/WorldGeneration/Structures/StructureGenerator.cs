@@ -2,91 +2,170 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.Mathematics;
+using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-public class StructureGenerator : MonoBehaviour, ChunkGenerator
+public class StructureGenerator : NetworkBehaviour, ChunkGenerator
 {
-    public int chunkSize;
-    public GameObject[] frontStructures;
-    public GameObject[] backStructures;
-    private int midPoint;
+    [SerializeField] int prewarmGOAmount = 15;
+    [SerializeField] int chunkSize;
+    [SerializeField] int midPoint;
+    [SerializeField] GameObject structurePrefab;
+    [SerializeField] StructureSO[] frontStructures;
+    [SerializeField] StructureSO[] backStructures;
     private int leftX;
     private int rightX;
-    private readonly Dictionary<Vector2Int, List<GameObject>> spawnedStructures = new();
+    private readonly Dictionary<Vector2Int, List<StructureData>> loadedStructureData = new();
+    private readonly Stack<Structure> inactiveStructures = new();
+
+    void Awake()
+    {
+        for (int i = 0; i < prewarmGOAmount; i++)
+        {
+            SpawnInactiveStructure();
+        }
+    }
+
+    void SpawnInactiveStructure()
+    {
+        GameObject inactiveStructure = Instantiate(structurePrefab, transform);
+        Structure emptyStructure = inactiveStructure.GetComponent<Structure>();
+        inactiveStructures.Push(emptyStructure);
+    }
+
+    Structure GetInactiveStructure()
+    {
+        if (inactiveStructures.Count == 0)
+            SpawnInactiveStructure();
+        return inactiveStructures.Pop();
+    }
+
+    void ReturnStructure(Structure structure)
+    {
+        structure.gameObject.SetActive(false);
+        inactiveStructures.Push(structure);
+    }
+
+    [Rpc(SendTo.Server)]
+    void UpdateStructureDataServerRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY)
+    {
+        UpdateStructureDataClientRpc(structureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    void UpdateStructureDataClientRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY)
+    {
+        StructureSO structureSO;
+        if (isFront)
+            structureSO = frontStructures[structureIndex];
+        else
+            structureSO = backStructures[structureIndex];
+        Vector2Int chunkLocation = new(chunkX, chunkY);
+        StructureData structureData = new()
+        {
+            StructureSO = structureSO,
+            IsFront = isFront,
+            StructureSOIndex = structureIndex,
+            SpawnLocation = spawnLocation,
+            SpawnRotation = spawnRotation
+        };
+
+        if (!loadedStructureData.ContainsKey(chunkLocation))
+            loadedStructureData[chunkLocation] = new List<StructureData>();
+
+        loadedStructureData[chunkLocation].Add(structureData);
+    }
+
     public void GenerateStructuresRight(System.Random random, int chunkX, int chunkY)
     {
-        Vector2Int chunkPos = new(chunkX, chunkY);
         if (chunkX < rightX)
             return;
         for (int i = 0; i < chunkSize; i++)
         {
             float x = chunkX * chunkSize + i;
             float y = chunkY * chunkSize + random.Next(chunkSize / 2);
-            GameObject randomStructure;
-            if (chunkY > midPoint)
+            int randomStructureIndex;
+            StructureSO structureSO;
+            bool isFront = chunkY > midPoint;
+            if (isFront)
             {
-                randomStructure = GetRandomFrontStructure(random);
+                randomStructureIndex = GetRandomFrontStructureIndex(random);
+                structureSO = frontStructures[randomStructureIndex];
             }
             else
             {
-                randomStructure = GetRandomBackStructure(random);
+                randomStructureIndex = GetRandomBackStructureIndex(random);
+                structureSO = backStructures[randomStructureIndex];
                 y++;
             }
-            GameObject spawnedStructure = SpawnStructureRight(randomStructure, x, y);
-            if (spawnedStructure != null)
-            {
-                spawnedStructures[chunkPos].Add(spawnedStructure);
-                BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
-                int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
-                i += structureXLength - 1;
-            }
+
+            Structure spawnedStructure = SpawnStructureRight(structureSO, x, y);
+            if (spawnedStructure == null)
+                continue;
+
+            Vector2 spawnLocation = spawnedStructure.transform.position;
+            Quaternion spawnRotation = spawnedStructure.transform.rotation;
+
+            UpdateStructureDataServerRpc(randomStructureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+
+            BoxCollider2D boxCollider2D = spawnedStructure.BoxCollider2D;
+            int structureXLength = (int)(boxCollider2D.size.x * structurePrefab.transform.localScale.x);
+            i += structureXLength - 1;
         }
         rightX = chunkX;
     }
     public void GenerateStructuresLeft(System.Random random, int chunkX, int chunkY)
     {
-        Vector2Int chunkPos = new(chunkX, chunkY);
         if (chunkX > leftX)
             return;
         for (int i = 0; i < chunkSize; i++)
         {
             float x = chunkX * chunkSize - i;
             float y = chunkY * chunkSize + random.Next(chunkSize / 2);
-            GameObject randomStructure;
-            if (chunkY > midPoint)
+            int randomStructureIndex;
+            StructureSO structureSO;
+            bool isFront = chunkY > midPoint;
+            if (isFront)
             {
-                randomStructure = GetRandomFrontStructure(random);
+                randomStructureIndex = GetRandomFrontStructureIndex(random);
+                structureSO = frontStructures[randomStructureIndex];
             }
             else
             {
-                randomStructure = GetRandomBackStructure(random);
+                randomStructureIndex = GetRandomBackStructureIndex(random);
+                structureSO = backStructures[randomStructureIndex];
                 y++;
             }
-            GameObject spawnedStructure = SpawnStructureLeft(randomStructure, x, y);
-            if (spawnedStructure != null)
-            {
-                spawnedStructures[chunkPos].Add(spawnedStructure);
-                BoxCollider2D boxCollider2D = randomStructure.GetComponent<BoxCollider2D>();
-                int structureXLength = (int)(boxCollider2D.size.x * randomStructure.transform.localScale.x);
-                i += structureXLength - 1;
-            }
+
+            Structure spawnedStructure = SpawnStructureLeft(structureSO, x, y);
+            if (spawnedStructure == null)
+                continue;
+
+            Vector2 spawnLocation = spawnedStructure.transform.position;
+            Quaternion spawnRotation = spawnedStructure.transform.rotation;
+
+            UpdateStructureDataServerRpc(randomStructureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+
+            BoxCollider2D boxCollider2D = spawnedStructure.BoxCollider2D;
+            int structureXLength = (int)(boxCollider2D.size.x * structurePrefab.transform.localScale.x);
+            i += structureXLength - 1;
         }
         leftX = chunkX;
     }
 
-    private GameObject SpawnStructureRight(GameObject prefab, float x, float y)
+    private Structure SpawnStructureRight(StructureSO structureSO, float x, float y)
     {
         float xOffset = 2;
         float yOffset = 2;
         Vector2 spawnLocation = new(x + xOffset, y + yOffset);
-        BoxCollider2D boxCollider2D = prefab.GetComponent<BoxCollider2D>();
-        Vector3 scale = boxCollider2D.transform.localScale;
-        Vector3 size = boxCollider2D.size * scale;
-        Vector2 sizeOffset = boxCollider2D.offset * scale;
+        Vector2 scale = structurePrefab.transform.localScale;
+        Vector2 size = structureSO.ColliderSize * scale;
+        Vector2 sizeOffset = structureSO.ColliderOffset * scale;
         float sizeMultiplier = 0.98f;
         Collider2D hitCollider = Physics2D.OverlapBox(spawnLocation + sizeOffset, size * sizeMultiplier, 0);
 
@@ -95,19 +174,16 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
             return null;
         }
 
-        GameObject structure = Instantiate(prefab, this.transform);
-        structure.transform.position = spawnLocation;
-        return structure;
+        return SpawnStructure(structureSO, spawnLocation, Quaternion.identity);
     }
-    private GameObject SpawnStructureLeft(GameObject prefab, float x, float y)
+    private Structure SpawnStructureLeft(StructureSO structureSO, float x, float y)
     {
         float xOffset = 2;
         float yOffset = 2;
         Vector2 spawnLocation = new(x + xOffset, y + yOffset);
-        BoxCollider2D boxCollider2D = prefab.GetComponent<BoxCollider2D>();
-        Vector3 scale = boxCollider2D.transform.localScale;
-        Vector3 size = boxCollider2D.size * scale;
-        Vector2 sizeOffset = boxCollider2D.offset * scale;
+        Vector2 scale = structurePrefab.transform.localScale;
+        Vector2 size = structureSO.ColliderSize * scale;
+        Vector2 sizeOffset = structureSO.ColliderOffset * scale;
         float sizeMultiplier = 0.98f;
         Collider2D hitCollider = Physics2D.OverlapBox(new Vector2(spawnLocation.x - sizeOffset.x, spawnLocation.y + sizeOffset.y), size * sizeMultiplier, 0);
 
@@ -116,14 +192,20 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
             return null;
         }
 
-        GameObject structure = Instantiate(prefab, this.transform);
-        structure.transform.SetPositionAndRotation(spawnLocation + new Vector2(0, 0), Quaternion.Euler(0, 180, 0));
+        return SpawnStructure(structureSO, spawnLocation, Quaternion.Euler(0, 180, 0));
+    }
+
+    Structure SpawnStructure(StructureSO structureSO, Vector2 spawnLocation, Quaternion spawnRotation)
+    {
+        Structure structure = GetInactiveStructure();
+        structure.SetStructureData(structureSO, spawnLocation, spawnRotation);
+        structure.gameObject.SetActive(true);
         return structure;
     }
 
-    private GameObject GetRandomFrontStructure(System.Random random)
+    private int GetRandomFrontStructureIndex(System.Random random)
     {
-        return frontStructures[random.Next(frontStructures.Length)];
+        return random.Next(frontStructures.Length);
         // int totalWeight = 0;
         // foreach (StructureEntry entry in frontStructures)
         // {
@@ -139,9 +221,9 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
         // }
         // return null;
     }
-    private GameObject GetRandomBackStructure(System.Random random)
+    private int GetRandomBackStructureIndex(System.Random random)
     {
-        return backStructures[random.Next(backStructures.Length)];
+        return random.Next(backStructures.Length);
         // int totalWeight = 0;
         // foreach (StructureEntry entry in backStructures)
         // {
@@ -163,17 +245,14 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
         if (roadType != RoadType.NONE)
             return;
         Vector2Int chunkPos = new(chunkX, chunkY);
-        if (spawnedStructures.TryGetValue(chunkPos, out List<GameObject> spawnedStructureList))
+        if (loadedStructureData.TryGetValue(chunkPos, out List<StructureData> loadedDatas))
         {
-            foreach (GameObject structure in spawnedStructureList)
+            foreach (StructureData data in loadedDatas)
             {
-                structure.SetActive(true);
+                SpawnStructure(data.StructureSO, data.SpawnLocation, data.SpawnRotation);
             }
             return;
         }
-
-        List<GameObject> structureList = new();
-        spawnedStructures[chunkPos] = structureList;
 
         if (generateDirection == GenerateDirection.EAST)
         {
@@ -188,22 +267,16 @@ public class StructureGenerator : MonoBehaviour, ChunkGenerator
     public void UnloadChunkAt(int chunkX, int chunkY)
     {
         Vector2Int chunkPos = new(chunkX, chunkY);
-        if (spawnedStructures.TryGetValue(chunkPos, out List<GameObject> spawnedStructureList))
+        if (loadedStructureData.TryGetValue(chunkPos, out List<StructureData> loadedDatas))
         {
-            foreach (GameObject structure in spawnedStructureList)
+            foreach (StructureData data in loadedDatas)
             {
-                if (!structure.IsDestroyed())
-                {
-                    structure.SetActive(false);
-                }
+                if (data.SpawnedStructure == null)
+                    continue;
+                ReturnStructure(data.SpawnedStructure);
+                data.SpawnedStructure = null;
             }
-            spawnedStructureList.RemoveAll(IsGameObjectDestroyed);
         }
-    }
-
-    bool IsGameObjectDestroyed(GameObject gameObject)
-    {
-        return gameObject.IsDestroyed();
     }
 }
 
@@ -212,4 +285,14 @@ public class StructureEntry
 {
     public GameObject prefab;
     [HideInInspector] public int weight;
+}
+
+public class StructureData
+{
+    public int StructureSOIndex { get; set; }
+    public bool IsFront { get; set; }
+    public StructureSO StructureSO { get; set; }
+    public Vector2 SpawnLocation { get; set; }
+    public Quaternion SpawnRotation { get; set; }
+    public Structure SpawnedStructure { get; set; }
 }

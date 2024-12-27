@@ -8,24 +8,22 @@ using UnityEngine.UI;
 
 public class ReloadUI : MonoBehaviour
 {
+    [SerializeField] InventoryHandler localPlayerInventory;
     [SerializeField] SpriteRenderer reloadBarRenderer;
     [SerializeField] SpriteRenderer fillRenderer;
     [SerializeField] GameObject reloadFill;
     [SerializeField] float fadeDuration;
-    private InventoryHandler localPlayerInventory;
     private IReloadableItem reloadableItem;
+
+    void OnValidate()
+    {
+        localPlayerInventory = transform.parent.GetComponent<InventoryHandler>();
+    }
 
     void Awake()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
-    }
-
-    void OnPlayerJoined(ulong clientID)
-    {
-        localPlayerInventory = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<InventoryHandler>();
         localPlayerInventory.OnItemSwapEvent += OnItemSwap;
         localPlayerInventory.OnItemPickedUpEvent += OnItemPickedUp;
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnPlayerJoined;
     }
 
     void OnDestroy()
@@ -33,6 +31,7 @@ public class ReloadUI : MonoBehaviour
         localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
         localPlayerInventory.OnItemPickedUpEvent -= OnItemPickedUp;
         reloadableItem.OnReloadEvent -= OnItemReload;
+        Debug.Log("Reload Unsubscribed Sucessfully");
     }
 
     void OnItemPickedUp(object sender, InventoryHandler.ItemPickedUpEventArgs e)

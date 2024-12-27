@@ -36,6 +36,7 @@ public class WeaponPanelUI : MonoBehaviour
         localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
         if (gun != null)
             gun.OnAmmoChangeEvent -= OnGunShot;
+        Debug.Log("Weapon Panel Unsubscribed Sucessfully");
     }
 
 
