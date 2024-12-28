@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -61,14 +62,35 @@ public class RelayManager : MonoBehaviour
 
             NetworkManager.Singleton.StartHost();
 
+            NetworkManager.Singleton.SceneManager.OnLoadComplete += OnWorldSceneLoaded;
+            NetworkManager.Singleton.SceneManager.OnUnloadComplete += OnWorldSceneUnloaded;
+
             // NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
             NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
+
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
     }
+
+    private void OnWorldSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    {
+        if (sceneName != "World")
+            return;
+
+        WorldDataManager.Instance.LoadWorld("World");
+    }
+
+    private void OnWorldSceneUnloaded(ulong clientId, string sceneName)
+    {
+        if (sceneName != "World")
+            return;
+
+        WorldDataManager.Instance.SaveWorld("World");
+    }
+
 
     public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
     {

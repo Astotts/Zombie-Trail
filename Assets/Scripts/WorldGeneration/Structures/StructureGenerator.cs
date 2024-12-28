@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using Newtonsoft.Json;
 using Unity.Collections;
 using Unity.IO.LowLevel.Unsafe;
 using Unity.Mathematics;
@@ -11,7 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-public class StructureGenerator : NetworkBehaviour, ChunkGenerator
+public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentData
 {
     [SerializeField] int prewarmGOAmount = 15;
     [SerializeField] int chunkSize;
@@ -21,7 +23,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator
     [SerializeField] StructureSO[] backStructures;
     private int leftX;
     private int rightX;
-    private readonly Dictionary<Vector2Int, List<StructureData>> loadedStructureData = new();
+    private Dictionary<Vector2Int, List<StructureData>> loadedStructureData = new();
     private readonly Stack<Structure> inactiveStructures = new();
 
     void Awake()
@@ -278,6 +280,56 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator
             }
         }
     }
+
+    public void LoadData(WorldData worldData)
+    {
+        loadedStructureData.Clear();
+        foreach (KeyValuePair<int[], List<StructureData>> data in worldData.loadedStructuresData)
+        {
+            int[] pos = data.Key;
+            Vector2Int chunkPos = new(pos[0], pos[1]);
+            List<StructureData> structureDataList = data.Value;
+
+            foreach (StructureData structureData in structureDataList)
+            {
+                float[] spawnLocationJson = structureData.SpawnLocationJson;
+                float[] spawnRotationJson = structureData.SpawnRotationJson;
+
+                Vector3 spawnLocation = new(spawnLocationJson[0], spawnLocationJson[1], spawnLocationJson[2]);
+                Quaternion spawnRotation = new(spawnRotationJson[0], spawnRotationJson[1], spawnRotationJson[2], spawnRotationJson[3]);
+
+                structureData.SpawnLocation = spawnLocation;
+                structureData.SpawnRotation = spawnRotation;
+
+                structureData.StructureSO = structureData.IsFront ? frontStructures[structureData.StructureSOIndex] : backStructures[structureData.StructureSOIndex];
+            }
+            loadedStructureData[chunkPos] = structureDataList;
+        }
+    }
+
+    public void SaveData(ref WorldData worldData)
+    {
+        List<KeyValuePair<int[], List<StructureData>>> structureMap = new();
+        foreach (Vector2Int chunkPos in loadedStructureData.Keys)
+        {
+            int[] pos = { chunkPos.x, chunkPos.y };
+            List<StructureData> structureDataList = loadedStructureData[chunkPos];
+
+            foreach (StructureData structureData in structureDataList)
+            {
+                Vector3 spawnLocation = structureData.SpawnLocation;
+                Quaternion spawnRotation = structureData.SpawnRotation;
+
+                float[] spawnLocationJson = { spawnLocation.x, spawnLocation.y, spawnLocation.z };
+                float[] spawnRotationJson = { spawnRotation.x, spawnRotation.y, spawnRotation.z, spawnRotation.w };
+
+                structureData.SpawnLocationJson = spawnLocationJson;
+                structureData.SpawnRotationJson = spawnRotationJson;
+            }
+            structureMap.Add(new KeyValuePair<int[], List<StructureData>>(pos, structureDataList));
+        }
+        worldData.loadedStructuresData = structureMap;
+    }
 }
 
 [Serializable]
@@ -287,12 +339,17 @@ public class StructureEntry
     [HideInInspector] public int weight;
 }
 
+[Serializable]
 public class StructureData
 {
     public int StructureSOIndex { get; set; }
     public bool IsFront { get; set; }
-    public StructureSO StructureSO { get; set; }
-    public Vector2 SpawnLocation { get; set; }
-    public Quaternion SpawnRotation { get; set; }
-    public Structure SpawnedStructure { get; set; }
+    // We need these because json.net can't serialize Vector or Quaternion
+    // Or I'm just dumb as always
+    public float[] SpawnLocationJson { get; set; }
+    public float[] SpawnRotationJson { get; set; }
+    [JsonIgnore] public Quaternion SpawnRotation { get; set; }
+    [JsonIgnore] public Vector2 SpawnLocation { get; set; }
+    [JsonIgnore] public StructureSO StructureSO { get; set; }
+    [JsonIgnore] public Structure SpawnedStructure { get; set; }
 }
