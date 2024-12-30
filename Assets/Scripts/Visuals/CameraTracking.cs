@@ -9,10 +9,12 @@ using UnityEngine.U2D;
 public class CameraTracking : MonoBehaviour
 {
     [SerializeField] float camSnapFloat;
-    [SerializeField] Transform player = null;
+    [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
     [SerializeField] WorldGenerator worldGenerator;
     [SerializeField] int findAttempts = 20;
+
+    private ulong ownerID;
 
     float minY;
     float maxY;
@@ -21,37 +23,15 @@ public class CameraTracking : MonoBehaviour
 
     void Start()
     {
+        ownerID = NetworkManager.Singleton.LocalClientId;
+        player = PlayerManager.Instance.GetPlayerObject(ownerID).transform;
         this.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing = true;
-        StartCoroutine(FindPlayer());
         Camera camera = Camera.main;
         float worldGeneratorYPos = worldGenerator.chunkSize / 2;
         float worldGeneratorVerticalExtend = worldGenerator.maxWidth;
 
         maxY = worldGeneratorYPos + worldGeneratorVerticalExtend + camera.orthographicSize / 2;
         minY = -worldGeneratorYPos - worldGeneratorVerticalExtend - camera.orthographicSize / 2;
-    }
-
-    IEnumerator FindPlayer()
-    {
-        bool found = false;
-        for (int i = 0; i < findAttempts && !found; i++)
-        {
-            Debug.Log("Finding Owner, Atempt #" + i);
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("Player"))
-            {
-                if (go.GetComponent<NetworkBehaviour>().IsLocalPlayer)
-                {
-                    player = go.transform;
-                    found = true;
-                    Debug.Log("Is local");
-                    break;
-                }
-                Debug.Log("Is it?");
-            }
-            yield return new WaitForSecondsRealtime(1.0f);
-        }
-        if (!found)
-            gameObject.SetActive(false);
     }
 
     float BetweenMinMax(float y)
