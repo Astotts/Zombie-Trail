@@ -1,36 +1,23 @@
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using JetBrains.Annotations;
+using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using Unity.VisualScripting;
-using Unity.VisualScripting.ReorderableList;
-using UnityEditor;
-using UnityEditor.PackageManager;
-using UnityEditor.Search;
-using UnityEditor.U2D.Sprites;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
+using static EventManager;
 
 [RequireComponent(typeof(NetworkObject))]
-public class InventoryHandler : MonoBehaviour
+public class InventoryHandler : NetworkBehaviour
 {
     public static readonly int INVENTORY_SIZE = 4;
-    public event EventHandler<ItemLeftClickPressedEventArgs> OnItemLeftClickPressedEvent;
-    public event EventHandler<ItemLeftClickReleasedEventArgs> OnItemLeftClickReleasesedEvent;
-    public event EventHandler<ItemRightClickPressedEventArgs> OnItemRightClickPressedEvent;
-    public event EventHandler<ItemRightClickReleasedEventArgs> OnItemRightClickReleasedEvent;
-    public event EventHandler<ItemSwappedEventArgs> OnItemSwapEvent;
-    public event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
-    public event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
-    public event EventHandler<ItemReloadEventArgs> OnitemReloadEvent;
-    public NetworkObject owner { get; private set; }
+    public ulong PlayerID { get; set; }
+    public NetworkObject Owner { get; private set; }
 
     [SerializeField] private float pickUpRadius;
     [SerializeField] private GameObject pickUpButtonGO;
     [SerializeField] private LayerMask layerToDetect;
+    [SerializeField] private AvailableItemsSO availableItems;
 
     private readonly IItem[] inventory = new IItem[INVENTORY_SIZE];
     private PlayerControls playerControls;
@@ -39,7 +26,7 @@ public class InventoryHandler : MonoBehaviour
 
     void Awake()
     {
-        owner = GetComponent<NetworkObject>();
+        Owner = GetComponent<NetworkObject>();
         playerControls = new PlayerControls();
 
         playerControls.Equipment.WeaponHotbar.performed += OnWeaponHotbarPressed;
@@ -51,9 +38,9 @@ public class InventoryHandler : MonoBehaviour
         playerControls.Equipment.ItemRightClick.started += OnItemRightClickPressed;
         playerControls.Equipment.ItemRightClick.canceled += OnItemRightClickReleased;
     }
-    void OnDestroy()
+    public override void OnDestroy()
     {
-        Debug.Log("Inventory Handler Unsubscribing...");
+        base.OnDestroy();
         playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
         playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
         playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
@@ -62,7 +49,6 @@ public class InventoryHandler : MonoBehaviour
         playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
         playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
         playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
-        Debug.Log("Inventory Handler Unsubscribed Sucessfully");
     }
 
     void OnEnable()
@@ -77,46 +63,71 @@ public class InventoryHandler : MonoBehaviour
 
     private void OnItemRightClickReleased(InputAction.CallbackContext context)
     {
-        RightClickReleaseCurrentItem();
+        RightClickReleaseCurrentItemServerRpc();
     }
 
     private void OnItemRightClickPressed(InputAction.CallbackContext context)
     {
-        RightClickPressedCurrentItem();
+        RightClickPressedCurrentItemServerRpc();
     }
 
     private void OnItemLeftClickReleased(InputAction.CallbackContext context)
     {
-        LeftClickReleasedCurrentItem();
+        LeftClickReleasedCurrentItemServerRpc();
     }
 
     private void OnItemLeftClickPressed(InputAction.CallbackContext context)
     {
-        LeftClickPressedCurrentItem();
+        LeftClickPressedCurrentItemServerRpc();
     }
 
     private void OnDropButtonPressed(InputAction.CallbackContext context)
     {
-        DropCurrentItem();
+        DropCurrentItemServerRpc();
     }
 
     private void OnPickUpButtonPressed(InputAction.CallbackContext context)
     {
-        PickUpClosestItem();
+        PickUpClosestItemServerRpc();
     }
 
     private void OnReloadButtonPressed(InputAction.CallbackContext context)
     {
-        ReloadCurrentItem();
+        ReloadCurrentItemServerRpc();
     }
 
     private void OnWeaponHotbarPressed(InputAction.CallbackContext context)
     {
-        SwapItemToNewSlot((int)context.ReadValue<float>());
+        SwapItemToNewSlotServerRpc((int)context.ReadValue<float>());
     }
 
+    // ==========================================
+    // Client Side Behaviours
+    // ==========================================
+    [Rpc(SendTo.SpecifiedInParams)]
+    void HidePickUpButtonClientRpc(RpcParams rpcParams = default)
+    {
+        pickUpButtonGO.SetActive(false);
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    void DisplayPickUpButtonClientRpc(Vector2 itemPosition, RpcParams rpcParams = default)
+    {
+        float xPos = transform.position.x + (itemPosition.x - transform.position.x) / 5;
+        float yPos = transform.position.y + (itemPosition.y - transform.position.y) / 5;
+        Vector2 position = new(xPos, yPos);
+
+        pickUpButtonGO.transform.position = position;
+        pickUpButtonGO.SetActive(true);
+    }
+
+    // ==========================================
+    // Server Side Behaviours
+    // ==========================================
     void Update()
     {
+        if (PlayerID != NetworkManager.Singleton.LocalClientId)
+            return;
         HandlePickUpDistance();
     }
 
@@ -136,271 +147,176 @@ public class InventoryHandler : MonoBehaviour
         }
         if (closestGO == null)
         {
-            HidePickUpButton();
+            HidePickUpButtonClientRpc(RpcTarget.Single(PlayerID, RpcTargetUse.Temp));
             return;
         }
 
-        DisplayPickUpButton(closestGO.transform.position);
+        DisplayPickUpButtonClientRpc(closestGO.transform.position, RpcTarget.Single(PlayerID, RpcTargetUse.Temp));
     }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, pickUpRadius);
-    }
-
-    void HidePickUpButton()
-    {
-        pickUpButtonGO.SetActive(false);
-    }
-    void DisplayPickUpButton(Vector2 itemPosition)
-    {
-        float xPos = transform.position.x + (itemPosition.x - transform.position.x) / 5;
-        float yPos = transform.position.y + (itemPosition.y - transform.position.y) / 5;
-        Vector2 position = new(xPos, yPos);
-
-        pickUpButtonGO.transform.position = position;
-        pickUpButtonGO.SetActive(true);
-    }
-    void RightClickPressedCurrentItem()
+    [Rpc(SendTo.Server)]
+    void RightClickPressedCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         ItemRightClickPressedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],
             Slot = currentSlot
         };
 
-        OnItemRightClickPressed(eventArgs);
+        EventManager.EventHandler.OnItemRightClickPressed(eventArgs);
     }
 
-    void RightClickReleaseCurrentItem()
+    [Rpc(SendTo.Server)]
+    void RightClickReleaseCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         ItemRightClickReleasedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],
             Slot = currentSlot
         };
 
-        OnItemRightClickReleased(eventArgs);
+        EventManager.EventHandler.OnItemRightClickReleased(eventArgs);
     }
 
-    void LeftClickPressedCurrentItem()
+    [Rpc(SendTo.Server)]
+    void LeftClickPressedCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         ItemLeftClickPressedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],
             Slot = currentSlot
         };
 
-        OnItemLeftClickPressed(eventArgs);
+        EventManager.EventHandler.OnItemLeftClickPressed(eventArgs);
     }
 
-
-    void LeftClickReleasedCurrentItem()
+    [Rpc(SendTo.Server)]
+    void LeftClickReleasedCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         ItemLeftClickReleasedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],
             Slot = currentSlot
         };
 
-        OnItemLeftClickReleased(eventArgs);
+        EventManager.EventHandler.OnItemLeftClickReleased(eventArgs);
     }
 
-    void SwapItemToNewSlot(int newSlot)
+    [Rpc(SendTo.Server)]
+    void SwapItemToNewSlotServerRpc(int newSlot, RpcParams rpcParams = default)
     {
         int previousSlot = currentSlot;
         currentSlot = newSlot;
 
         ItemSwappedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             PreviousItem = inventory[previousSlot],
             PreviousSlot = previousSlot,
             CurrentItem = inventory[currentSlot],
             CurrentSlot = currentSlot
         };
 
-        OnItemSwapped(eventArgs);
+        EventManager.EventHandler.OnItemSwapped(eventArgs);
     }
 
-    void PickUpClosestItem()
+    [Rpc(SendTo.Server)]
+    void PickUpClosestItemServerRpc(RpcParams rpcParams = default)
     {
         if (closestGO == null)
             return;
 
         if (inventory[currentSlot] != null)
-            DropCurrentItem();
+            DropCurrentItemServerRpc(rpcParams);
         IItem pickedUpItem = closestGO.GetComponent<IItem>();
         inventory[currentSlot] = pickedUpItem;
         pickedUpItem.OnPickUp(this);
 
-        PickUpItemServerRpc(pickedUpItem.WeaponNetworkObject);
+        NetworkObject itemNetworkObject = pickedUpItem.WeaponNetworkObject;
+        itemNetworkObject.TrySetParent(Owner.transform, false);
+        itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
+        itemNetworkObject.transform.localPosition = Vector2.zero;
+
+        Debug.Log("Calling PickedUpItem event");
 
         ItemPickedUpEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = pickedUpItem,
             Slot = currentSlot
         };
 
-        OnItemPickedUp(eventArgs);
+        EventManager.EventHandler.OnItemPickedUp(eventArgs);
     }
 
-    void DropCurrentItem()
+    [Rpc(SendTo.Server)]
+    void DropCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         IItem droppedItem = inventory[currentSlot];
         droppedItem.OnDrop(this);
         inventory[currentSlot] = null;
 
-        DropItemServerRpc(droppedItem.WeaponNetworkObject);
+        NetworkObject itemNetworkObject = droppedItem.WeaponNetworkObject;
+        itemNetworkObject.TrySetParent((Transform)null, true);
+        itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("PickUpRaycast");
+        itemNetworkObject.gameObject.SetActive(true);
 
         ItemDroppedEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = droppedItem,
             Slot = currentSlot
         };
 
-        OnItemDropped(eventArgs);
+        EventManager.EventHandler.OnItemDropped(eventArgs);
     }
 
-    void ReloadCurrentItem()
+    [Rpc(SendTo.Server)]
+    void ReloadCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         ItemReloadEventArgs eventArgs = new()
         {
+            PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],
             Slot = currentSlot,
         };
 
-        OnItemReload(eventArgs);
+        EventManager.EventHandler.OnItemReload(eventArgs);
     }
 
-    [Rpc(SendTo.Server)]
-    void DropItemServerRpc(NetworkObject networkObject)
+    public void LoadData(PlayerData playerData)
     {
-        networkObject.TrySetParent((Transform)null, true);
-        networkObject.gameObject.layer = LayerMask.NameToLayer("PickUpRaycast");
-        networkObject.gameObject.SetActive(true);
+        ItemData[] itemDatas = playerData.Inventory;
+        for (int i = 0; i < itemDatas.Length; i++)
+        {
+            ItemData data = itemDatas[i];
+            if (data == null)
+                continue;
+
+            GameObject prefab = availableItems.GetItemPrefabFromID(data.id);
+            NetworkObject itemNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab, Vector3.zero, Quaternion.identity);
+            itemNetworkObject.TrySetParent(transform, false);
+            IItem item = itemNetworkObject.GetComponent<IItem>();
+            item.LoadData(data);
+            inventory[i] = item;
+            itemNetworkObject.Spawn();
+        }
     }
 
-    [Rpc(SendTo.Server)]
-    void PickUpItemServerRpc(NetworkObject newItem)
+    public void SaveData(ref PlayerData playerData)
     {
-        newItem.TrySetParent(owner.transform, false);
-        newItem.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
-        newItem.transform.localPosition = Vector2.zero;
-    }
+        ItemData[] itemDatas = playerData.Inventory;
+        for (int i = 0; i < INVENTORY_SIZE; i++)
+        {
+            IItem item = inventory[i];
+            if (item == null)
+                continue;
 
-    #region ItemLeftClickPressedEvent
-    void OnItemLeftClickPressed(ItemLeftClickPressedEventArgs eventArgs)
-    {
-        OnItemLeftClickPressedEvent?.Invoke(this, eventArgs);
+            item.SaveData(ref itemDatas[i]);
+        }
     }
-    public class ItemLeftClickPressedEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemLeftClickReleasedEvent
-    void OnItemLeftClickReleased(ItemLeftClickReleasedEventArgs eventArgs)
-    {
-        OnItemLeftClickReleasesedEvent?.Invoke(this, eventArgs);
-    }
-    public class ItemLeftClickReleasedEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemRightClickPressedEvent
-    void OnItemRightClickPressed(ItemRightClickPressedEventArgs eventArgs)
-    {
-        OnItemRightClickPressedEvent?.Invoke(this, eventArgs);
-    }
-    public class ItemRightClickPressedEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemRightClickReleasedEvent
-    void OnItemRightClickReleased(ItemRightClickReleasedEventArgs eventArgs)
-    {
-        OnItemRightClickReleasedEvent?.Invoke(this, eventArgs);
-    }
-    public class ItemRightClickReleasedEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemSwapEvent
-    void OnItemSwapped(ItemSwappedEventArgs eventArgs)
-    {
-        OnItemSwapEvent?.Invoke(this, eventArgs);
-    }
-
-    public class ItemSwappedEventArgs : EventArgs
-    {
-        public IItem PreviousItem { get; set; }
-        public int PreviousSlot { get; set; }
-        public IItem CurrentItem { get; set; }
-        public int CurrentSlot { get; set; }
-    }
-    #endregion
-
-    #region ItemPickedUpEvent
-    void OnItemPickedUp(ItemPickedUpEventArgs eventArgs)
-    {
-        OnItemPickedUpEvent?.Invoke(this, eventArgs);
-    }
-
-    public class ItemPickedUpEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemDroppedEvent
-    void OnItemDropped(ItemDroppedEventArgs eventArgs)
-    {
-        OnItemDroppedEvent?.Invoke(this, eventArgs);
-    }
-
-    public class ItemDroppedEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-
-    #region ItemReloadEvent
-
-    void OnItemReload(ItemReloadEventArgs eventArgs)
-    {
-        OnitemReloadEvent?.Invoke(this, eventArgs);
-    }
-
-    public class ItemReloadEventArgs : EventArgs
-    {
-        public IItem Item { get; set; }
-        public int Slot { get; set; }
-    }
-    #endregion
-}
-
-public interface IItem
-{
-    NetworkObject WeaponNetworkObject { get; }
-    void OnPickUp(InventoryHandler playerInventory);
-    void OnDrop(InventoryHandler playerInventory);
-}
-
-public interface IReloadableItem
-{
-    event EventHandler<float> OnReloadEvent;
 }

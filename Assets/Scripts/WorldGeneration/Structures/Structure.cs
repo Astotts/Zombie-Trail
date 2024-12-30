@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Structure : NetworkBehaviour
+public class Structure : MonoBehaviour
 {
     [field: SerializeField] public SpriteRenderer SpriteRenderer { get; private set; }
     [field: SerializeField] public BoxCollider2D BoxCollider2D { get; private set; }

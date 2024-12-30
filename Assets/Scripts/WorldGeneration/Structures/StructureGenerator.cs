@@ -26,7 +26,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
     private Dictionary<Vector2Int, List<StructureData>> loadedStructureData = new();
     private readonly Stack<Structure> inactiveStructures = new();
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
         for (int i = 0; i < prewarmGOAmount; i++)
         {
@@ -37,6 +37,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
     void SpawnInactiveStructure()
     {
         GameObject inactiveStructure = Instantiate(structurePrefab, transform);
+        inactiveStructure.SetActive(false);
         Structure emptyStructure = inactiveStructure.GetComponent<Structure>();
         inactiveStructures.Push(emptyStructure);
     }
@@ -284,7 +285,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
     public void LoadData(WorldData worldData)
     {
         loadedStructureData.Clear();
-        foreach (KeyValuePair<int[], List<StructureData>> data in worldData.loadedStructuresData)
+        foreach (KeyValuePair<int[], List<StructureData>> data in worldData.LoadedStructuresData)
         {
             int[] pos = data.Key;
             Vector2Int chunkPos = new(pos[0], pos[1]);
@@ -302,8 +303,14 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
                 structureData.SpawnRotation = spawnRotation;
 
                 structureData.StructureSO = structureData.IsFront ? frontStructures[structureData.StructureSOIndex] : backStructures[structureData.StructureSOIndex];
+                UpdateStructureDataServerRpc(
+                    structureData.StructureSOIndex,
+                    structureData.IsFront,
+                    structureData.SpawnLocation,
+                    structureData.SpawnRotation,
+                    chunkPos.x, chunkPos.y
+                );
             }
-            loadedStructureData[chunkPos] = structureDataList;
         }
     }
 
@@ -328,7 +335,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
             }
             structureMap.Add(new KeyValuePair<int[], List<StructureData>>(pos, structureDataList));
         }
-        worldData.loadedStructuresData = structureMap;
+        worldData.LoadedStructuresData = structureMap;
     }
 }
 

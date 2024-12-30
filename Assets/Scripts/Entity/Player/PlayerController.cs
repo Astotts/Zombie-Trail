@@ -11,15 +11,11 @@ public class PlayerController : NetworkBehaviour
     PlayerControls playerControls;          // Input Action Asset - This allows the controls for the player. Check the file out to see the set up. (This will be obsolete, will use PlayerInput)
     Vector2 movement;                       // Controls the player movement
     Vector2 prevMovement = Vector2.zero;
-    int weaponSelected;                     // Keeps track of what weapon is selected
 
     Rigidbody2D rb;                         // Controls the player rigidbody
 
     //----------------------------------------
 
-    int selectedWeapon;
-
-    [SerializeField] List<WeaponsClass> weapons;
     [SerializeField] List<AnimationGenerator> animators;
 
     //----------------------------------------
@@ -44,10 +40,6 @@ public class PlayerController : NetworkBehaviour
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        if (weapons == null)
-        {
-            weapons = new List<WeaponsClass>();
-        }
         playerControls = new PlayerControls();
         rb = GetComponent<Rigidbody2D>();
 

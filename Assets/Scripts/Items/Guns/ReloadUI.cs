@@ -5,41 +5,37 @@ using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
+using static EventManager;
 
-public class ReloadUI : MonoBehaviour
+public class ReloadUI : NetworkBehaviour
 {
-    [SerializeField] InventoryHandler localPlayerInventory;
     [SerializeField] SpriteRenderer reloadBarRenderer;
     [SerializeField] SpriteRenderer fillRenderer;
     [SerializeField] GameObject reloadFill;
     [SerializeField] float fadeDuration;
     private IReloadableItem reloadableItem;
 
-    void OnValidate()
-    {
-        localPlayerInventory = transform.parent.GetComponent<InventoryHandler>();
-    }
-
     void Awake()
     {
-        localPlayerInventory.OnItemSwapEvent += OnItemSwap;
-        localPlayerInventory.OnItemPickedUpEvent += OnItemPickedUp;
+        EventHandler.OnItemSwappedEvent += OnItemSwap;
+        EventHandler.OnItemPickedUpEvent += OnItemPickedUp;
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
-        localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
-        localPlayerInventory.OnItemPickedUpEvent -= OnItemPickedUp;
-        reloadableItem.OnReloadEvent -= OnItemReload;
-        Debug.Log("Reload Unsubscribed Sucessfully");
+        base.OnDestroy();
+        EventHandler.OnItemSwappedEvent -= OnItemSwap;
+        EventHandler.OnItemPickedUpEvent -= OnItemPickedUp;
+        if (reloadableItem != null)
+            reloadableItem.OnReloadEvent -= OnItemReload;
     }
 
-    void OnItemPickedUp(object sender, InventoryHandler.ItemPickedUpEventArgs e)
+    void OnItemPickedUp(object sender, ItemPickedUpEventArgs e)
     {
         CheckItem(e.Item);
     }
 
-    void OnItemSwap(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    void OnItemSwap(object sender, ItemSwappedEventArgs e)
     {
         CheckItem(e.CurrentItem);
     }
@@ -57,6 +53,12 @@ public class ReloadUI : MonoBehaviour
     }
 
     void OnItemReload(object sender, float reloadTime)
+    {
+        PlayReloadEffectClientRpc(reloadTime);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void PlayReloadEffectClientRpc(float reloadTime)
     {
         StartCoroutine(Reloading(reloadTime));
     }

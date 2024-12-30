@@ -1,11 +1,10 @@
-using System;
 using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static EventManager;
 
-public class WeaponPanelUI : MonoBehaviour
+public class WeaponPanelUI : NetworkBehaviour
 {
     [SerializeField] TMP_Text weaponNameTMP;
     [SerializeField] Image weaponImage;
@@ -15,61 +14,78 @@ public class WeaponPanelUI : MonoBehaviour
     [SerializeField] Image ammoImage;
     [SerializeField] Image emptyAmmoImage;
 
-    InventoryHandler localPlayerInventory;
-    RifleGun gun;
+    RifleGun currentItem;
     float ammoIconWidth;
     float emptyAmmoIconWidth;
 
-    void Awake()
+    void Start()
     {
-        localPlayerInventory = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<InventoryHandler>();
-    }
-
-    void OnEnable()
-    {
-        localPlayerInventory.OnItemSwapEvent += OnItemSwap;
-        localPlayerInventory.OnItemPickedUpEvent += OnItemPickUp;
+        if (!IsHost)
+            return;
+        EventHandler.OnItemSwappedEvent += OnItemSwap;
+        EventHandler.OnItemPickedUpEvent += OnItemPickUp;
+        EventHandler.OnItemDroppedEvent += OnItemDrop;
+        EventHandler.OnGunAmmoChangedEvent += OnRifleAmmoChange;
+        Debug.Log("Weapon Panel Subscribed to InventoryEvents!");
     }
 
     void OnDisable()
     {
-        localPlayerInventory.OnItemSwapEvent -= OnItemSwap;
-        if (gun != null)
-            gun.OnAmmoChangeEvent -= OnGunShot;
-        Debug.Log("Weapon Panel Unsubscribed Sucessfully");
+        if (!IsHost)
+            return;
+        EventHandler.OnItemSwappedEvent -= OnItemSwap;
+        EventHandler.OnItemPickedUpEvent -= OnItemPickUp;
+        EventHandler.OnItemDroppedEvent -= OnItemDrop;
+        EventHandler.OnGunAmmoChangedEvent -= OnRifleAmmoChange;
+        Debug.Log("Weapon Panel Unsubscribed to InventoryEvents!");
     }
 
+    // =======================
+    // Server Side:
+    // =====================
 
-    private void OnItemPickUp(object sender, InventoryHandler.ItemPickedUpEventArgs e)
+    private void OnItemPickUp(object sender, ItemPickedUpEventArgs e)
     {
-        HandleItem(e.Item);
+        HandleItem(e.PlayerID, e.Item);
     }
 
-    private void OnItemSwap(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    private void OnItemDrop(object sender, ItemDroppedEventArgs e)
     {
-        HandleItem(e.CurrentItem);
+        HandleItem(e.PlayerID, null);
     }
 
-    void HandleItem(IItem item)
+    private void OnItemSwap(object sender, ItemSwappedEventArgs e)
     {
-        if (item is not RifleGun gun)
+        HandleItem(e.PlayerID, e.CurrentItem);
+    }
+
+    void HandleItem(ulong playerID, IItem item)
+    {
+        UpdateUIClientRpc((NetworkBehaviour)item, RpcTarget.Single(playerID, RpcTargetUse.Temp));
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    void UpdateUIClientRpc(NetworkBehaviourReference clientNetworkObject, RpcParams rpcParams)
+    {
+        if (clientNetworkObject.TryGet(out RifleGun rifleGun))
+        {
+            currentItem = rifleGun;
+            HandleRifleGun(rifleGun);
+            EnableUI();
+        }
+        else
         {
             DisableUI();
-            this.gun.OnAmmoChangeEvent -= OnGunShot;
-            this.gun = null;
-            return;
         }
-        EnableUI();
+    }
 
-        this.gun = gun;
-        gun.OnAmmoChangeEvent += OnGunShot;
-
-        weaponNameTMP.text = gun.GunName;
-        weaponImage.sprite = gun.Icon;
-
-        SetEmptyAmmoIcon(gun.EmptyAmmoIcon, gun.MagazineSize);
-        SetAmmoIcon(gun.AmmoIcon, gun.MagazineSize);
-        SetCurrentAmmo(gun.CurrentAmmo);
+    void HandleRifleGun(RifleGun rifleGun)
+    {
+        weaponImage.sprite = rifleGun.Icon;
+        weaponNameTMP.text = rifleGun.GunName;
+        SetEmptyAmmoIcon(rifleGun.EmptyAmmoIcon, rifleGun.MagazineSize);
+        SetAmmoIcon(rifleGun.AmmoIcon, rifleGun.MagazineSize);
+        SetCurrentAmmo(rifleGun.CurrentAmmo);
     }
 
     void DisableUI()
@@ -120,7 +136,15 @@ public class WeaponPanelUI : MonoBehaviour
         }
     }
 
-    void OnGunShot(object sender, int currentAmmo)
+    void OnRifleAmmoChange(object sender, AmmoChangedEventArgs e)
+    {
+        if (e.Item.WeaponNetworkObject.GetInstanceID() != currentItem.WeaponNetworkObject.GetInstanceID())
+            return;
+        SetCurrentAmmoClientRpc(e.CurrentValue, RpcTarget.Single(e.OwnerID, RpcTargetUse.Temp));
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    void SetCurrentAmmoClientRpc(int currentAmmo, RpcParams rpcParams)
     {
         SetCurrentAmmo(currentAmmo);
     }

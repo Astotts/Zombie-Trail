@@ -42,9 +42,9 @@ public class WorldDataManager : MonoBehaviour
     public void SaveWorld(string worldName)
     {
         this.worldName = worldName;
+        worldData = new WorldData();
         foreach (IPersistentData persistentData in persistentDatas)
         {
-            worldData ??= new WorldData();
             persistentData.SaveData(ref worldData);
         }
 
@@ -93,7 +93,8 @@ public class WorldData
     // The whole purpose is to serialize a dictionary
     // Json.net won't accept a complex data for dictionary key
     // The reason? beat me
-    public List<KeyValuePair<int[], List<StructureData>>> loadedStructuresData;
+    public List<KeyValuePair<int[], List<StructureData>>> LoadedStructuresData { get; set; }
+    public Dictionary<ulong, PlayerData> clientDataMap;
 }
 
 public class JsonUtil<T>
@@ -132,7 +133,7 @@ public class JsonUtil<T>
             jsonString = reader.ReadToEnd();
 
             data = JsonConvert.DeserializeObject<T>(jsonString);
-            Debug.Log("Saved data at: " + fullPath);
+            Debug.Log("Loaded data at: " + fullPath);
         }
         catch (Exception e)
         {

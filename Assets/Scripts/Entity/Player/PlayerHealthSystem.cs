@@ -31,7 +31,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
 
     private IEnumerator healthFlashing;
 
-    private bool isDead => currentHealth.Value <= 0;
+    private bool IsDead => currentHealth.Value <= 0;
 
     public override void OnNetworkSpawn()
     {
@@ -90,7 +90,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     public void Damage(float amount)
     {
         currentHealth.Value -= amount;
-        if (isDead)
+        if (IsDead)
             Die();
     }
 
@@ -156,5 +156,15 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
             yield return null;
         }
         yield break;
+    }
+
+    public void LoadData(PlayerData playerData)
+    {
+        currentHealth.Value = playerData.CurrentHealth;
+    }
+
+    public void SaveData(ref PlayerData playerData)
+    {
+        playerData.CurrentHealth = currentHealth.Value;
     }
 }

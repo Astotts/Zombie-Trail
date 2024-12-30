@@ -87,9 +87,7 @@ public class NetworkObjectPool : NetworkBehaviour
         var networkObject = m_PooledObjects[prefab].Get();
 
         var noTransform = networkObject.transform;
-        noTransform.position = position;
-        noTransform.rotation = rotation;
-
+        noTransform.SetPositionAndRotation(position, rotation);
         return networkObject;
     }
 
@@ -108,7 +106,7 @@ public class NetworkObjectPool : NetworkBehaviour
     {
         NetworkObject CreateFunc()
         {
-            return Instantiate(prefab).GetComponent<NetworkObject>();
+            return Instantiate(prefab, transform).GetComponent<NetworkObject>();
         }
 
         void ActionOnGet(NetworkObject networkObject)

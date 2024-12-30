@@ -3,17 +3,18 @@ using System.Collections;
 using System.Linq;
 using TreeEditor;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static EventManager;
 
 public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
 {
     private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;         // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 1000;         // Only change when you want to change rotation speed for other gun too
 
-    public event EventHandler<int> OnAmmoChangeEvent;               // Event for UI (mostly)
+    public string Id => stats.Id;                                   // Id so it can be used in AvailableItemSO
     public event EventHandler<float> OnReloadEvent;                 // Event for UI (mostly)
-    private int currentAmmo;                                        // Current Ammo before reload
     public string GunName => stats.GunName;                         // Variables for Inventory and UIs to read
     public Sprite Icon => stats.Icon;                               // Variables for Inventory and UIs to read
     public int CurrentAmmo => currentAmmo;                          // Variables for Inventory and UIs to read
@@ -23,12 +24,14 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
     public int Capacity => stats.Capacity;                          // Variables for Inventory and UIs to read
     public NetworkObject WeaponNetworkObject => networkObject;      // Variables for Inventory and UIs to read
 
+
     [SerializeField] private GunStats stats;                        // Stats for guns (this script would be use for rifles GameObject)
     [SerializeField] NetworkObject networkObject;                   // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;           // Sprite render so we can flip it
 
-    private NetworkObject owner;                                   // Owner of the gun
-
+    private NetworkObject owner;                                    // Owner of the gun
+    private ulong ownerID;                                          // ClientId of owner in ulong
+    private int currentAmmo;                                        // Current Ammo before reload
     private bool isReloading;                                       // Inner variable so we know when the gun is reloading (can't shoot)
     private bool isOnFireRateCooldown;                              // Inner variable so we know when to shoot
     private bool isPickedUp;                                        // Inner variable so that gun can rotate
@@ -37,6 +40,19 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
     void OnValidate()
     {
         networkObject = GetComponent<NetworkObject>();
+        if (weaponSpriteRenderer != null)
+            weaponSpriteRenderer.sprite = stats.WeaponSprite;
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        if (!isPickedUp)
+            return;
+        EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
+        EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
+        EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
+        EventManager.EventHandler.OnItemSwappedEvent -= OnSwapIn;
     }
 
     void Start()
@@ -96,13 +112,22 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
         }
 
         // create & shoot the projectile 
-        SpawnBulletsServerRpc(transform.rotation);
+        SpawnBullets(transform.rotation);
         StartCoroutine(FireRateCooldown());
+        int previousValue = currentAmmo;
         currentAmmo -= 1;
-        OnAmmoChange(currentAmmo);
         AudioManager.Instance.PlaySFX(stats.GunShotSFXs[UnityEngine.Random.Range(0, stats.GunShotSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
 
         HandleRecoil();
+
+        AmmoChangedEventArgs ammoChangedEventArgs = new()
+        {
+            OwnerID = ownerID,
+            Item = this,
+            PreviousValue = previousValue,
+            CurrentValue = currentAmmo
+        };
+        EventManager.EventHandler.OnAmmoChanged(ammoChangedEventArgs);
     }
 
     private void Reload()
@@ -140,13 +165,21 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
         OnReloadEvent?.Invoke(this, stats.ReloadTime);
         yield return new WaitForSecondsRealtime(stats.ReloadTime);
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
+        int previousValue = currentAmmo;
         currentAmmo = stats.MagazineSize;
-        OnAmmoChange(currentAmmo);
         isReloading = false;
+
+        AmmoChangedEventArgs ammoChangedEventArgs = new()
+        {
+            OwnerID = ownerID,
+            Item = this,
+            PreviousValue = previousValue,
+            CurrentValue = currentAmmo
+        };
+        EventManager.EventHandler.OnAmmoChanged(ammoChangedEventArgs);
     }
 
-    [Rpc(SendTo.Server)]
-    public void SpawnBulletsServerRpc(Quaternion rotation)
+    public void SpawnBullets(Quaternion rotation)
     {
         float thetaInDeg = transform.eulerAngles.z;
         float thetaInRadian = Mathf.Deg2Rad * thetaInDeg;
@@ -168,19 +201,15 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
         bulletNetworkObject.Spawn();
     }
 
-    void OnAmmoChange(int currentAmmo)
-    {
-        OnAmmoChangeEvent?.Invoke(this, currentAmmo);
-    }
-
     public void OnPickUp(InventoryHandler playerInventory)
     {
         isPickedUp = true;
-        owner = playerInventory.owner;
-        playerInventory.OnItemLeftClickPressedEvent += OnLeftClickPressed;
-        playerInventory.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
-        playerInventory.OnitemReloadEvent += OnReloadPressed;
-        playerInventory.OnItemSwapEvent += OnSwapIn;
+        owner = playerInventory.Owner;
+        ownerID = OwnerClientId;
+        EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
+        EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
+        EventManager.EventHandler.OnitemReloadEvent += OnReloadPressed;
+        EventManager.EventHandler.OnItemSwappedEvent += OnSwapIn;
     }
 
     public void OnDrop(InventoryHandler playerInventory)
@@ -188,25 +217,47 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
         isPickedUp = false;
         owner = null;
         transform.rotation = Quaternion.identity;
+        EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
+        EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
+        EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
+        EventManager.EventHandler.OnItemSwappedEvent -= OnSwapIn;
     }
 
 
-    void OnLeftClickPressed(object sender, InventoryHandler.ItemLeftClickPressedEventArgs e)
+    void OnLeftClickPressed(object sender, ItemLeftClickPressedEventArgs e)
     {
+        if (e.PlayerID != ownerID)
+            return;
         isShooting = true;
     }
-    void OnLeftClickReleased(object sender, InventoryHandler.ItemLeftClickReleasedEventArgs e)
+    void OnLeftClickReleased(object sender, ItemLeftClickReleasedEventArgs e)
     {
+        if (e.PlayerID != ownerID)
+            return;
         isShooting = false;
     }
 
-    void OnReloadPressed(object sender, InventoryHandler.ItemReloadEventArgs e)
+    void OnReloadPressed(object sender, ItemReloadEventArgs e)
     {
+        if (e.PlayerID != ownerID)
+            return;
         Reload();
     }
 
-    public void OnSwapIn(object sender, InventoryHandler.ItemSwappedEventArgs e)
+    void OnSwapIn(object sender, ItemSwappedEventArgs e)
     {
+        if (e.PlayerID != ownerID)
+            return;
         Cursor.SetCursor(stats.Cursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void LoadData(ItemData data)
+    {
+        currentAmmo = data.IntMap["CurrentAmmo"];
+    }
+
+    public void SaveData(ref ItemData data)
+    {
+        data.IntMap["CurrentAmmo"] = currentAmmo;
     }
 }

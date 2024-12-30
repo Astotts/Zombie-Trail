@@ -7,6 +7,7 @@ public class GunStats : ScriptableObject
 {
     // [field: SerializeField] Can display variables on inspector, PEAK!
     // The property (private set) is to make sure other codes don't change variables
+    [field: SerializeField] public string Id { get; private set; }                // Weapon Icon on ui (Pivot at the end of the gun)
     [field: SerializeField] public Sprite Icon { get; private set; }                // Weapon Icon on ui (Pivot at the end of the gun)
     [field: SerializeField] public Sprite WeaponSprite { get; private set; }        // Sprite to display
     [field: SerializeField] public Sprite AmmoIcon { get; private set; }            // Ammo Icon for UI
