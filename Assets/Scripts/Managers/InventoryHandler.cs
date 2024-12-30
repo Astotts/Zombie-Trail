@@ -8,7 +8,16 @@ using static EventManager;
 public class InventoryHandler : NetworkBehaviour
 {
     public static readonly int INVENTORY_SIZE = 4;
-    public ulong PlayerID { get; set; }
+    private ulong ownerID;
+    public ulong PlayerID
+    {
+        get { return ownerID; }
+        set
+        {
+            Debug.Log("PlayerID Set to " + value);
+            ownerID = value;
+        }
+    }
     public NetworkObject Owner { get; private set; }
 
     [SerializeField] private float pickUpRadius;
@@ -101,14 +110,12 @@ public class InventoryHandler : NetworkBehaviour
     // ==========================================
     // Client Side Behaviours
     // ==========================================
-    [Rpc(SendTo.SpecifiedInParams)]
-    void HidePickUpButtonClientRpc(RpcParams rpcParams = default)
+    void HidePickUpButton()
     {
         pickUpButtonGO.SetActive(false);
     }
 
-    [Rpc(SendTo.SpecifiedInParams)]
-    void DisplayPickUpButtonClientRpc(Vector2 itemPosition, RpcParams rpcParams = default)
+    void DisplayPickUpButton(Vector2 itemPosition)
     {
         float xPos = transform.position.x + (itemPosition.x - transform.position.x) / 5;
         float yPos = transform.position.y + (itemPosition.y - transform.position.y) / 5;
@@ -123,12 +130,14 @@ public class InventoryHandler : NetworkBehaviour
     // ==========================================
     void Start()
     {
-        // StartCoroutine(PickUpLoop());
+        if (!IsOwner)
+            return;
+        StartCoroutine(PickUpLoop());
     }
 
     IEnumerator PickUpLoop()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         HandlePickUpDistance();
         StartCoroutine(PickUpLoop());
     }
@@ -149,11 +158,11 @@ public class InventoryHandler : NetworkBehaviour
         }
         if (closestGO == null)
         {
-            HidePickUpButtonClientRpc(RpcTarget.Single(PlayerID, RpcTargetUse.Temp));
+            HidePickUpButton();
             return;
         }
 
-        DisplayPickUpButtonClientRpc(closestGO.transform.position, RpcTarget.Single(PlayerID, RpcTargetUse.Temp));
+        DisplayPickUpButton(closestGO.transform.position);
     }
 
     [Rpc(SendTo.Server)]
