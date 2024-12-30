@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,13 +9,22 @@ public class Player : MonoBehaviour
     [SerializeField] InventoryHandler playerInventory;
     [SerializeField] ReloadUI reloadUI;
 
-    public ulong PlayerID { get; set; }
+    public ulong PlayerID
+    {
+        set
+        {
+            SetOwnerIDClientRpc(value);
+        }
+    }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SetOwnerIDClientRpc(ulong clientID)
+    {
+        reloadUI.PlayerID = clientID;
+        playerInventory.PlayerID = clientID;
+    }
     public void LoadData(PlayerData playerData)
     {
-        reloadUI.PlayerID = PlayerID;
-        playerInventory.PlayerID = PlayerID;
-
         if (playerData == null)
             return;
 

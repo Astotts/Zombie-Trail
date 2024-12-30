@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
-public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentData
+public class StructureGenerator : NetworkBehaviour, ChunkGenerator
 {
     [SerializeField] int prewarmGOAmount = 15;
     [SerializeField] int chunkSize;
@@ -56,19 +56,20 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
     }
 
     [Rpc(SendTo.Server)]
-    void UpdateStructureDataServerRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY)
+    void UpdateStructureDataServerRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY, RpcParams rpcParams = default)
     {
-        UpdateStructureDataClientRpc(structureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+        UpdateStructureDataClientRpc(structureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY, rpcParams.Receive.SenderClientId);
     }
     [Rpc(SendTo.ClientsAndHost)]
-    void UpdateStructureDataClientRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY)
+    void UpdateStructureDataClientRpc(int structureIndex, bool isFront, Vector2 spawnLocation, Quaternion spawnRotation, int chunkX, int chunkY, ulong sender)
     {
+        if (sender == NetworkManager.Singleton.LocalClientId)
+            return;
         StructureSO structureSO;
         if (isFront)
             structureSO = frontStructures[structureIndex];
         else
             structureSO = backStructures[structureIndex];
-        Vector2Int chunkLocation = new(chunkX, chunkY);
         StructureData structureData = new()
         {
             StructureSO = structureSO,
@@ -77,6 +78,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
             SpawnLocation = spawnLocation,
             SpawnRotation = spawnRotation
         };
+        Vector2Int chunkLocation = new(chunkX, chunkY);
 
         if (!loadedStructureData.ContainsKey(chunkLocation))
             loadedStructureData[chunkLocation] = new List<StructureData>();
@@ -115,6 +117,21 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
             Quaternion spawnRotation = spawnedStructure.transform.rotation;
 
             UpdateStructureDataServerRpc(randomStructureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+            StructureData structureData = new()
+            {
+                StructureSOIndex = randomStructureIndex,
+                StructureSO = structureSO,
+                IsFront = isFront,
+                SpawnLocation = spawnLocation,
+                SpawnRotation = spawnRotation,
+                SpawnedStructure = spawnedStructure
+            };
+            Vector2Int chunkLocation = new(chunkX, chunkY);
+
+            if (!loadedStructureData.ContainsKey(chunkLocation))
+                loadedStructureData[chunkLocation] = new List<StructureData>();
+
+            loadedStructureData[chunkLocation].Add(structureData);
 
             BoxCollider2D boxCollider2D = spawnedStructure.BoxCollider2D;
             int structureXLength = (int)(boxCollider2D.size.x * structurePrefab.transform.localScale.x);
@@ -153,6 +170,21 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
             Quaternion spawnRotation = spawnedStructure.transform.rotation;
 
             UpdateStructureDataServerRpc(randomStructureIndex, isFront, spawnLocation, spawnRotation, chunkX, chunkY);
+            StructureData structureData = new()
+            {
+                StructureSOIndex = randomStructureIndex,
+                StructureSO = structureSO,
+                IsFront = isFront,
+                SpawnLocation = spawnLocation,
+                SpawnRotation = spawnRotation,
+                SpawnedStructure = spawnedStructure
+            };
+            Vector2Int chunkLocation = new(chunkX, chunkY);
+
+            if (!loadedStructureData.ContainsKey(chunkLocation))
+                loadedStructureData[chunkLocation] = new List<StructureData>();
+
+            loadedStructureData[chunkLocation].Add(structureData);
 
             BoxCollider2D boxCollider2D = spawnedStructure.BoxCollider2D;
             int structureXLength = (int)(boxCollider2D.size.x * structurePrefab.transform.localScale.x);
@@ -252,7 +284,7 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
         {
             foreach (StructureData data in loadedDatas)
             {
-                SpawnStructure(data.StructureSO, data.SpawnLocation, data.SpawnRotation);
+                data.SpawnedStructure = SpawnStructure(data.StructureSO, data.SpawnLocation, data.SpawnRotation);
             }
             return;
         }
@@ -280,62 +312,6 @@ public class StructureGenerator : NetworkBehaviour, ChunkGenerator, IPersistentD
                 data.SpawnedStructure = null;
             }
         }
-    }
-
-    public void LoadData(WorldData worldData)
-    {
-        loadedStructureData.Clear();
-        foreach (KeyValuePair<int[], List<StructureData>> data in worldData.LoadedStructuresData)
-        {
-            int[] pos = data.Key;
-            Vector2Int chunkPos = new(pos[0], pos[1]);
-            List<StructureData> structureDataList = data.Value;
-
-            foreach (StructureData structureData in structureDataList)
-            {
-                float[] spawnLocationJson = structureData.SpawnLocationJson;
-                float[] spawnRotationJson = structureData.SpawnRotationJson;
-
-                Vector3 spawnLocation = new(spawnLocationJson[0], spawnLocationJson[1], spawnLocationJson[2]);
-                Quaternion spawnRotation = new(spawnRotationJson[0], spawnRotationJson[1], spawnRotationJson[2], spawnRotationJson[3]);
-
-                structureData.SpawnLocation = spawnLocation;
-                structureData.SpawnRotation = spawnRotation;
-
-                structureData.StructureSO = structureData.IsFront ? frontStructures[structureData.StructureSOIndex] : backStructures[structureData.StructureSOIndex];
-                UpdateStructureDataServerRpc(
-                    structureData.StructureSOIndex,
-                    structureData.IsFront,
-                    structureData.SpawnLocation,
-                    structureData.SpawnRotation,
-                    chunkPos.x, chunkPos.y
-                );
-            }
-        }
-    }
-
-    public void SaveData(ref WorldData worldData)
-    {
-        List<KeyValuePair<int[], List<StructureData>>> structureMap = new();
-        foreach (Vector2Int chunkPos in loadedStructureData.Keys)
-        {
-            int[] pos = { chunkPos.x, chunkPos.y };
-            List<StructureData> structureDataList = loadedStructureData[chunkPos];
-
-            foreach (StructureData structureData in structureDataList)
-            {
-                Vector3 spawnLocation = structureData.SpawnLocation;
-                Quaternion spawnRotation = structureData.SpawnRotation;
-
-                float[] spawnLocationJson = { spawnLocation.x, spawnLocation.y, spawnLocation.z };
-                float[] spawnRotationJson = { spawnRotation.x, spawnRotation.y, spawnRotation.z, spawnRotation.w };
-
-                structureData.SpawnLocationJson = spawnLocationJson;
-                structureData.SpawnRotationJson = spawnRotationJson;
-            }
-            structureMap.Add(new KeyValuePair<int[], List<StructureData>>(pos, structureDataList));
-        }
-        worldData.LoadedStructuresData = structureMap;
     }
 }
 

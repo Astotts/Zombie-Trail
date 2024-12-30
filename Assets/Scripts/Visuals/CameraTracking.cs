@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
 
 public class CameraTracking : MonoBehaviour
 {
     [SerializeField] float camSnapFloat;
-    [SerializeField] Transform player;
     [SerializeField] Vector3 offset;
     [SerializeField] WorldGenerator worldGenerator;
     [SerializeField] int findAttempts = 20;
 
-    private ulong ownerID;
+    Transform player;
 
     float minY;
     float maxY;
@@ -23,8 +23,7 @@ public class CameraTracking : MonoBehaviour
 
     void Start()
     {
-        ownerID = NetworkManager.Singleton.LocalClientId;
-        player = PlayerManager.Instance.GetPlayerObject(ownerID).transform;
+        StartCoroutine(SearchForPlayer());
         this.GetComponent<UnityEngine.Rendering.Universal.UniversalAdditionalCameraData>().renderPostProcessing = true;
         Camera camera = Camera.main;
         float worldGeneratorYPos = worldGenerator.chunkSize / 2;
@@ -32,6 +31,18 @@ public class CameraTracking : MonoBehaviour
 
         maxY = worldGeneratorYPos + worldGeneratorVerticalExtend + camera.orthographicSize / 2;
         minY = -worldGeneratorYPos - worldGeneratorVerticalExtend - camera.orthographicSize / 2;
+    }
+
+    IEnumerator SearchForPlayer()
+    {
+        yield return new WaitForSeconds(1.0f);
+        NetworkObject localClientObj = NetworkManager.Singleton.LocalClient.PlayerObject;
+        if (localClientObj != null)
+            player = localClientObj.transform;
+        findAttempts--;
+
+        if (player == null && findAttempts > 0)
+            StartCoroutine(SearchForPlayer());
     }
 
     float BetweenMinMax(float y)
@@ -42,9 +53,6 @@ public class CameraTracking : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (player == null)
-            return;
-
         // pos.x += Input.GetAxisRaw("Horizontal") * camSnapFloat;
         // pos.y += Input.GetAxisRaw("Vertical") * camSnapFloat;
 

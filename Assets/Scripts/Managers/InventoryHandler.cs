@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using Unity.Mathematics;
+using System.Collections;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager;
@@ -124,11 +121,16 @@ public class InventoryHandler : NetworkBehaviour
     // ==========================================
     // Server Side Behaviours
     // ==========================================
-    void Update()
+    void Start()
     {
-        if (PlayerID != NetworkManager.Singleton.LocalClientId)
-            return;
+        // StartCoroutine(PickUpLoop());
+    }
+
+    IEnumerator PickUpLoop()
+    {
+        yield return new WaitForSeconds(1.0f);
         HandlePickUpDistance();
+        StartCoroutine(PickUpLoop());
     }
 
     void HandlePickUpDistance()

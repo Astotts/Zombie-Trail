@@ -81,11 +81,12 @@ public class RelayManager : MonoBehaviour
             return;
 
         WorldDataManager.Instance.LoadWorld("World");
+        NetworkManager.Singleton.SceneManager.OnLoadComplete -= OnWorldSceneLoaded;
     }
 
     private void OnWorldSceneUnloaded(ulong clientId, string sceneName)
     {
-        if (sceneName != "World")
+        if (sceneName != "World" || clientId != NetworkManager.Singleton.ConnectedClientsIds[0])
             return;
 
         WorldDataManager.Instance.SaveWorld("World");

@@ -21,25 +21,32 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
         if (Instance != null)
             Debug.LogError("There are more than one Player Manager!");
         Instance = this;
-        NetworkManager.Singleton.SceneManager.OnLoadComplete += OnSceneLoaded;
-        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
     }
 
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnPlayerJoined;
-    }
-
-    private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    public override void OnNetworkSpawn()
     {
         if (!IsServer)
             return;
-
+        base.OnNetworkSpawn();
         foreach (ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
         {
             SpawnPlayer(clientID);
         }
+        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnPLayerLeft;
+        NetworkManager.Singleton.OnServerStopped += OnServerStop;
+    }
+
+    private void OnServerStop(bool obj)
+    {
+        NetworkManager.Singleton.OnClientConnectedCallback -= OnPlayerJoined;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= OnPLayerLeft;
+        NetworkManager.Singleton.OnServerStopped -= OnServerStop;
+    }
+
+    private void OnPLayerLeft(ulong clientId)
+    {
+        DespawnPlayer(clientId);
     }
 
     private void OnPlayerJoined(ulong clientID)
@@ -47,18 +54,28 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
         SpawnPlayer(clientID);
     }
 
+    void DespawnPlayer(ulong clientID)
+    {
+        NetworkObject clientPlayerObject = playerObjectMap[clientID];
+        playerObjectMap.Remove(clientID);
+        NetworkObjectPool.Singleton.ReturnNetworkObject(clientPlayerObject, playerPrefab);
+        clientPlayerObject.Despawn(false);
+    }
+
     void SpawnPlayer(ulong clientID)
     {
-        NetworkObject clientPlayerObject = NetworkObjectPool.Singleton.GetNetworkObject(playerPrefab, carTransform.position, Quaternion.identity);
+        GameObject spawnedPlayerObject = Instantiate(playerPrefab, carTransform.position, Quaternion.identity, transform);
 
-        Player player = clientPlayerObject.GetComponent<Player>();
+        Player player = spawnedPlayerObject.GetComponent<Player>();
         player.PlayerID = clientID;
         PlayerData nullablePlayerData = clientDataMap.TryGetValue(clientID, out PlayerData data) ? data : null;
         player.LoadData(nullablePlayerData);
 
-        playerObjectMap.Add(clientID, clientPlayerObject);
+        NetworkObject playerNetworkObject = spawnedPlayerObject.GetComponent<NetworkObject>();
 
-        clientPlayerObject.Spawn();
+        playerObjectMap.Add(clientID, playerNetworkObject);
+
+        playerNetworkObject.SpawnAsPlayerObject(clientID);
     }
 
     public void LoadData(WorldData worldData)

@@ -4,10 +4,11 @@ using System.ComponentModel;
 using System.IO;
 using Newtonsoft.Json;
 using Unity.Mathematics;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class WorldDataManager : MonoBehaviour
+public class WorldDataManager : NetworkBehaviour
 {
     public static WorldDataManager Instance { get; set; }
     [SerializeField] List<GameObject> objectsToSaveList = new();
@@ -17,6 +18,16 @@ public class WorldDataManager : MonoBehaviour
     WorldData worldData;
 
     string worldName;
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsServer)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        base.OnNetworkSpawn();
+    }
 
     void Awake()
     {
@@ -29,7 +40,7 @@ public class WorldDataManager : MonoBehaviour
         GetAllPersistenDataInterfaces();
     }
 
-    void OnDestroy()
+    public override void OnDestroy()
     {
         Instance = null;
     }
