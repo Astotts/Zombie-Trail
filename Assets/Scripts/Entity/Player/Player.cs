@@ -6,12 +6,18 @@ public class Player : MonoBehaviour
 {
     [SerializeField] PlayerHealth playerHealth;
     [SerializeField] InventoryHandler playerInventory;
+    [SerializeField] ReloadUI reloadUI;
 
     public ulong PlayerID { get; set; }
 
     public void LoadData(PlayerData playerData)
     {
+        reloadUI.PlayerID = PlayerID;
         playerInventory.PlayerID = PlayerID;
+
+        if (playerData == null)
+            return;
+
         float[] jsonVector = playerData.Position;
         transform.position = new(jsonVector[0], jsonVector[1], jsonVector[2]);
 
@@ -24,7 +30,6 @@ public class Player : MonoBehaviour
 
     public void SaveData(ref PlayerData playerData)
     {
-        playerInventory.PlayerID = PlayerID;
         Vector3 currentPosition = transform.position;
         float[] jsonPosition = { currentPosition.x, currentPosition.y, currentPosition.z };
         playerData.Position = jsonPosition;

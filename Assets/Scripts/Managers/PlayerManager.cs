@@ -55,8 +55,8 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
 
         Player player = clientPlayerObject.GetComponent<Player>();
         player.PlayerID = clientID;
-        if (clientDataMap.TryGetValue(clientID, out PlayerData data))
-            player.LoadData(data);
+        PlayerData nullablePlayerData = clientDataMap.TryGetValue(clientID, out PlayerData data) ? data : null;
+        player.LoadData(nullablePlayerData);
 
         playerObjectMap.Add(clientID, clientPlayerObject);
 

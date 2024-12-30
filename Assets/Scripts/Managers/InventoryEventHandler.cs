@@ -1,5 +1,7 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using UnityEngine;
 using UnityEngine.InputSystem.Interactions;
 
 public class EventManager
@@ -16,7 +18,8 @@ public class EventManager
     public event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
     public event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
     public event EventHandler<ItemReloadEventArgs> OnitemReloadEvent;
-    public event EventHandler<AmmoChangedEventArgs> OnGunAmmoChangedEvent;
+    public event EventHandler<AmmoChangedEventArgs> OnAmmoChangedEvent;
+    public event EventHandler<GunReloadEventArgs> OnGunReloadEvent;
     #endregion
 
     #region InventoryLoadedEvent
@@ -143,10 +146,10 @@ public class EventManager
     }
     #endregion
 
-    #region GunAmmoChange
+    #region GunAmmoChangedEvent
     public void OnAmmoChanged(AmmoChangedEventArgs eventArgs)
     {
-        OnGunAmmoChangedEvent?.Invoke(this, eventArgs);
+        OnAmmoChangedEvent?.Invoke(this, eventArgs);
     }
     public class AmmoChangedEventArgs : EventArgs
     {
@@ -154,6 +157,19 @@ public class EventManager
         public IItem Item { get; set; }
         public int PreviousValue { get; set; }
         public int CurrentValue { get; set; }
+    }
+    #endregion
+
+    #region GunReloadedEvent
+    public void OnGunReload(GunReloadEventArgs eventArgs)
+    {
+        OnGunReloadEvent?.Invoke(this, eventArgs);
+    }
+    public class GunReloadEventArgs : EventArgs
+    {
+        public ulong PlayerID { get; set; }
+        public IItem Item { get; set; }
+        public float ReloadTime { get; set; }
     }
     #endregion
 }

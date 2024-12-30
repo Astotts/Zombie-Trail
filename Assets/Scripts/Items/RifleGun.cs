@@ -8,13 +8,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager;
 
-public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
+public class RifleGun : NetworkBehaviour, IItem
 {
     private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;         // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 1000;         // Only change when you want to change rotation speed for other gun too
 
     public string Id => stats.Id;                                   // Id so it can be used in AvailableItemSO
-    public event EventHandler<float> OnReloadEvent;                 // Event for UI (mostly)
     public string GunName => stats.GunName;                         // Variables for Inventory and UIs to read
     public Sprite Icon => stats.Icon;                               // Variables for Inventory and UIs to read
     public int CurrentAmmo => currentAmmo;                          // Variables for Inventory and UIs to read
@@ -134,7 +133,6 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
     {
         if (isReloading || currentAmmo == stats.MagazineSize)
             return;
-        isReloading = true;
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
         StartCoroutine(Reloading());
     }
@@ -162,9 +160,20 @@ public class RifleGun : NetworkBehaviour, IItem, IReloadableItem
 
     IEnumerator Reloading()
     {
-        OnReloadEvent?.Invoke(this, stats.ReloadTime);
+        isReloading = true;
+
+        GunReloadEventArgs eventArgs = new()
+        {
+            PlayerID = ownerID,
+            Item = this,
+            ReloadTime = stats.ReloadTime
+        };
+        EventManager.EventHandler.OnGunReload(eventArgs);
+
         yield return new WaitForSecondsRealtime(stats.ReloadTime);
+
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
+
         int previousValue = currentAmmo;
         currentAmmo = stats.MagazineSize;
         isReloading = false;

@@ -19,8 +19,3 @@ public interface IItem
     void LoadData(ItemData data);
     void SaveData(ref ItemData data);
 }
-
-public interface IReloadableItem
-{
-    event EventHandler<float> OnReloadEvent;
-}

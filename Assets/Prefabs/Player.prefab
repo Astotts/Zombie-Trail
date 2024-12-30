@@ -440,7 +440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1423560401
+  GlobalObjectIdHash: 3566276912
   InScenePlacedSourceGlobalObjectIdHash: 3566276912
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -773,6 +773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHealth: {fileID: 4277080930078860087}
   playerInventory: {fileID: 3620888271258052386}
+  reloadUI: {fileID: 7185180946255342875}
 --- !u!114 &7185180946255342875
 MonoBehaviour:
   m_ObjectHideFlags: 0

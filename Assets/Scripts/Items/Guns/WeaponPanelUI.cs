@@ -25,7 +25,7 @@ public class WeaponPanelUI : NetworkBehaviour
         EventHandler.OnItemSwappedEvent += OnItemSwap;
         EventHandler.OnItemPickedUpEvent += OnItemPickUp;
         EventHandler.OnItemDroppedEvent += OnItemDrop;
-        EventHandler.OnGunAmmoChangedEvent += OnRifleAmmoChange;
+        EventHandler.OnAmmoChangedEvent += OnRifleAmmoChange;
         Debug.Log("Weapon Panel Subscribed to InventoryEvents!");
     }
 
@@ -36,7 +36,7 @@ public class WeaponPanelUI : NetworkBehaviour
         EventHandler.OnItemSwappedEvent -= OnItemSwap;
         EventHandler.OnItemPickedUpEvent -= OnItemPickUp;
         EventHandler.OnItemDroppedEvent -= OnItemDrop;
-        EventHandler.OnGunAmmoChangedEvent -= OnRifleAmmoChange;
+        EventHandler.OnAmmoChangedEvent -= OnRifleAmmoChange;
         Debug.Log("Weapon Panel Unsubscribed to InventoryEvents!");
     }
 

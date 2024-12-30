@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Runtime.InteropServices;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor.Build.Player;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,53 +15,34 @@ public class ReloadUI : NetworkBehaviour
     [SerializeField] SpriteRenderer fillRenderer;
     [SerializeField] GameObject reloadFill;
     [SerializeField] float fadeDuration;
-    private IReloadableItem reloadableItem;
 
-    void Awake()
+    public ulong PlayerID { get; set; }
+
+    public override void OnNetworkSpawn()
     {
-        EventHandler.OnItemSwappedEvent += OnItemSwap;
-        EventHandler.OnItemPickedUpEvent += OnItemPickedUp;
+        if (!IsServer)
+            return;
+        base.OnNetworkSpawn();
+        EventManager.EventHandler.OnGunReloadEvent += OnItemReload;
     }
 
     public override void OnDestroy()
     {
         base.OnDestroy();
-        EventHandler.OnItemSwappedEvent -= OnItemSwap;
-        EventHandler.OnItemPickedUpEvent -= OnItemPickedUp;
-        if (reloadableItem != null)
-            reloadableItem.OnReloadEvent -= OnItemReload;
+        EventManager.EventHandler.OnGunReloadEvent -= OnItemReload;
     }
 
-    void OnItemPickedUp(object sender, ItemPickedUpEventArgs e)
+    private void OnItemReload(object sender, GunReloadEventArgs e)
     {
-        CheckItem(e.Item);
-    }
-
-    void OnItemSwap(object sender, ItemSwappedEventArgs e)
-    {
-        CheckItem(e.CurrentItem);
-    }
-
-    void CheckItem(IItem item)
-    {
-        if (this.reloadableItem != null)
-            this.reloadableItem.OnReloadEvent -= OnItemReload;
-
-        if (item is not IReloadableItem reloadableItem)
+        if (e.PlayerID != this.PlayerID)
             return;
-
-        this.reloadableItem = reloadableItem;
-        this.reloadableItem.OnReloadEvent += OnItemReload;
-    }
-
-    void OnItemReload(object sender, float reloadTime)
-    {
-        PlayReloadEffectClientRpc(reloadTime);
+        PlayReloadEffectClientRpc(e.ReloadTime);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void PlayReloadEffectClientRpc(float reloadTime)
     {
+        Debug.Log("reached");
         StartCoroutine(Reloading(reloadTime));
     }
 
