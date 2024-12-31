@@ -62,15 +62,25 @@ public class WeaponPanelUI : NetworkBehaviour
 
     void HandleItem(ulong playerID, IItem item)
     {
+        if (item == null)
+        {
+            HideItemClientRpc(RpcTarget.Single(playerID, RpcTargetUse.Temp));
+            return;
+        }
         if (item.WeaponNetworkObject.TryGetComponent(out IDisplayableWeapon weapon))
         {
             currentItem = weapon;
         }
-        UpdateUIClientRpc(item.WeaponNetworkObject, RpcTarget.Single(playerID, RpcTargetUse.Temp));
+        DisplayItemClientRpc(item.WeaponNetworkObject, RpcTarget.Single(playerID, RpcTargetUse.Temp));
+    }
+    [Rpc(SendTo.SpecifiedInParams)]
+    void HideItemClientRpc(RpcParams rpcParams)
+    {
+        DisableUI();
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
-    void UpdateUIClientRpc(NetworkObjectReference clientNetworkObject, RpcParams rpcParams)
+    void DisplayItemClientRpc(NetworkObjectReference clientNetworkObject, RpcParams rpcParams)
     {
         if (!clientNetworkObject.TryGet(out NetworkObject networkObject))
             return;
