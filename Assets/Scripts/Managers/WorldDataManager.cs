@@ -53,7 +53,11 @@ public class WorldDataManager : NetworkBehaviour
     public void SaveWorld(string worldName)
     {
         this.worldName = worldName;
-        worldData = new WorldData();
+        worldData = new WorldData()
+        {
+            WorldName = worldName,
+            ClientDataMap = new()
+        };
         foreach (IPersistentData persistentData in persistentDatas)
         {
             persistentData.SaveData(ref worldData);
@@ -104,8 +108,7 @@ public class WorldData
     // The whole purpose is to serialize a dictionary
     // Json.net won't accept a complex data for dictionary key
     // The reason? beat me
-    public List<KeyValuePair<int[], List<StructureData>>> LoadedStructuresData { get; set; }
-    public Dictionary<ulong, PlayerData> clientDataMap;
+    public Dictionary<ulong, PlayerData> ClientDataMap { get; set; }
 }
 
 public class JsonUtil<T>
@@ -122,6 +125,7 @@ public class JsonUtil<T>
             using FileStream stream = new(fullPath, FileMode.Create);
             using StreamWriter writer = new(stream);
             writer.Write(jsonString);
+            Debug.Log("Saved data at: " + fullPath);
         }
         catch (Exception e)
         {

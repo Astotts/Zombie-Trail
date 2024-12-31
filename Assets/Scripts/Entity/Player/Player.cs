@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     }
     public void LoadData(PlayerData playerData)
     {
-        if (playerData == null)
+        if (playerData.Position == null)
             return;
 
         float[] jsonVector = playerData.Position;

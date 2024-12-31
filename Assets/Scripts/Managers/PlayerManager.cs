@@ -13,7 +13,7 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
     public static PlayerManager Instance { get; private set; }
     [SerializeField] GameObject playerPrefab;
     [SerializeField] Transform carTransform;
-    Dictionary<ulong, NetworkObject> playerObjectMap = new();
+    Dictionary<ulong, Player> playerMap = new();
     Dictionary<ulong, PlayerData> clientDataMap = new();
 
     void Awake()
@@ -46,7 +46,11 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
 
     private void OnPLayerLeft(ulong clientId)
     {
-        playerObjectMap.Remove(clientId);
+        Player player = playerMap[clientId];
+        Debug.Log("Query data");
+        PlayerData data = clientDataMap[clientId];
+        player.SaveData(ref data);
+        playerMap.Remove(clientId);
     }
 
     private void OnPlayerJoined(ulong clientID)
@@ -59,31 +63,34 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
         GameObject spawnedPlayerObject = Instantiate(playerPrefab, carTransform.position, Quaternion.identity, transform);
 
         Player player = spawnedPlayerObject.GetComponent<Player>();
-        PlayerData nullablePlayerData = clientDataMap.TryGetValue(clientID, out PlayerData data) ? data : null;
-        player.LoadData(nullablePlayerData);
+        playerMap[clientID] = player;
 
         NetworkObject playerNetworkObject = spawnedPlayerObject.GetComponent<NetworkObject>();
-
-        playerObjectMap.Add(clientID, playerNetworkObject);
-
         playerNetworkObject.SpawnAsPlayerObject(clientID);
         player.PlayerID = clientID;
+        if (clientDataMap.TryGetValue(clientID, out PlayerData data))
+            player.LoadData(data);
+        else
+            clientDataMap.Add(clientID, new PlayerData());
     }
 
     public void LoadData(WorldData worldData)
     {
-        if (worldData.clientDataMap == null)
+        if (worldData.ClientDataMap == null)
             return;
-        clientDataMap = worldData.clientDataMap;
+        clientDataMap = worldData.ClientDataMap;
+        foreach (ulong clientID in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            if (clientDataMap.TryGetValue(clientID, out PlayerData data))
+                playerMap[clientID].LoadData(data);
+            else
+                clientDataMap.Add(clientID, new PlayerData());
+        }
     }
 
     public void SaveData(ref WorldData worldData)
     {
-        worldData.clientDataMap = clientDataMap;
-    }
-
-    public NetworkObject GetPlayerObject(ulong playerId)
-    {
-        return playerObjectMap[playerId];
+        Debug.Log("Save");
+        worldData.ClientDataMap = clientDataMap;
     }
 }

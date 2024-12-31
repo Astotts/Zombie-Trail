@@ -325,6 +325,8 @@ public class InventoryHandler : NetworkBehaviour
     public void LoadData(PlayerData playerData)
     {
         ItemData[] itemDatas = playerData.Inventory;
+        if (itemDatas == null)
+            return;
         for (int i = 0; i < itemDatas.Length; i++)
         {
             ItemData data = itemDatas[i];
