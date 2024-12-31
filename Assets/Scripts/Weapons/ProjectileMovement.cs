@@ -3,6 +3,7 @@ using Unity.Networking.Transport;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class ProjectileMovement : NetworkBehaviour
 {
@@ -22,7 +23,8 @@ public class ProjectileMovement : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsHost)
+        trailRenderer.Clear();
+        if (!IsServer)
         {
             enabled = false;
             return;
@@ -68,7 +70,6 @@ public class ProjectileMovement : NetworkBehaviour
         this.range = range;
 
         SetupDirection(rotation, accuracy);
-        trailRenderer.Clear();
     }
 
     [Rpc(SendTo.Server)]
