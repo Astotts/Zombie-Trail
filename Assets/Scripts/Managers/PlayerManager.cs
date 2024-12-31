@@ -46,20 +46,12 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
 
     private void OnPLayerLeft(ulong clientId)
     {
-        DespawnPlayer(clientId);
+        playerObjectMap.Remove(clientId);
     }
 
     private void OnPlayerJoined(ulong clientID)
     {
         SpawnPlayer(clientID);
-    }
-
-    void DespawnPlayer(ulong clientID)
-    {
-        NetworkObject clientPlayerObject = playerObjectMap[clientID];
-        playerObjectMap.Remove(clientID);
-        NetworkObjectPool.Singleton.ReturnNetworkObject(clientPlayerObject, playerPrefab);
-        clientPlayerObject.Despawn(false);
     }
 
     void SpawnPlayer(ulong clientID)
