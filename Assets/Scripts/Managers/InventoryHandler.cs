@@ -27,38 +27,6 @@ public class InventoryHandler : NetworkBehaviour
     void Awake()
     {
         Owner = GetComponent<NetworkObject>();
-        playerControls = new PlayerControls();
-
-        playerControls.Equipment.WeaponHotbar.performed += OnWeaponHotbarPressed;
-        playerControls.Equipment.PickUpItem.performed += OnPickUpButtonPressed;
-        playerControls.Equipment.DropItem.performed += OnDropButtonPressed;
-        playerControls.Equipment.ReloadItem.performed += OnReloadButtonPressed;
-        playerControls.Equipment.ItemLeftClick.started += OnItemLeftClickPressed;
-        playerControls.Equipment.ItemLeftClick.canceled += OnItemLeftClickReleased;
-        playerControls.Equipment.ItemRightClick.started += OnItemRightClickPressed;
-        playerControls.Equipment.ItemRightClick.canceled += OnItemRightClickReleased;
-    }
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-        playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
-        playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
-        playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
-        playerControls.Equipment.ReloadItem.performed -= OnReloadButtonPressed;
-        playerControls.Equipment.ItemLeftClick.started -= OnItemLeftClickPressed;
-        playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
-        playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
-        playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
-    }
-
-    void OnEnable()
-    {
-        playerControls.Equipment.Enable();
-    }
-
-    void OnDisable()
-    {
-        playerControls.Equipment.Disable();
     }
 
     private void OnItemRightClickReleased(InputAction.CallbackContext context)
@@ -104,9 +72,43 @@ public class InventoryHandler : NetworkBehaviour
     // ==========================================
     // Client Side Behaviours
     // ==========================================
-    void Start()
+    public override void OnNetworkSpawn()
     {
+        // We will do calculation for nearest item on Server and Client
+        // But only client(owner of the object) should display the pickup button
         StartCoroutine(PickUpLoop());
+
+        if (!IsOwner)
+            return;
+        playerControls = new PlayerControls();
+
+        playerControls.Equipment.WeaponHotbar.performed += OnWeaponHotbarPressed;
+        playerControls.Equipment.PickUpItem.performed += OnPickUpButtonPressed;
+        playerControls.Equipment.DropItem.performed += OnDropButtonPressed;
+        playerControls.Equipment.ReloadItem.performed += OnReloadButtonPressed;
+        playerControls.Equipment.ItemLeftClick.started += OnItemLeftClickPressed;
+        playerControls.Equipment.ItemLeftClick.canceled += OnItemLeftClickReleased;
+        playerControls.Equipment.ItemRightClick.started += OnItemRightClickPressed;
+        playerControls.Equipment.ItemRightClick.canceled += OnItemRightClickReleased;
+        playerControls.Equipment.Enable();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (!IsOwner)
+            return;
+
+        base.OnDestroy();
+        playerControls.Equipment.Disable();
+        playerControls.Equipment.WeaponHotbar.performed -= OnWeaponHotbarPressed;
+        playerControls.Equipment.PickUpItem.performed -= OnPickUpButtonPressed;
+        playerControls.Equipment.DropItem.performed -= OnDropButtonPressed;
+        playerControls.Equipment.ReloadItem.performed -= OnReloadButtonPressed;
+        playerControls.Equipment.ItemLeftClick.started -= OnItemLeftClickPressed;
+        playerControls.Equipment.ItemLeftClick.canceled -= OnItemLeftClickReleased;
+        playerControls.Equipment.ItemRightClick.started -= OnItemRightClickPressed;
+        playerControls.Equipment.ItemRightClick.canceled -= OnItemRightClickReleased;
+        playerControls = null;
     }
 
     IEnumerator PickUpLoop()
@@ -241,6 +243,7 @@ public class InventoryHandler : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void PickUpClosestItemServerRpc(RpcParams rpcParams = default)
     {
+        Debug.Log("Client " + rpcParams.Receive.SenderClientId + " Requesting PickUp");
         if (closestGO == null)
             return;
 

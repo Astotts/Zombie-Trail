@@ -1,5 +1,6 @@
 using TMPro;
 using Unity.Netcode;
+using UnityEditor.Experimental.Licensing;
 using UnityEngine;
 using UnityEngine.UI;
 using static EventManager;
@@ -14,7 +15,7 @@ public class WeaponPanelUI : NetworkBehaviour
     [SerializeField] Image ammoImage;
     [SerializeField] Image emptyAmmoImage;
 
-    RifleGun currentItem;
+    IDisplayableWeapon currentItem;
     float ammoIconWidth;
     float emptyAmmoIconWidth;
 
@@ -61,16 +62,23 @@ public class WeaponPanelUI : NetworkBehaviour
 
     void HandleItem(ulong playerID, IItem item)
     {
-        UpdateUIClientRpc((NetworkBehaviour)item, RpcTarget.Single(playerID, RpcTargetUse.Temp));
+        if (item.WeaponNetworkObject.TryGetComponent(out IDisplayableWeapon weapon))
+        {
+            currentItem = weapon;
+        }
+        UpdateUIClientRpc(item.WeaponNetworkObject, RpcTarget.Single(playerID, RpcTargetUse.Temp));
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
-    void UpdateUIClientRpc(NetworkBehaviourReference clientNetworkObject, RpcParams rpcParams)
+    void UpdateUIClientRpc(NetworkObjectReference clientNetworkObject, RpcParams rpcParams)
     {
-        if (clientNetworkObject.TryGet(out RifleGun rifleGun))
+        if (!clientNetworkObject.TryGet(out NetworkObject networkObject))
+            return;
+
+        if (networkObject.TryGetComponent(out IDisplayableWeapon weapon))
         {
-            currentItem = rifleGun;
-            HandleRifleGun(rifleGun);
+            currentItem = weapon;
+            HandleDisplableWeapon(weapon);
             EnableUI();
         }
         else
@@ -79,13 +87,13 @@ public class WeaponPanelUI : NetworkBehaviour
         }
     }
 
-    void HandleRifleGun(RifleGun rifleGun)
+    void HandleDisplableWeapon(IDisplayableWeapon weapon)
     {
-        weaponImage.sprite = rifleGun.Icon;
-        weaponNameTMP.text = rifleGun.GunName;
-        SetEmptyAmmoIcon(rifleGun.EmptyAmmoIcon, rifleGun.MagazineSize);
-        SetAmmoIcon(rifleGun.AmmoIcon, rifleGun.MagazineSize);
-        SetCurrentAmmo(rifleGun.CurrentAmmo);
+        weaponImage.sprite = weapon.Icon;
+        weaponNameTMP.text = weapon.WeaponName;
+        SetEmptyAmmoIcon(weapon.EmptyAmmoIcon, weapon.MagazineSize);
+        SetAmmoIcon(weapon.AmmoIcon, weapon.MagazineSize);
+        SetCurrentAmmo(weapon.CurrentAmmo);
     }
 
     void DisableUI()
@@ -138,8 +146,9 @@ public class WeaponPanelUI : NetworkBehaviour
 
     void OnRifleAmmoChange(object sender, AmmoChangedEventArgs e)
     {
-        if (e.Item.WeaponNetworkObject.GetInstanceID() != currentItem.WeaponNetworkObject.GetInstanceID())
+        if (e.Item is not IDisplayableWeapon weapon || weapon != currentItem)
             return;
+
         SetCurrentAmmoClientRpc(e.CurrentValue, RpcTarget.Single(e.OwnerID, RpcTargetUse.Temp));
     }
 
@@ -148,4 +157,14 @@ public class WeaponPanelUI : NetworkBehaviour
     {
         SetCurrentAmmo(currentAmmo);
     }
+}
+
+public interface IDisplayableWeapon
+{
+    public string WeaponName { get; }
+    public int CurrentAmmo { get; }
+    public int MagazineSize { get; }
+    public Sprite Icon { get; }
+    public Sprite AmmoIcon { get; }
+    public Sprite EmptyAmmoIcon { get; }
 }

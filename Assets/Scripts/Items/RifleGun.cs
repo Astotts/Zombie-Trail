@@ -8,14 +8,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager;
 
-public class RifleGun : NetworkBehaviour, IItem
+public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 {
     private static readonly int TICK_PER_UPDATE = 2;                // Tick per update for vector
     private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;   // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 1000;       // Only change when you want to change rotation speed for other gun too
 
     public string Id => stats.Id;                                   // Id so it can be used in AvailableItemSO
-    public string GunName => stats.GunName;                         // Variables for Inventory and UIs to read
+    public string WeaponName => stats.name;                         // Variables for Inventory and UIs to read
     public Sprite Icon => stats.Icon;                               // Variables for Inventory and UIs to read
     public int CurrentAmmo => currentAmmo;                          // Variables for Inventory and UIs to read
     public Sprite AmmoIcon => stats.AmmoIcon;                       // Variables for Inventory and UIs to read
@@ -28,7 +28,7 @@ public class RifleGun : NetworkBehaviour, IItem
     [SerializeField] private GunStats stats;                        // Stats for guns (this script would be use for rifles GameObject)
     [SerializeField] NetworkObject networkObject;                   // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;           // Sprite render so we can flip it
-    
+
     // Owner's mouse to player
     private readonly NetworkVariable<Vector2> mouseToPlayerVector = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
@@ -266,7 +266,6 @@ public class RifleGun : NetworkBehaviour, IItem
 
     void OnNetworkTick()
     {
-
         // Count off until we reach the ControlTicksPerUpdate which will roll the TickCounter to zero
         // and that signals we update the user's mouse information
         tickCounter = (tickCounter + 1) % TICK_PER_UPDATE;
