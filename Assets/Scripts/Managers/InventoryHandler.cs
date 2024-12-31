@@ -287,7 +287,6 @@ public class InventoryHandler : NetworkBehaviour
 
         NetworkObject itemNetworkObject = droppedItem.WeaponNetworkObject;
         itemNetworkObject.TryRemoveParent();
-        itemNetworkObject.ChangeOwnership(0);
         DropitemClientRpc(itemNetworkObject);
 
         ItemDroppedEventArgs eventArgs = new()

@@ -273,8 +273,9 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         // Count off until we reach the ControlTicksPerUpdate which will roll the TickCounter to zero
         // and that signals we update the user's mouse information
         tickCounter = (tickCounter + 1) % TICK_PER_UPDATE;
-        if (tickCounter != 0)
+        if (tickCounter != 0 || !IsOwner)
             return;
+
         UpdateMouseToPlayerVector();
     }
 
