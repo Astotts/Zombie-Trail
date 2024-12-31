@@ -252,6 +252,7 @@ public class InventoryHandler : NetworkBehaviour
 
         NetworkObject itemNetworkObject = pickedUpItem.WeaponNetworkObject;
         itemNetworkObject.TrySetParent(Owner.transform);
+        itemNetworkObject.ChangeOwnership(rpcParams.Receive.SenderClientId);
         PickUpItemClientRpc(itemNetworkObject);
 
         ItemPickedUpEventArgs eventArgs = new()
@@ -282,8 +283,8 @@ public class InventoryHandler : NetworkBehaviour
         inventory[currentSlot] = null;
 
         NetworkObject itemNetworkObject = droppedItem.WeaponNetworkObject;
-        itemNetworkObject.TrySetParent((Transform)null, true);
         itemNetworkObject.TryRemoveParent();
+        itemNetworkObject.ChangeOwnership(0);
         DropitemClientRpc(itemNetworkObject);
 
         ItemDroppedEventArgs eventArgs = new()

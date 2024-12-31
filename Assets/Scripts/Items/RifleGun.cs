@@ -10,8 +10,9 @@ using static EventManager;
 
 public class RifleGun : NetworkBehaviour, IItem
 {
-    private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;         // Only change when you want to change rotation speed for other gun too
-    private static readonly float GLOBAL_ROTATE_SPEED = 1000;         // Only change when you want to change rotation speed for other gun too
+    private static readonly int TICK_PER_UPDATE = 2;                // Tick per update for vector
+    private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;   // Only change when you want to change rotation speed for other gun too
+    private static readonly float GLOBAL_ROTATE_SPEED = 1000;       // Only change when you want to change rotation speed for other gun too
 
     public string Id => stats.Id;                                   // Id so it can be used in AvailableItemSO
     public string GunName => stats.GunName;                         // Variables for Inventory and UIs to read
@@ -27,6 +28,9 @@ public class RifleGun : NetworkBehaviour, IItem
     [SerializeField] private GunStats stats;                        // Stats for guns (this script would be use for rifles GameObject)
     [SerializeField] NetworkObject networkObject;                   // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;           // Sprite render so we can flip it
+    
+    // Owner's mouse to player
+    private readonly NetworkVariable<Vector2> mouseToPlayerVector = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private NetworkObject owner;                                    // Owner of the gun
     private ulong ownerID;                                          // ClientId of owner in ulong
@@ -35,6 +39,7 @@ public class RifleGun : NetworkBehaviour, IItem
     private bool isOnFireRateCooldown;                              // Inner variable so we know when to shoot
     private bool isPickedUp;                                        // Inner variable so that gun can rotate
     private bool isShooting;                                        // Inner variable so we know left click is down
+    private int tickCounter;                                        // Counter to update mouse to player vector
 
     void OnValidate()
     {
@@ -53,18 +58,20 @@ public class RifleGun : NetworkBehaviour, IItem
         EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
         EventManager.EventHandler.OnItemSwappedEvent -= OnSwapIn;
     }
-
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        currentAmmo = UnityEngine.Random.Range(0, stats.MagazineSize);
+        if (IsServer)
+            currentAmmo = UnityEngine.Random.Range(0, stats.MagazineSize);
+    }
+    public override void OnNetworkDespawn()
+    {
+        if (isPickedUp)
+            NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
+        base.OnNetworkDespawn();
     }
 
-    void Update()
+    void UpdateMouseToPlayerVector()
     {
-        if (!isPickedUp)
-            return;
-
-
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         // Finding the closest player? Look like a working as a magnet
@@ -73,9 +80,15 @@ public class RifleGun : NetworkBehaviour, IItem
         // //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
 
         // vector from this object towards the target location
-        Vector3 vectorToTarget = mouseWorldPos - (Vector2)transform.position;
+        mouseToPlayerVector.Value = mouseWorldPos - (Vector2)transform.position;
+    }
+
+    void Update()
+    {
+        if (!isPickedUp || !IsServer)
+            return;
         // rotate that vector by 90 degrees around the Z axis
-        Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * vectorToTarget;
+        Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * mouseToPlayerVector.Value;
 
         float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime / stats.Weight;
 
@@ -215,19 +228,28 @@ public class RifleGun : NetworkBehaviour, IItem
         isPickedUp = true;
         owner = playerInventory.Owner;
         ownerID = playerInventory.OwnerID;
-        networkObject.ChangeOwnership(ownerID);
+        OnPickUpClientRpc(RpcTarget.Single(ownerID, RpcTargetUse.Temp));
+
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
         EventManager.EventHandler.OnitemReloadEvent += OnReloadPressed;
         EventManager.EventHandler.OnItemSwappedEvent += OnSwapIn;
     }
+    [Rpc(SendTo.SpecifiedInParams)]
+    void OnPickUpClientRpc(RpcParams rpcParams)
+    {
+        isPickedUp = true;
+        NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
+    }
 
     public void OnDrop(InventoryHandler playerInventory)
     {
         isPickedUp = false;
+        OnDropClientRpc(RpcTarget.Single(ownerID, RpcTargetUse.Temp));
+
         owner = null;
         ownerID = 0;
-        networkObject.ChangeOwnership(0);
+
         transform.rotation = Quaternion.identity;
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
@@ -235,6 +257,24 @@ public class RifleGun : NetworkBehaviour, IItem
         EventManager.EventHandler.OnItemSwappedEvent -= OnSwapIn;
     }
 
+    [Rpc(SendTo.SpecifiedInParams)]
+    void OnDropClientRpc(RpcParams rpcParams)
+    {
+        isPickedUp = false;
+        NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
+    }
+
+    void OnNetworkTick()
+    {
+
+        // Count off until we reach the ControlTicksPerUpdate which will roll the TickCounter to zero
+        // and that signals we update the user's mouse information
+        tickCounter = (tickCounter + 1) % TICK_PER_UPDATE;
+        if (tickCounter == 0)
+        {
+            UpdateMouseToPlayerVector();
+        }
+    }
 
     void OnLeftClickPressed(object sender, ItemLeftClickPressedEventArgs e)
     {
