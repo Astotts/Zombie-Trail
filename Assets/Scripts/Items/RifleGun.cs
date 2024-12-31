@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using TreeEditor;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     private bool isPickedUp;                                        // Inner variable so that gun can rotate
     private bool isShooting;                                        // Inner variable so we know left click is down
     private int tickCounter;                                        // Counter to update mouse to player vector
+    private Vector2 recoilForce;                                    // cummulative recoil force to apply at once on client side
 
     void OnValidate()
     {
@@ -161,7 +163,16 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         Vector2 fromBulletToPlayer = playerPos - bulletOffset;
         Vector2 recoilVector = fromBulletToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
-        owner.transform.position = playerPos + recoilVector;
+        recoilForce += recoilVector;
+        ApplyRecoilClientRpc(recoilForce, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
+        recoilForce = Vector2.zero;
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    void ApplyRecoilClientRpc(Vector2 vectorForce, RpcParams rpcParams)
+    {
+        Debug.Log("applied Recoil");
+        owner.transform.position = owner.transform.position + (Vector3)vectorForce;
     }
 
     IEnumerator FireRateCooldown()
@@ -218,7 +229,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         isPickedUp = true;
         owner = playerInventory.Owner;
         ownerID = playerInventory.OwnerID;
-        OnPickUpClientRpc(RpcTarget.Single(ownerID, RpcTargetUse.Temp));
+        OnPickUpClientRpc(owner, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
@@ -226,9 +237,12 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         EventManager.EventHandler.OnItemSwappedEvent += OnSwapIn;
     }
     [Rpc(SendTo.SpecifiedInParams)]
-    void OnPickUpClientRpc(RpcParams rpcParams)
+    void OnPickUpClientRpc(NetworkObjectReference networkObjectReference, RpcParams rpcParams)
     {
+        if (!networkObjectReference.TryGet(out NetworkObject networkObject))
+            return;
         isPickedUp = true;
+        owner = networkObject;
         NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
     }
 
@@ -259,10 +273,9 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         // Count off until we reach the ControlTicksPerUpdate which will roll the TickCounter to zero
         // and that signals we update the user's mouse information
         tickCounter = (tickCounter + 1) % TICK_PER_UPDATE;
-        if (tickCounter == 0)
-        {
-            UpdateMouseToPlayerVector();
-        }
+        if (tickCounter != 0)
+            return;
+        UpdateMouseToPlayerVector();
     }
 
     void OnLeftClickPressed(object sender, ItemLeftClickPressedEventArgs e)
