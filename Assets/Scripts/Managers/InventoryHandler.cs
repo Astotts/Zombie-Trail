@@ -1,5 +1,7 @@
 using System.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
+using UnityEditor.Build.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static EventManager;
@@ -8,17 +10,8 @@ using static EventManager;
 public class InventoryHandler : NetworkBehaviour
 {
     public static readonly int INVENTORY_SIZE = 4;
-    private ulong ownerID;
-    public ulong PlayerID
-    {
-        get { return ownerID; }
-        set
-        {
-            Debug.Log("PlayerID Set to " + value);
-            ownerID = value;
-        }
-    }
     public NetworkObject Owner { get; private set; }
+    public ulong OwnerID { get; private set; }
 
     [SerializeField] private float pickUpRadius;
     [SerializeField] private GameObject pickUpButtonGO;
@@ -29,6 +22,7 @@ public class InventoryHandler : NetworkBehaviour
     private PlayerControls playerControls;
     private int currentSlot = 0;
     private GameObject closestGO = null;
+
 
     void Awake()
     {
@@ -110,28 +104,8 @@ public class InventoryHandler : NetworkBehaviour
     // ==========================================
     // Client Side Behaviours
     // ==========================================
-    void HidePickUpButton()
-    {
-        pickUpButtonGO.SetActive(false);
-    }
-
-    void DisplayPickUpButton(Vector2 itemPosition)
-    {
-        float xPos = transform.position.x + (itemPosition.x - transform.position.x) / 5;
-        float yPos = transform.position.y + (itemPosition.y - transform.position.y) / 5;
-        Vector2 position = new(xPos, yPos);
-
-        pickUpButtonGO.transform.position = position;
-        pickUpButtonGO.SetActive(true);
-    }
-
-    // ==========================================
-    // Server Side Behaviours
-    // ==========================================
     void Start()
     {
-        if (!IsOwner)
-            return;
         StartCoroutine(PickUpLoop());
     }
 
@@ -156,6 +130,10 @@ public class InventoryHandler : NetworkBehaviour
                 closestGO = collider2D.gameObject;
             }
         }
+
+        if (!IsOwner)
+            return;
+
         if (closestGO == null)
         {
             HidePickUpButton();
@@ -163,6 +141,31 @@ public class InventoryHandler : NetworkBehaviour
         }
 
         DisplayPickUpButton(closestGO.transform.position);
+    }
+
+    void HidePickUpButton()
+    {
+        pickUpButtonGO.SetActive(false);
+    }
+
+    void DisplayPickUpButton(Vector2 itemPosition)
+    {
+        float xPos = transform.position.x + (itemPosition.x - transform.position.x) / 5;
+        float yPos = transform.position.y + (itemPosition.y - transform.position.y) / 5;
+        Vector2 position = new(xPos, yPos);
+
+        pickUpButtonGO.transform.position = position;
+        pickUpButtonGO.SetActive(true);
+    }
+
+    // ==========================================
+    // Server Side Behaviours
+    // ==========================================
+
+    [Rpc(SendTo.ClientsAndHost)]
+    public void SetOwnerIDClientRpc(ulong ownerID)
+    {
+        OwnerID = ownerID;
     }
 
     [Rpc(SendTo.Server)]
@@ -248,11 +251,8 @@ public class InventoryHandler : NetworkBehaviour
         pickedUpItem.OnPickUp(this);
 
         NetworkObject itemNetworkObject = pickedUpItem.WeaponNetworkObject;
-        itemNetworkObject.TrySetParent(Owner.transform, false);
-        itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
-        itemNetworkObject.transform.localPosition = Vector2.zero;
-
-        Debug.Log("Calling PickedUpItem event");
+        itemNetworkObject.TrySetParent(Owner.transform);
+        PickUpItemClientRpc(itemNetworkObject);
 
         ItemPickedUpEventArgs eventArgs = new()
         {
@@ -264,6 +264,16 @@ public class InventoryHandler : NetworkBehaviour
         EventManager.EventHandler.OnItemPickedUp(eventArgs);
     }
 
+    [Rpc(SendTo.ClientsAndHost)]
+    void PickUpItemClientRpc(NetworkObjectReference networkObjectReference)
+    {
+        if (networkObjectReference.TryGet(out NetworkObject itemNetworkObject))
+        {
+            itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("IgnorePickUpRaycast");
+            itemNetworkObject.transform.localPosition = Vector2.zero;
+        }
+    }
+
     [Rpc(SendTo.Server)]
     void DropCurrentItemServerRpc(RpcParams rpcParams = default)
     {
@@ -273,8 +283,8 @@ public class InventoryHandler : NetworkBehaviour
 
         NetworkObject itemNetworkObject = droppedItem.WeaponNetworkObject;
         itemNetworkObject.TrySetParent((Transform)null, true);
-        itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("PickUpRaycast");
-        itemNetworkObject.gameObject.SetActive(true);
+        itemNetworkObject.TryRemoveParent();
+        DropitemClientRpc(itemNetworkObject);
 
         ItemDroppedEventArgs eventArgs = new()
         {
@@ -284,6 +294,16 @@ public class InventoryHandler : NetworkBehaviour
         };
 
         EventManager.EventHandler.OnItemDropped(eventArgs);
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    void DropitemClientRpc(NetworkObjectReference networkObjectReference)
+    {
+        if (networkObjectReference.TryGet(out NetworkObject itemNetworkObject))
+        {
+            itemNetworkObject.transform.parent = null;
+            itemNetworkObject.gameObject.layer = LayerMask.NameToLayer("PickUpRaycast");
+            itemNetworkObject.gameObject.SetActive(true);
+        }
     }
 
     [Rpc(SendTo.Server)]

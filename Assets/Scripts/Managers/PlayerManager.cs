@@ -67,7 +67,6 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
         GameObject spawnedPlayerObject = Instantiate(playerPrefab, carTransform.position, Quaternion.identity, transform);
 
         Player player = spawnedPlayerObject.GetComponent<Player>();
-        player.PlayerID = clientID;
         PlayerData nullablePlayerData = clientDataMap.TryGetValue(clientID, out PlayerData data) ? data : null;
         player.LoadData(nullablePlayerData);
 
@@ -76,6 +75,7 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
         playerObjectMap.Add(clientID, playerNetworkObject);
 
         playerNetworkObject.SpawnAsPlayerObject(clientID);
+        player.PlayerID = clientID;
     }
 
     public void LoadData(WorldData worldData)

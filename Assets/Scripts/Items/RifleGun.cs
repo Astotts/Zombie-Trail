@@ -214,7 +214,8 @@ public class RifleGun : NetworkBehaviour, IItem
     {
         isPickedUp = true;
         owner = playerInventory.Owner;
-        ownerID = OwnerClientId;
+        ownerID = playerInventory.OwnerID;
+        networkObject.ChangeOwnership(ownerID);
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
         EventManager.EventHandler.OnitemReloadEvent += OnReloadPressed;
@@ -225,6 +226,8 @@ public class RifleGun : NetworkBehaviour, IItem
     {
         isPickedUp = false;
         owner = null;
+        ownerID = 0;
+        networkObject.ChangeOwnership(0);
         transform.rotation = Quaternion.identity;
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;

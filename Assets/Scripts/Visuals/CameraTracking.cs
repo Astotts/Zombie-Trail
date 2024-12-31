@@ -36,6 +36,7 @@ public class CameraTracking : MonoBehaviour
     IEnumerator SearchForPlayer()
     {
         yield return new WaitForSeconds(1.0f);
+        Debug.Log("Finding Local Player Object Attempt #" + findAttempts);
         NetworkObject localClientObj = NetworkManager.Singleton.LocalClient.PlayerObject;
         if (localClientObj != null)
             player = localClientObj.transform;

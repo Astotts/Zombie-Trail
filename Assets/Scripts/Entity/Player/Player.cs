@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
     public void SetOwnerIDClientRpc(ulong clientID)
     {
         reloadUI.PlayerID = clientID;
-        playerInventory.PlayerID = clientID;
+        playerInventory.SetOwnerIDClientRpc(clientID);
     }
     public void LoadData(PlayerData playerData)
     {
