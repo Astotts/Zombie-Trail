@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d159c92a68f452a85bb79e879b6dea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  availableItemsSO: {fileID: 11400000, guid: b2f45968bc1e046bbbbb2b2d6014ed8f, type: 2}
   stats: {fileID: 11400000, guid: 2fe3fb05d69604b4ab77fcf90558b643, type: 2}
   networkObject: {fileID: 2841383473250935542}
   weaponSpriteRenderer: {fileID: 3035351581802553140}

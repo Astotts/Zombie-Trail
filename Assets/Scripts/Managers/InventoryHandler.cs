@@ -4,6 +4,7 @@ using System.Data.Common;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEditor.Build.Player;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
@@ -13,8 +14,8 @@ using static EventManager;
 public class InventoryHandler : NetworkBehaviour
 {
     public static readonly int INVENTORY_SIZE = 4;
-    public NetworkObject Owner { get; private set; }
-    public ulong OwnerID { get; private set; }
+    private NetworkObject ownerNetworkObject;
+    private ulong ownerID;
 
     [SerializeField] private float pickUpRadius;
     [SerializeField] private GameObject pickUpButtonGO;
@@ -29,7 +30,7 @@ public class InventoryHandler : NetworkBehaviour
 
     void Awake()
     {
-        Owner = GetComponent<NetworkObject>();
+        ownerNetworkObject = GetComponent<NetworkObject>();
     }
 
     private void OnItemRightClickReleased(InputAction.CallbackContext context)
@@ -69,7 +70,7 @@ public class InventoryHandler : NetworkBehaviour
 
     private void OnWeaponHotbarPressed(InputAction.CallbackContext context)
     {
-        SwapItemToNewSlotServerRpc((int)context.ReadValue<float>());
+        SwapItemToNewSlotServerRpc((int)context.ReadValue<float>() - 1);
     }
 
     // ==========================================
@@ -170,7 +171,7 @@ public class InventoryHandler : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     public void SetOwnerIDClientRpc(ulong ownerID)
     {
-        OwnerID = ownerID;
+        this.ownerID = ownerID;
     }
 
     [Rpc(SendTo.Server)]
@@ -250,21 +251,26 @@ public class InventoryHandler : NetworkBehaviour
             return;
 
         int pickUpSlot = currentSlot;
-        for (int i = 0; i < INVENTORY_SIZE; i++)
+        if (inventory[currentSlot] != null)
         {
-            if (inventory[i] == null)
-                continue;
-            pickUpSlot = i;
+            for (int i = 0; i < INVENTORY_SIZE; i++)
+            {
+                int slot = (currentSlot + i) % INVENTORY_SIZE;
+                if (inventory[slot] != null)
+                    continue;
+
+                pickUpSlot = slot;
+                break;
+            }
         }
 
         IItem pickedUpItem = closestGO.GetComponent<IItem>();
         inventory[pickUpSlot] = pickedUpItem;
 
         NetworkObject itemNetworkObject = pickedUpItem.WeaponNetworkObject;
-        itemNetworkObject.TrySetParent(Owner.transform);
+        itemNetworkObject.TrySetParent(ownerNetworkObject.transform);
         itemNetworkObject.ChangeOwnership(rpcParams.Receive.SenderClientId);
-        PickUpItemClientRpc(itemNetworkObject, pickUpSlot == currentSlot);
-        pickedUpItem.OnPickUp(this);
+        PickUpItemClientRpc(itemNetworkObject);
 
         ItemPickedUpEventArgs eventArgs = new()
         {
@@ -278,12 +284,11 @@ public class InventoryHandler : NetworkBehaviour
     }
 
     [Rpc(SendTo.ClientsAndHost)]
-    void PickUpItemClientRpc(NetworkObjectReference networkObjectReference, bool isActive)
+    void PickUpItemClientRpc(NetworkObjectReference networkObjectReference)
     {
         if (networkObjectReference.TryGet(out NetworkObject itemNetworkObject))
         {
             itemNetworkObject.transform.localPosition = Vector2.zero;
-            itemNetworkObject.gameObject.SetActive(isActive);
         }
     }
 
@@ -291,12 +296,13 @@ public class InventoryHandler : NetworkBehaviour
     void DropCurrentItemServerRpc(RpcParams rpcParams = default)
     {
         IItem droppedItem = inventory[currentSlot];
-        droppedItem.OnDrop(this);
+        if (droppedItem == null)
+            return;
         inventory[currentSlot] = null;
 
         NetworkObject itemNetworkObject = droppedItem.WeaponNetworkObject;
         itemNetworkObject.TryRemoveParent();
-        DropitemClientRpc(itemNetworkObject);
+        itemNetworkObject.ChangeOwnership(0);
 
         ItemDroppedEventArgs eventArgs = new()
         {
@@ -306,14 +312,6 @@ public class InventoryHandler : NetworkBehaviour
         };
 
         EventManager.EventHandler.OnItemDropped(eventArgs);
-    }
-    [Rpc(SendTo.ClientsAndHost)]
-    void DropitemClientRpc(NetworkObjectReference networkObjectReference)
-    {
-        if (networkObjectReference.TryGet(out NetworkObject itemNetworkObject))
-        {
-            itemNetworkObject.gameObject.SetActive(true);
-        }
     }
 
     [Rpc(SendTo.Server)]
@@ -341,19 +339,22 @@ public class InventoryHandler : NetworkBehaviour
             if (data == null)
                 continue;
 
-            GameObject prefab = availableItems.GetItemPrefabFromID(data.Id);
+            GameObject prefab = availableItems.GetItemPrefabFromType(data.Type);
             NetworkObject itemNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(prefab, Vector3.zero, Quaternion.identity);
             IItem item = itemNetworkObject.GetComponent<IItem>();
-            itemNetworkObject.SpawnWithOwnership(OwnerID);
+
+            itemNetworkObject.Spawn();
             itemNetworkObject.TrySetParent(transform, false);
-            item.LoadData(data);
-            item.OnPickUp(this);
+            itemNetworkObject.ChangeOwnership(ownerID);
+            item.LoadData(data, ownerID, currentSlot, i);
+
+            PickUpItemClientRpc(itemNetworkObject);
+
             inventory[i] = item;
-            PickUpItemClientRpc(itemNetworkObject, i == currentSlot);
 
             InventoryLoadedEventArgs eventArgs = new()
             {
-                PlayerID = OwnerID,
+                PlayerID = ownerID,
                 CurrentSlot = currentSlot,
                 Item = item,
                 LoadedSlot = i,
@@ -372,13 +373,12 @@ public class InventoryHandler : NetworkBehaviour
             IItem item = inventory[i];
             if (item == null)
                 continue;
-
-            ItemData data = new()
+            ItemData itemData = new()
             {
-                Id = item.Id
+                Type = item.ItemType
             };
-            item.SaveData(ref data);
-            itemDatas[i] = data;
+            item.SaveData(ref itemData);
+            itemDatas[i] = itemData;
         }
         playerData.Inventory = itemDatas;
     }

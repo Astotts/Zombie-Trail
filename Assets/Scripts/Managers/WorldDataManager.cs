@@ -120,7 +120,13 @@ public class JsonUtil<T>
         {
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
-            string jsonString = JsonConvert.SerializeObject(data);
+            string jsonString = JsonConvert.SerializeObject(
+                data,
+                Formatting.Indented,
+                new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                });
 
             using FileStream stream = new(fullPath, FileMode.Create);
             using StreamWriter writer = new(stream);
@@ -147,7 +153,12 @@ public class JsonUtil<T>
             using StreamReader reader = new(stream);
             jsonString = reader.ReadToEnd();
 
-            data = JsonConvert.DeserializeObject<T>(jsonString);
+            data = JsonConvert.DeserializeObject<T>(
+                jsonString,
+                new JsonSerializerSettings()
+                {
+                    TypeNameHandling = TypeNameHandling.Auto
+                });
             Debug.Log("Loaded data at: " + fullPath);
         }
         catch (Exception e)
