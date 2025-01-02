@@ -1,18 +1,17 @@
 using System.Collections.Generic;
-using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AvailableItems", fileName = "AvailableItems")]
 public class AvailableItemsSO : ScriptableObject
 {
-    [SerializeField] public List<GameObject> itemGOList;
+    [SerializeField] List<GameObject> itemGOList;
 
-    private Dictionary<string, GameObject> itemPrefabMap = new();
+    public Dictionary<string, GameObject> itemPrefabMap;
 
-    void Awake()
+    void OnEnable()
     {
+        itemPrefabMap = new();
         foreach (GameObject itemGO in itemGOList)
         {
             IItem item = itemGO.GetComponent<IItem>();
@@ -22,6 +21,8 @@ public class AvailableItemsSO : ScriptableObject
 
     public GameObject GetItemPrefabFromID(string id)
     {
+        foreach (string item in itemPrefabMap.Keys)
+            Debug.Log(item);
         return itemPrefabMap[id];
     }
 }

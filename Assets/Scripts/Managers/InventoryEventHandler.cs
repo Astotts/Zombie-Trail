@@ -23,15 +23,16 @@ public class EventManager
     #endregion
 
     #region InventoryLoadedEvent
-    public void OnInventoryLoad(InventoryLoadedEventArgs eventArgs)
+    public void OnInventoryLoaded(InventoryLoadedEventArgs eventArgs)
     {
         OnInventoryLoadedEvent?.Invoke(this, eventArgs);
     }
     public class InventoryLoadedEventArgs : EventArgs
     {
         public ulong PlayerID { get; set; }
+        public int CurrentSlot { get; set; }
         public IItem Item { get; set; }
-        public int Slot { get; set; }
+        public int LoadedSlot { get; set; }
     }
     #endregion
 
@@ -113,7 +114,8 @@ public class EventManager
     {
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
-        public int Slot { get; set; }
+        public int CurrentSlot { get; set; }
+        public int PickedUpSlot { get; set; }
     }
     #endregion
 

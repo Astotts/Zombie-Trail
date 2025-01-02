@@ -46,8 +46,8 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
 
     private void OnPLayerLeft(ulong clientId)
     {
+        Debug.Log("Player " + clientId + " left, Saving Data");
         Player player = playerMap[clientId];
-        Debug.Log("Query data");
         PlayerData data = clientDataMap[clientId];
         player.SaveData(ref data);
         playerMap.Remove(clientId);
@@ -61,13 +61,16 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
     void SpawnPlayer(ulong clientID)
     {
         GameObject spawnedPlayerObject = Instantiate(playerPrefab, carTransform.position, Quaternion.identity, transform);
-
+        NetworkObject playerNetworkObject = spawnedPlayerObject.GetComponent<NetworkObject>();
         Player player = spawnedPlayerObject.GetComponent<Player>();
+
         playerMap[clientID] = player;
 
-        NetworkObject playerNetworkObject = spawnedPlayerObject.GetComponent<NetworkObject>();
         playerNetworkObject.SpawnAsPlayerObject(clientID);
+        playerNetworkObject.TrySetParent(transform);
+
         player.PlayerID = clientID;
+
         if (clientDataMap.TryGetValue(clientID, out PlayerData data))
             player.LoadData(data);
         else
@@ -90,7 +93,6 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
 
     public void SaveData(ref WorldData worldData)
     {
-        Debug.Log("Save");
         worldData.ClientDataMap = clientDataMap;
     }
 }

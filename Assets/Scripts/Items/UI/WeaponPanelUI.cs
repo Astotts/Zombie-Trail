@@ -1,6 +1,5 @@
 using TMPro;
 using Unity.Netcode;
-using UnityEditor.Experimental.Licensing;
 using UnityEngine;
 using UnityEngine.UI;
 using static EventManager;
@@ -19,7 +18,7 @@ public class WeaponPanelUI : NetworkBehaviour
     float ammoIconWidth;
     float emptyAmmoIconWidth;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
         if (!IsHost)
             return;
@@ -27,10 +26,13 @@ public class WeaponPanelUI : NetworkBehaviour
         EventHandler.OnItemPickedUpEvent += OnItemPickUp;
         EventHandler.OnItemDroppedEvent += OnItemDrop;
         EventHandler.OnAmmoChangedEvent += OnRifleAmmoChange;
+        EventHandler.OnInventoryLoadedEvent += OnInventorySlotLoad;
         Debug.Log("Weapon Panel Subscribed to InventoryEvents!");
+
+        base.OnNetworkSpawn();
     }
 
-    void OnDisable()
+    public override void OnNetworkDespawn()
     {
         if (!IsHost)
             return;
@@ -38,7 +40,10 @@ public class WeaponPanelUI : NetworkBehaviour
         EventHandler.OnItemPickedUpEvent -= OnItemPickUp;
         EventHandler.OnItemDroppedEvent -= OnItemDrop;
         EventHandler.OnAmmoChangedEvent -= OnRifleAmmoChange;
+        EventHandler.OnInventoryLoadedEvent -= OnInventorySlotLoad;
         Debug.Log("Weapon Panel Unsubscribed to InventoryEvents!");
+
+        base.OnNetworkDespawn();
     }
 
     // =======================
@@ -47,6 +52,9 @@ public class WeaponPanelUI : NetworkBehaviour
 
     private void OnItemPickUp(object sender, ItemPickedUpEventArgs e)
     {
+        if (e.CurrentSlot != e.PickedUpSlot)
+            return;
+
         HandleItem(e.PlayerID, e.Item);
     }
 
@@ -58,6 +66,14 @@ public class WeaponPanelUI : NetworkBehaviour
     private void OnItemSwap(object sender, ItemSwappedEventArgs e)
     {
         HandleItem(e.PlayerID, e.CurrentItem);
+    }
+
+    private void OnInventorySlotLoad(object sender, InventoryLoadedEventArgs e)
+    {
+        if (e.CurrentSlot != e.LoadedSlot)
+            return;
+
+        HandleItem(e.PlayerID, e.Item);
     }
 
     void HandleItem(ulong playerID, IItem item)

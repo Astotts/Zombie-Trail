@@ -4,7 +4,7 @@ using Unity.Netcode;
 
 public class ItemData
 {
-    public string id;
+    public string Id { get; set; }
     public Dictionary<string, string> StringMap { get; set; }
     public Dictionary<string, int> IntMap { get; set; }
     public Dictionary<string, float> FloatMap { get; set; }

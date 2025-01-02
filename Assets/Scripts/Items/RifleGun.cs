@@ -1,12 +1,9 @@
 using System;
 using System.Collections;
-using System.Linq;
-using TreeEditor;
-using Unity.Collections.LowLevel.Unsafe;
+using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static EventManager;
 
 public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
@@ -31,8 +28,8 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     [SerializeField] SpriteRenderer weaponSpriteRenderer;           // Sprite render so we can flip it
 
     // Owner's mouse to player
-    private readonly NetworkVariable<Vector2> mouseToPlayerVector = new(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private readonly NetworkVariable<int> currentAmmo = new();      // Current Ammo before reload
+    private readonly NetworkVariable<int> currentLayer = new();     // For syncing layer between clients (Rpc doesn't work for late joining clients)
 
     private NetworkObject owner;                                    // Owner of the gun
     private ulong ownerID;                                          // ClientId of owner in ulong
@@ -40,8 +37,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     private bool isOnFireRateCooldown;                              // Inner variable so we know when to shoot
     private bool isPickedUp;                                        // Inner variable so that gun can rotate
     private bool isShooting;                                        // Inner variable so we know left click is down
-    private int tickCounter;                                        // Counter to update mouse to player vector
-    private Vector2 recoilForce;                                    // cummulative recoil force to apply at once on client side
 
     void OnValidate()
     {
@@ -52,10 +47,18 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     public override void OnNetworkSpawn()
     {
+        gameObject.layer = currentLayer.Value;
+        currentLayer.OnValueChanged += OnLayerChange;
         if (!IsServer)
             return;
+        currentLayer.Value = LayerMask.NameToLayer("PickUpRaycast");
         currentAmmo.Value = UnityEngine.Random.Range(0, stats.MagazineSize);
         currentAmmo.OnValueChanged += OnAmmoChange;
+    }
+
+    private void OnLayerChange(int previousValue, int newValue)
+    {
+        gameObject.layer = newValue;
     }
 
     public override void OnNetworkDespawn()
@@ -66,7 +69,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
         EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
         EventManager.EventHandler.OnItemSwappedEvent -= OnSwapIn;
-        NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
         base.OnNetworkDespawn();
     }
 
@@ -82,7 +84,19 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         EventManager.EventHandler.OnAmmoChanged(ammoChangedEventArgs);
     }
 
-    void UpdateMouseToPlayerVector()
+    void Update()
+    {
+        if (!isPickedUp)
+            return;
+
+        if (IsServer)
+            HandleShooting();
+
+        if (IsOwner)
+            HandleWeaponRotation();
+    }
+
+    void HandleWeaponRotation()
     {
         Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -92,15 +106,10 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         // //Debug.DrawRay(transform.position, targetWorldPos, Color.red, 0.01f);
 
         // vector from this object towards the target location
-        mouseToPlayerVector.Value = mouseWorldPos - (Vector2)transform.position;
-    }
+        Vector2 mouseToPlayerVector = mouseWorldPos - (Vector2)transform.position;
 
-    void Update()
-    {
-        if (!isPickedUp || !IsServer)
-            return;
         // rotate that vector by 90 degrees around the Z axis
-        Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * mouseToPlayerVector.Value;
+        Vector3 rotatedVectorToTarget = Quaternion.Euler(0, 0, 90) * mouseToPlayerVector;
 
         float singleStep = GLOBAL_ROTATE_SPEED * Time.deltaTime / stats.Weight;
 
@@ -119,14 +128,11 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         {
             weaponSpriteRenderer.flipY = true;
         }
-
-        if (isShooting)
-            Shoot();
     }
 
-    public void Shoot()
+    public void HandleShooting()
     {
-        if (isReloading || isOnFireRateCooldown)
+        if (!isShooting || isReloading || isOnFireRateCooldown)
             return;
 
         if (currentAmmo.Value == 0)
@@ -163,15 +169,12 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         Vector2 fromBulletToPlayer = playerPos - bulletOffset;
         Vector2 recoilVector = fromBulletToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
-        recoilForce += recoilVector;
-        ApplyRecoilClientRpc(recoilForce, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
-        recoilForce = Vector2.zero;
+        ApplyRecoilClientRpc(recoilVector, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
     void ApplyRecoilClientRpc(Vector2 vectorForce, RpcParams rpcParams)
     {
-        Debug.Log("applied Recoil");
         owner.transform.position = owner.transform.position + (Vector3)vectorForce;
     }
 
@@ -229,6 +232,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         isPickedUp = true;
         owner = playerInventory.Owner;
         ownerID = playerInventory.OwnerID;
+        currentLayer.Value = LayerMask.NameToLayer("IgnorePickUpRaycast");
         OnPickUpClientRpc(owner, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
@@ -243,12 +247,12 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
             return;
         isPickedUp = true;
         owner = networkObject;
-        NetworkManager.NetworkTickSystem.Tick += OnNetworkTick;
     }
 
     public void OnDrop(InventoryHandler playerInventory)
     {
         isPickedUp = false;
+        currentLayer.Value = LayerMask.NameToLayer("PickUpRaycast");
         OnDropClientRpc(RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
         owner = null;
@@ -265,18 +269,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     void OnDropClientRpc(RpcParams rpcParams)
     {
         isPickedUp = false;
-        NetworkManager.NetworkTickSystem.Tick -= OnNetworkTick;
-    }
-
-    void OnNetworkTick()
-    {
-        // Count off until we reach the ControlTicksPerUpdate which will roll the TickCounter to zero
-        // and that signals we update the user's mouse information
-        tickCounter = (tickCounter + 1) % TICK_PER_UPDATE;
-        if (tickCounter != 0 || !IsOwner)
-            return;
-
-        UpdateMouseToPlayerVector();
     }
 
     void OnLeftClickPressed(object sender, ItemLeftClickPressedEventArgs e)
@@ -313,6 +305,11 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     public void SaveData(ref ItemData data)
     {
-        data.IntMap["CurrentAmmo"] = currentAmmo.Value;
+        Dictionary<string, int> integerMap = new()
+        {
+            ["CurrentAmmo"] = currentAmmo.Value
+        };
+
+        data.IntMap = integerMap;
     }
 }
