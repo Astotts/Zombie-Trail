@@ -9,29 +9,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cba9aea5b75f426298fa18fc9781f7f, type: 3}
+  m_Script: {fileID: 11500000, guid: 327320538e6624fee8360aa6b0d37c74, type: 3}
   m_Name: Glock19
   m_EditorClassIdentifier: 
+  <GunName>k__BackingField: Glock 19
   <Icon>k__BackingField: {fileID: 21300000, guid: 01ffd71f47089b64b9ac3e7f01697c83, type: 3}
   <WeaponSprite>k__BackingField: {fileID: 21300000, guid: 01ffd71f47089b64b9ac3e7f01697c83, type: 3}
   <AmmoIcon>k__BackingField: {fileID: 21300000, guid: b08a98793579447d1b232711b8767d54, type: 3}
   <EmptyAmmoIcon>k__BackingField: {fileID: 21300000, guid: 2a18913cda93145f79a45dcec5809209, type: 3}
   <BulletGO>k__BackingField: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
-  <Cursor>k__BackingField: {fileID: 2800000, guid: 124423d4ac55143d4b9249daabd30de1, type: 3}
-  <BulletSpawnOffset>k__BackingField: 0.5
-  <GunName>k__BackingField: Glock 19
   <Damage>k__BackingField: 10
-  <Recoil>k__BackingField: 5
-  <Accuracy>k__BackingField: 10
-  <Range>k__BackingField: 30
-  <MagazineSize>k__BackingField: 15
-  <Capacity>k__BackingField: 7
-  <BulletVelocity>k__BackingField: 30
-  <FireRate>k__BackingField: 1
-  <ReloadTime>k__BackingField: 3
   <Penetration>k__BackingField: 1
-  <Weight>k__BackingField: 20
-  <GunShotSFXs>k__BackingField: []
-  <ReloadSFXs>k__BackingField: []
-  <EquipSFXs>k__BackingField: []
-  <HolsterSFXs>k__BackingField: []
+  <Recoil>k__BackingField: 15
+  <Accuracy>k__BackingField: 15
+  <Range>k__BackingField: 25
+  <MagazineSize>k__BackingField: 15
+  <MaxMagazine>k__BackingField: 7
+  <BulletSpawnOffset>k__BackingField: 1
+  <BulletVelocity>k__BackingField: 10
+  <FireRate>k__BackingField: 0.055
+  <ReloadTime>k__BackingField: 2
+  <Weight>k__BackingField: 5
+  <GunShotSFXs>k__BackingField:
+  - GunShot0
+  - GunShot1
+  <ReloadSFXs>k__BackingField:
+  - ReloadSound0
+  - ReloadSound1
+  - ReloadSound2
+  <EquipSFXs>k__BackingField:
+  - Equip
+  <HolsterSFXs>k__BackingField:
+  - Holster

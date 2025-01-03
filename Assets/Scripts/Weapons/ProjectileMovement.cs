@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class ProjectileMovement : NetworkBehaviour
 {
@@ -29,13 +30,8 @@ public class ProjectileMovement : NetworkBehaviour
             enabled = false;
             return;
         }
+        initialPosition = this.transform.position;
         base.OnNetworkSpawn();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        initialPosition = this.transform.position; // Store the initial position of the projectile
     }
 
     void SetupDirection(Quaternion rotation, float accuracy)

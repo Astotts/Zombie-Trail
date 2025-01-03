@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 64fa0edddd2a2324bbc7d1a4f29d8e2d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01ffd71f47089b64b9ac3e7f01697c83, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -94,11 +94,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5522958022875047128}
   - component: {fileID: 2841383473250935542}
-  - component: {fileID: 1613402221212117109}
   - component: {fileID: 8099728369950312160}
   - component: {fileID: 618794936110384566}
+  - component: {fileID: -1444203319800199594}
   m_Layer: 9
-  m_Name: Ak47
+  m_Name: Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 23191741
+  GlobalObjectIdHash: 2685695832
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -141,22 +141,6 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &1613402221212117109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5555060981659758837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27d159c92a68f452a85bb79e879b6dea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  availableItemsSO: {fileID: 11400000, guid: b2f45968bc1e046bbbbb2b2d6014ed8f, type: 2}
-  stats: {fileID: 11400000, guid: 2fe3fb05d69604b4ab77fcf90558b643, type: 2}
-  networkObject: {fileID: 2841383473250935542}
-  weaponSpriteRenderer: {fileID: 3035351581802553140}
 --- !u!58 &8099728369950312160
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -223,3 +207,19 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-1444203319800199594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5555060981659758837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34ff5b783431343f4a8b32dc3208049a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  availableItemsSO: {fileID: 11400000, guid: b2f45968bc1e046bbbbb2b2d6014ed8f, type: 2}
+  stats: {fileID: 11400000, guid: 1946a9d375e784b0b928d1086a52c093, type: 2}
+  networkObject: {fileID: 2841383473250935542}
+  weaponSpriteRenderer: {fileID: 3035351581802553140}

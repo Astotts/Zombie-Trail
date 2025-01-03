@@ -20,6 +20,7 @@ public class EventManager
     public event EventHandler<ItemReloadPressedEventArgs> OnItemReloadPressedEvent;
     public event EventHandler<AmmoChangedEventArgs> OnAmmoChangedEvent;
     public event EventHandler<GunReloadEventArgs> OnGunReloadEvent;
+    public event EventHandler<GunReloadInterruptedEventArgs> OnGunReloadInterruptedEvent;
     public event EventHandler<GunReloadedEventArgs> OnGunReloadedEvent;
     #endregion
 
@@ -173,6 +174,18 @@ public class EventManager
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
         public float ReloadTime { get; set; }
+    }
+    #endregion
+
+    #region GunReloadInteruptedEvent
+    public void GunReloadInterupted(GunReloadInterruptedEventArgs eventArgs)
+    {
+        OnGunReloadInterruptedEvent?.Invoke(this, eventArgs);
+    }
+    public class GunReloadInterruptedEventArgs : EventArgs
+    {
+        public ulong PlayerID { get; set; }
+        public IItem Item { get; set; }
     }
     #endregion
 

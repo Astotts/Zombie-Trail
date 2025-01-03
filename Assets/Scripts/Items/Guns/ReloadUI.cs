@@ -16,20 +16,40 @@ public class ReloadUI : NetworkBehaviour
     [SerializeField] GameObject reloadFill;
     [SerializeField] float fadeDuration;
 
+    Coroutine reloadCoroutine;
+    Coroutine fadeCoroutine;
+
+    bool isReloading;
+    bool isFading;
+
     public ulong PlayerID { get; set; }
 
     public override void OnNetworkSpawn()
     {
         if (!IsServer)
             return;
-        base.OnNetworkSpawn();
         EventManager.EventHandler.OnGunReloadEvent += OnItemReload;
+        EventManager.EventHandler.OnGunReloadInterruptedEvent += OnReloadInterrupt;
+        base.OnNetworkSpawn();
+    }
+    public override void OnNetworkDespawn()
+    {
+        EventManager.EventHandler.OnGunReloadEvent -= OnItemReload;
+        EventManager.EventHandler.OnGunReloadInterruptedEvent -= OnReloadInterrupt;
+        base.OnNetworkDespawn();
     }
 
-    public override void OnDestroy()
+    private void OnReloadInterrupt(object sender, GunReloadInterruptedEventArgs e)
     {
-        base.OnDestroy();
-        EventManager.EventHandler.OnGunReloadEvent -= OnItemReload;
+        if (e.PlayerID != this.PlayerID)
+            return;
+        PlayFadeEffectClientRpc();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void PlayFadeEffectClientRpc()
+    {
+        fadeCoroutine = StartCoroutine(HideReloadStatus());
     }
 
     private void OnItemReload(object sender, GunReloadEventArgs e)
@@ -42,11 +62,17 @@ public class ReloadUI : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     void PlayReloadEffectClientRpc(float reloadTime)
     {
-        StartCoroutine(Reloading(reloadTime));
+        reloadCoroutine = StartCoroutine(Reloading(reloadTime));
     }
 
     IEnumerator Reloading(float reloadTime)
     {
+        if (isFading)
+            StopCoroutine(fadeCoroutine);
+        if (isReloading)
+            StopCoroutine(reloadCoroutine);
+        isFading = false;
+        isReloading = true;
         reloadFill.transform.localScale = Vector2.zero;
         SetOpacity(1);
         float reloadElapsed = 0;
@@ -59,11 +85,19 @@ public class ReloadUI : NetworkBehaviour
             reloadFill.transform.localScale = new Vector3(reloadValue, 1, 0);
             yield return null;
         }
-        StartCoroutine(HideReloadStatus());
+        yield return null;
+        isReloading = false;
+        fadeCoroutine = StartCoroutine(HideReloadStatus());
     }
 
     IEnumerator HideReloadStatus()
     {
+        if (isFading)
+            StopCoroutine(fadeCoroutine);
+        if (isReloading)
+            StopCoroutine(reloadCoroutine);
+        isReloading = false;
+        isFading = true;
         float statusElapsed = 0f;
         while (statusElapsed <= fadeDuration)
         {
@@ -72,7 +106,8 @@ public class ReloadUI : NetworkBehaviour
             SetOpacity(value);
             yield return null;
         }
-        yield break;
+        yield return null;
+        isFading = false;
     }
 
 

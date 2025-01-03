@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item/RifleGun/Stats", fileName = "New Gun Stats")]
-public class RifleGunStats : ScriptableObject
+[CreateAssetMenu(menuName = "Item/PistolGun/Stats", fileName = "New Pistol Stats")]
+public class PistolGunStats : ScriptableObject
 {
-    // [field: SerializeField] Can display variables on inspector, PEAK!
-    // The property (private set) is to make sure other codes don't change variables
+    // Tbh it is the same as rifle, but pistols won't be automatic
     [field: SerializeField] public string GunName { get; private set; }             // Weapon Name
     [field: SerializeField] public Sprite Icon { get; private set; }                // Weapon Icon on ui (Pivot at the end of the gun)
     [field: SerializeField] public Sprite WeaponSprite { get; private set; }        // Sprite to display

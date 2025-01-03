@@ -1,21 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Unity.Netcode;
-using UnityEditor;
-using UnityEditor.Rendering;
 using UnityEngine;
 using static EventManager;
 
-public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
+public class Pistol : NetworkBehaviour, IItem, IDisplayableWeapon
 {
     private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;       // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 10000;           // Only change when you want to change rotation speed for other gun too
 
 
     public Guid UniqueID => guid;                                       // Guid for every prefab
-    public EItemType ItemType => EItemType.Rifle;                       // Item type for prefab
+    public EItemType ItemType => EItemType.Pistol;                       // Item type for prefab
     public string WeaponName => stats.GunName;                             // Variable for WeaponPanelUI to read
     public Sprite Icon => stats.Icon;                                   // Variable for WeaponPanelUI and HotbarUI to read
     public int CurrentAmmo => currentAmmo.Value;                        // Variable for WeaponPanelUI to read
@@ -28,7 +25,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
 
     [SerializeField] AvailableItemsSO availableItemsSO;                 // Script to save and load item to json
-    [SerializeField] private RifleGunStats stats;                       // Stats for guns (this script would be use for rifles GameObjects)
+    [SerializeField] private PistolGunStats stats;                       // Stats for guns (this script would be used for Pistol GameObjects)
     [SerializeField] NetworkObject networkObject;                       // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;               // Sprite render so we can flip it
 
@@ -43,9 +40,9 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     private ulong ownerID;                                              // ClientId of owner in ulong
     private bool isReloading;                                           // Inner variable so we know when the gun is reloading (can't shoot)
     private bool isPickedUp;                                            // Inner variable so that gun can rotate
-    private bool isShooting;                                            // Inner variable so we know left click is down
     private bool IsOnFireRateCooldown => fireRateCooldown > 0;         // Inner variable so we know when to shoot
     private float fireRateCooldown;
+
     private Coroutine reloadCoroutine;
 
     void OnValidate()
@@ -124,7 +121,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
             return;
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
-        EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
         EventManager.EventHandler.OnItemReloadPressedEvent -= OnReloadPressed;
         EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
         base.OnNetworkDespawn();
@@ -155,20 +151,8 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         if (!isPickedUp)
             return;
 
-        if (IsServer)
-        {
-            HandleShooting();
-            HandleFireRateCooldown();
-        }
-
         if (IsOwner)
             HandleWeaponRotation();
-    }
-
-    void HandleFireRateCooldown()
-    {
-        if (IsOnFireRateCooldown)
-            fireRateCooldown -= Time.deltaTime;
     }
 
     void HandleWeaponRotation()
@@ -207,7 +191,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     public void HandleShooting()
     {
-        if (!isShooting || isReloading || IsOnFireRateCooldown)
+        if (isReloading || IsOnFireRateCooldown)
             return;
 
         if (currentAmmo.Value == 0)
@@ -315,7 +299,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         OnPickUpClientRpc(owner, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
-        EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
         EventManager.EventHandler.OnItemReloadPressedEvent += OnReloadPressed;
         EventManager.EventHandler.OnItemSwapPressedEvent += OnItemSwap;
     }
@@ -339,7 +322,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         transform.rotation = Quaternion.identity;
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
-        EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
         EventManager.EventHandler.OnItemReloadPressedEvent -= OnReloadPressed;
         EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
     }
@@ -354,13 +336,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     {
         if (e.PlayerID != ownerID || e.Item.UniqueID != this.guid)
             return;
-        isShooting = true;
-    }
-    void OnLeftClickReleased(object sender, ItemLeftClickReleasedEventArgs e)
-    {
-        if (e.PlayerID != ownerID || e.Item.UniqueID != this.guid)
-            return;
-        isShooting = false;
+        HandleShooting();
     }
 
     void OnReloadPressed(object sender, ItemReloadPressedEventArgs e)
@@ -372,30 +348,30 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     public void LoadData(ItemData data, ulong ownerID, int currentSlot, int loadedSlot)
     {
-        if (data.Stats is not RifleStats rifleStats)
+        if (data.Stats is not PistolStats pistolStats)
             return;
 
-        guid = new Guid(rifleStats.UniqueID);
-        currentAmmo.Value = rifleStats.CurrentAmmo;
-        currentMagazine.Value = rifleStats.CurrentMagazine;
-        stats = (RifleGunStats)availableItemsSO.GetItemStat(EItemType.Rifle, rifleStats.GunStatsID);
+        guid = new Guid(pistolStats.UniqueID);
+        currentAmmo.Value = pistolStats.CurrentAmmo;
+        currentMagazine.Value = pistolStats.CurrentMagazine;
+        stats = (PistolGunStats)availableItemsSO.GetItemStat(EItemType.Pistol, pistolStats.GunStatsID);
         NetworkObject ownerNetworkObject = NetworkManager.Singleton.ConnectedClients[ownerID].PlayerObject;
         OnPickUp(ownerNetworkObject, ownerID, currentSlot == loadedSlot);
     }
 
     public void SaveData(ref ItemData data)
     {
-        RifleStats rifleStats = new()
+        PistolStats pistolStats = new()
         {
             UniqueID = guid.ToString(),
             CurrentAmmo = currentAmmo.Value,
             CurrentMagazine = currentMagazine.Value,
-            GunStatsID = availableItemsSO.GetItemStatIndex(EItemType.Rifle, stats)
+            GunStatsID = availableItemsSO.GetItemStatIndex(EItemType.Pistol, stats)
         };
-        data.Stats = rifleStats;
+        data.Stats = pistolStats;
     }
 
-    public class RifleStats : IItemStats
+    public class PistolStats : IItemStats
     {
         public string UniqueID { get; set; }
         public int CurrentAmmo { get; set; }
