@@ -16,22 +16,25 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     public Guid UniqueID => guid;                                       // Guid for every prefab
     public EItemType ItemType => EItemType.Rifle;                       // Item type for prefab
-    public string WeaponName => stats.name;                             // Variables for Inventory and UIs to read
-    public Sprite Icon => stats.Icon;                                   // Variables for Inventory and UIs to read
-    public int CurrentAmmo => currentAmmo.Value;                        // Variables for Inventory and UIs to read
-    public Sprite AmmoIcon => stats.AmmoIcon;                           // Variables for Inventory and UIs to read
-    public Sprite EmptyAmmoIcon => stats.EmptyAmmoIcon;                 // Variables for Inventory and UIs to read
-    public int MagazineSize => stats.MagazineSize;                      // Variables for Inventory and UIs to read
-    public int Capacity => stats.Capacity;                              // Variables for Inventory and UIs to read
-    public NetworkObject WeaponNetworkObject => networkObject;          // Variables for Inventory and UIs to read
+    public string WeaponName => stats.name;                             // Variable for WeaponPanelUI to read
+    public Sprite Icon => stats.Icon;                                   // Variable for WeaponPanelUI and HotbarUI to read
+    public int CurrentAmmo => currentAmmo.Value;                        // Variable for WeaponPanelUI to read
+    public Sprite AmmoIcon => stats.AmmoIcon;                           // Variable for WeaponPanelUI to read
+    public Sprite EmptyAmmoIcon => stats.EmptyAmmoIcon;                 // Variable for WeaponPanelUI to read
+    public int MagazineSize => stats.MagazineSize;                      // Variable for WeaponPanelUI to read
+    public int CurrentMagazine => currentMagazine.Value;                // Variable for WeaponPanelUI to read
+    public int MaxMagazine => stats.Capacity;                              // Variable for WeaponPanelUI to read
+    public NetworkObject WeaponNetworkObject => networkObject;          // Variable for WeaponPanelUI to read
 
-    [SerializeField] AvailableItemsSO availableItemsSO;                 // Stats for guns (this script would be use for rifles GameObject)
-    [SerializeField] private GunStats stats;                            // Stats for guns (this script would be use for rifles GameObject)
+
+    [SerializeField] AvailableItemsSO availableItemsSO;                 // Script to save and load item to json
+    [SerializeField] private RifleGunStats stats;                       // Stats for guns (this script would be use for rifles GameObjects)
     [SerializeField] NetworkObject networkObject;                       // Just for external variable up there (WeaponNetworkObject)
     [SerializeField] SpriteRenderer weaponSpriteRenderer;               // Sprite render so we can flip it
 
     // Owner's mouse to player
     private readonly NetworkVariable<int> currentAmmo = new();          // Current Ammo before reload
+    private readonly NetworkVariable<int> currentMagazine = new();      // Magazine left for reloading
     private readonly NetworkVariable<int> currentLayer = new();         // For syncing layer between clients (Rpc doesn't work for late joining clients)
     private readonly NetworkVariable<bool> isActive = new(true);        // For syncing gameobject activation on player pick ups
 
@@ -64,13 +67,14 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         guid = Guid.NewGuid();
         currentLayer.Value = LayerMask.NameToLayer("PickUpRaycast");
         currentAmmo.Value = UnityEngine.Random.Range(0, stats.MagazineSize);
+        currentMagazine.Value = UnityEngine.Random.Range(0, stats.Capacity);
         currentAmmo.OnValueChanged += OnAmmoChange;
 
-        EventManager.EventHandler.OnItemPickedUpEvent += OnItemPickedUp;
-        EventManager.EventHandler.OnItemDroppedEvent += OnItemDropped;
+        EventManager.EventHandler.OnItemPickUpPressedEvent += OnItemPickedUp;
+        EventManager.EventHandler.OnItemDropPressedEvent += OnItemDropped;
     }
 
-    private void OnItemPickedUp(object sender, ItemPickedUpEventArgs e)
+    private void OnItemPickedUp(object sender, ItemPickUpPressedEventArgs e)
     {
         if (e.Item == null || e.Item.UniqueID != this.guid)
             return;
@@ -82,7 +86,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         OnPickUp(ownerNetworkObject, ownerID, isItemActive);
     }
 
-    private void OnItemDropped(object sender, ItemDroppedEventArgs e)
+    private void OnItemDropped(object sender, ItemDropPressedEventArgs e)
     {
         if (e.Item == null || e.Item.UniqueID != this.guid)
             return;
@@ -119,12 +123,12 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
-        EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
-        EventManager.EventHandler.OnItemSwappedEvent -= OnItemSwap;
+        EventManager.EventHandler.OnItemReloadPressedEvent -= OnReloadPressed;
+        EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
         base.OnNetworkDespawn();
     }
 
-    private void OnItemSwap(object sender, ItemSwappedEventArgs e)
+    private void OnItemSwap(object sender, ItemSwapPressedEventArgs e)
     {
         if (e.PlayerID != ownerID)
             return;
@@ -200,7 +204,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
     private void Reload()
     {
-        if (isReloading || currentAmmo.Value == stats.MagazineSize)
+        if (isReloading || currentMagazine.Value < 1 || currentAmmo.Value == stats.MagazineSize)
             return;
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
         StartCoroutine(Reloading());
@@ -250,7 +254,17 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         AudioManager.Instance.PlaySFX(stats.ReloadSFXs[UnityEngine.Random.Range(0, stats.ReloadSFXs.Length)], UnityEngine.Random.Range(0.7f, 1.1f));
 
         currentAmmo.Value = stats.MagazineSize;
+        currentMagazine.Value--;
         isReloading = false;
+
+        GunReloadedEventArgs reloadedEventArgs = new()
+        {
+            PlayerID = ownerID,
+            Item = this,
+            CurrentMagazine = currentMagazine.Value,
+            MaxMagazine = stats.Capacity
+        };
+        EventManager.EventHandler.OnGunReloaded(reloadedEventArgs);
     }
 
     public void SpawnBullets(Quaternion rotation)
@@ -286,8 +300,8 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         EventManager.EventHandler.OnItemLeftClickPressedEvent += OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent += OnLeftClickReleased;
-        EventManager.EventHandler.OnitemReloadEvent += OnReloadPressed;
-        EventManager.EventHandler.OnItemSwappedEvent += OnItemSwap;
+        EventManager.EventHandler.OnItemReloadPressedEvent += OnReloadPressed;
+        EventManager.EventHandler.OnItemSwapPressedEvent += OnItemSwap;
     }
     [Rpc(SendTo.SpecifiedInParams)]
     void OnPickUpClientRpc(NetworkObjectReference networkObjectReference, RpcParams rpcParams)
@@ -310,8 +324,8 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         transform.rotation = Quaternion.identity;
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
         EventManager.EventHandler.OnItemLeftClickReleasesedEvent -= OnLeftClickReleased;
-        EventManager.EventHandler.OnitemReloadEvent -= OnReloadPressed;
-        EventManager.EventHandler.OnItemSwappedEvent -= OnItemSwap;
+        EventManager.EventHandler.OnItemReloadPressedEvent -= OnReloadPressed;
+        EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
@@ -333,7 +347,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         isShooting = false;
     }
 
-    void OnReloadPressed(object sender, ItemReloadEventArgs e)
+    void OnReloadPressed(object sender, ItemReloadPressedEventArgs e)
     {
         if (e.PlayerID != ownerID)
             return;
@@ -347,7 +361,8 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 
         guid = new Guid(rifleStats.UniqueID);
         currentAmmo.Value = rifleStats.CurrentAmmo;
-        stats = (GunStats)availableItemsSO.GetItemStat(EItemType.Rifle, rifleStats.GunStatsID);
+        currentMagazine.Value = rifleStats.CurrentMagazine;
+        stats = (RifleGunStats)availableItemsSO.GetItemStat(EItemType.Rifle, rifleStats.GunStatsID);
         NetworkObject ownerNetworkObject = NetworkManager.Singleton.ConnectedClients[ownerID].PlayerObject;
         OnPickUp(ownerNetworkObject, ownerID, currentSlot == loadedSlot);
     }
@@ -358,6 +373,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         {
             UniqueID = guid.ToString(),
             CurrentAmmo = currentAmmo.Value,
+            CurrentMagazine = currentMagazine.Value,
             GunStatsID = availableItemsSO.GetItemStatIndex(EItemType.Rifle, stats)
         };
         data.Stats = rifleStats;
@@ -367,6 +383,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     {
         public string UniqueID { get; set; }
         public int CurrentAmmo { get; set; }
+        public int CurrentMagazine { get; set; }
         public int GunStatsID { get; set; }
     }
 }

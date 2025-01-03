@@ -12,8 +12,8 @@ public class ItemHotBarUI : NetworkBehaviour
         if (!IsServer)
             return;
 
-        EventHandler.OnItemPickedUpEvent += OnItemPickedUp;
-        EventHandler.OnItemDroppedEvent += OnItemDropped;
+        EventHandler.OnItemPickUpPressedEvent += OnItemPickedUp;
+        EventHandler.OnItemDropPressedEvent += OnItemDropped;
         EventHandler.OnInventoryLoadedEvent += OnInventorySlotLoaded;
 
         base.OnNetworkSpawn();
@@ -24,8 +24,8 @@ public class ItemHotBarUI : NetworkBehaviour
         if (!IsServer)
             return;
 
-        EventHandler.OnItemPickedUpEvent -= OnItemPickedUp;
-        EventHandler.OnItemDroppedEvent -= OnItemDropped;
+        EventHandler.OnItemPickUpPressedEvent -= OnItemPickedUp;
+        EventHandler.OnItemDropPressedEvent -= OnItemDropped;
         EventHandler.OnInventoryLoadedEvent -= OnInventorySlotLoaded;
 
         base.OnNetworkDespawn();
@@ -51,12 +51,12 @@ public class ItemHotBarUI : NetworkBehaviour
         }
     }
 
-    private void OnItemPickedUp(object sender, ItemPickedUpEventArgs e)
+    private void OnItemPickedUp(object sender, ItemPickUpPressedEventArgs e)
     {
         DisplayItemClientRpc(e.Item.WeaponNetworkObject, e.PickedUpSlot, RpcTarget.Single(e.PlayerID, RpcTargetUse.Temp));
     }
 
-    private void OnItemDropped(object sender, ItemDroppedEventArgs e)
+    private void OnItemDropped(object sender, ItemDropPressedEventArgs e)
     {
         RemoveItemClientRpc(e.Slot, RpcTarget.Single(e.PlayerID, RpcTargetUse.Temp));
     }

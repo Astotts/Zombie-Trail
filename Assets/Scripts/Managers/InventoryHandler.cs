@@ -232,7 +232,7 @@ public class InventoryHandler : NetworkBehaviour
         int previousSlot = currentSlot;
         currentSlot = newSlot;
 
-        ItemSwappedEventArgs eventArgs = new()
+        ItemSwapPressedEventArgs eventArgs = new()
         {
             PlayerID = rpcParams.Receive.SenderClientId,
             PreviousItem = inventory[previousSlot],
@@ -272,7 +272,7 @@ public class InventoryHandler : NetworkBehaviour
         itemNetworkObject.ChangeOwnership(rpcParams.Receive.SenderClientId);
         PickUpItemClientRpc(itemNetworkObject);
 
-        ItemPickedUpEventArgs eventArgs = new()
+        ItemPickUpPressedEventArgs eventArgs = new()
         {
             PlayerID = rpcParams.Receive.SenderClientId,
             Item = pickedUpItem,
@@ -304,7 +304,7 @@ public class InventoryHandler : NetworkBehaviour
         itemNetworkObject.TryRemoveParent();
         itemNetworkObject.ChangeOwnership(0);
 
-        ItemDroppedEventArgs eventArgs = new()
+        ItemDropPressedEventArgs eventArgs = new()
         {
             PlayerID = rpcParams.Receive.SenderClientId,
             Item = droppedItem,
@@ -317,7 +317,7 @@ public class InventoryHandler : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void ReloadCurrentItemServerRpc(RpcParams rpcParams = default)
     {
-        ItemReloadEventArgs eventArgs = new()
+        ItemReloadPressedEventArgs eventArgs = new()
         {
             PlayerID = rpcParams.Receive.SenderClientId,
             Item = inventory[currentSlot],

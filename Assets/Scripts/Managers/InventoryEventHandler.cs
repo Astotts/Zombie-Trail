@@ -14,12 +14,13 @@ public class EventManager
     public event EventHandler<ItemLeftClickReleasedEventArgs> OnItemLeftClickReleasesedEvent;
     public event EventHandler<ItemRightClickPressedEventArgs> OnItemRightClickPressedEvent;
     public event EventHandler<ItemRightClickReleasedEventArgs> OnItemRightClickReleasedEvent;
-    public event EventHandler<ItemSwappedEventArgs> OnItemSwappedEvent;
-    public event EventHandler<ItemPickedUpEventArgs> OnItemPickedUpEvent;
-    public event EventHandler<ItemDroppedEventArgs> OnItemDroppedEvent;
-    public event EventHandler<ItemReloadEventArgs> OnitemReloadEvent;
+    public event EventHandler<ItemSwapPressedEventArgs> OnItemSwapPressedEvent;
+    public event EventHandler<ItemPickUpPressedEventArgs> OnItemPickUpPressedEvent;
+    public event EventHandler<ItemDropPressedEventArgs> OnItemDropPressedEvent;
+    public event EventHandler<ItemReloadPressedEventArgs> OnItemReloadPressedEvent;
     public event EventHandler<AmmoChangedEventArgs> OnAmmoChangedEvent;
     public event EventHandler<GunReloadEventArgs> OnGunReloadEvent;
+    public event EventHandler<GunReloadedEventArgs> OnGunReloadedEvent;
     #endregion
 
     #region InventoryLoadedEvent
@@ -89,12 +90,12 @@ public class EventManager
     #endregion
 
     #region ItemSwapEvent
-    public void OnItemSwapped(ItemSwappedEventArgs eventArgs)
+    public void OnItemSwapped(ItemSwapPressedEventArgs eventArgs)
     {
-        OnItemSwappedEvent?.Invoke(this, eventArgs);
+        OnItemSwapPressedEvent?.Invoke(this, eventArgs);
     }
 
-    public class ItemSwappedEventArgs : EventArgs
+    public class ItemSwapPressedEventArgs : EventArgs
     {
         public ulong PlayerID { get; set; }
         public IItem PreviousItem { get; set; }
@@ -105,12 +106,12 @@ public class EventManager
     #endregion
 
     #region ItemPickedUpEvent
-    public void OnItemPickedUp(ItemPickedUpEventArgs eventArgs)
+    public void OnItemPickedUp(ItemPickUpPressedEventArgs eventArgs)
     {
-        OnItemPickedUpEvent?.Invoke(this, eventArgs);
+        OnItemPickUpPressedEvent?.Invoke(this, eventArgs);
     }
 
-    public class ItemPickedUpEventArgs : EventArgs
+    public class ItemPickUpPressedEventArgs : EventArgs
     {
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
@@ -120,12 +121,12 @@ public class EventManager
     #endregion
 
     #region ItemDroppedEvent
-    public void OnItemDropped(ItemDroppedEventArgs eventArgs)
+    public void OnItemDropped(ItemDropPressedEventArgs eventArgs)
     {
-        OnItemDroppedEvent?.Invoke(this, eventArgs);
+        OnItemDropPressedEvent?.Invoke(this, eventArgs);
     }
 
-    public class ItemDroppedEventArgs : EventArgs
+    public class ItemDropPressedEventArgs : EventArgs
     {
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
@@ -135,12 +136,12 @@ public class EventManager
 
     #region ItemReloadEvent
 
-    public void OnItemReload(ItemReloadEventArgs eventArgs)
+    public void OnItemReload(ItemReloadPressedEventArgs eventArgs)
     {
-        OnitemReloadEvent?.Invoke(this, eventArgs);
+        OnItemReloadPressedEvent?.Invoke(this, eventArgs);
     }
 
-    public class ItemReloadEventArgs : EventArgs
+    public class ItemReloadPressedEventArgs : EventArgs
     {
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
@@ -162,7 +163,7 @@ public class EventManager
     }
     #endregion
 
-    #region GunReloadedEvent
+    #region GunReloadEvent
     public void OnGunReload(GunReloadEventArgs eventArgs)
     {
         OnGunReloadEvent?.Invoke(this, eventArgs);
@@ -172,6 +173,20 @@ public class EventManager
         public ulong PlayerID { get; set; }
         public IItem Item { get; set; }
         public float ReloadTime { get; set; }
+    }
+    #endregion
+
+    #region GunReloadedEvent
+    public void OnGunReloaded(GunReloadedEventArgs eventArgs)
+    {
+        OnGunReloadedEvent?.Invoke(this, eventArgs);
+    }
+    public class GunReloadedEventArgs : EventArgs
+    {
+        public ulong PlayerID { get; set; }
+        public IItem Item { get; set; }
+        public int CurrentMagazine { get; set; }
+        public int MaxMagazine { get; set; }
     }
     #endregion
 }

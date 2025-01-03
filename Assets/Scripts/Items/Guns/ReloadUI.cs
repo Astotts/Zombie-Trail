@@ -42,7 +42,6 @@ public class ReloadUI : NetworkBehaviour
     [Rpc(SendTo.ClientsAndHost)]
     void PlayReloadEffectClientRpc(float reloadTime)
     {
-        Debug.Log("reached");
         StartCoroutine(Reloading(reloadTime));
     }
 

@@ -1,3 +1,5 @@
+using System;
+using System.Net.Sockets;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -13,6 +15,7 @@ public class WeaponPanelUI : NetworkBehaviour
     [SerializeField] RectTransform emptyAmmoImageRectTransform;
     [SerializeField] Image ammoImage;
     [SerializeField] Image emptyAmmoImage;
+    [SerializeField] TMP_Text magazineCounter;
 
     IDisplayableWeapon currentItem;
     float ammoIconWidth;
@@ -20,13 +23,14 @@ public class WeaponPanelUI : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsHost)
+        if (!IsServer)
             return;
-        EventHandler.OnItemSwappedEvent += OnItemSwap;
-        EventHandler.OnItemPickedUpEvent += OnItemPickUp;
-        EventHandler.OnItemDroppedEvent += OnItemDrop;
-        EventHandler.OnAmmoChangedEvent += OnRifleAmmoChange;
-        EventHandler.OnInventoryLoadedEvent += OnInventorySlotLoad;
+        EventManager.EventHandler.OnItemSwapPressedEvent += OnItemSwap;
+        EventManager.EventHandler.OnItemPickUpPressedEvent += OnItemPickUp;
+        EventManager.EventHandler.OnItemDropPressedEvent += OnItemDrop;
+        EventManager.EventHandler.OnAmmoChangedEvent += OnRifleAmmoChange;
+        EventManager.EventHandler.OnInventoryLoadedEvent += OnInventorySlotLoad;
+        EventManager.EventHandler.OnGunReloadedEvent += OnGunReloaded;
         Debug.Log("Weapon Panel Subscribed to InventoryEvents!");
 
         base.OnNetworkSpawn();
@@ -34,13 +38,14 @@ public class WeaponPanelUI : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
-        if (!IsHost)
+        if (!IsServer)
             return;
-        EventHandler.OnItemSwappedEvent -= OnItemSwap;
-        EventHandler.OnItemPickedUpEvent -= OnItemPickUp;
-        EventHandler.OnItemDroppedEvent -= OnItemDrop;
-        EventHandler.OnAmmoChangedEvent -= OnRifleAmmoChange;
-        EventHandler.OnInventoryLoadedEvent -= OnInventorySlotLoad;
+        EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
+        EventManager.EventHandler.OnItemPickUpPressedEvent -= OnItemPickUp;
+        EventManager.EventHandler.OnItemDropPressedEvent -= OnItemDrop;
+        EventManager.EventHandler.OnAmmoChangedEvent -= OnRifleAmmoChange;
+        EventManager.EventHandler.OnInventoryLoadedEvent -= OnInventorySlotLoad;
+        EventManager.EventHandler.OnGunReloadedEvent -= OnGunReloaded;
         Debug.Log("Weapon Panel Unsubscribed to InventoryEvents!");
 
         base.OnNetworkDespawn();
@@ -50,7 +55,7 @@ public class WeaponPanelUI : NetworkBehaviour
     // Server Side:
     // =====================
 
-    private void OnItemPickUp(object sender, ItemPickedUpEventArgs e)
+    private void OnItemPickUp(object sender, ItemPickUpPressedEventArgs e)
     {
         if (e.CurrentSlot != e.PickedUpSlot)
             return;
@@ -58,12 +63,12 @@ public class WeaponPanelUI : NetworkBehaviour
         HandleItem(e.PlayerID, e.Item);
     }
 
-    private void OnItemDrop(object sender, ItemDroppedEventArgs e)
+    private void OnItemDrop(object sender, ItemDropPressedEventArgs e)
     {
         HandleItem(e.PlayerID, null);
     }
 
-    private void OnItemSwap(object sender, ItemSwappedEventArgs e)
+    private void OnItemSwap(object sender, ItemSwapPressedEventArgs e)
     {
         HandleItem(e.PlayerID, e.CurrentItem);
     }
@@ -120,6 +125,7 @@ public class WeaponPanelUI : NetworkBehaviour
         SetEmptyAmmoIcon(weapon.EmptyAmmoIcon, weapon.MagazineSize);
         SetAmmoIcon(weapon.AmmoIcon, weapon.MagazineSize);
         SetCurrentAmmo(weapon.CurrentAmmo);
+        SetMagazineCounter(weapon.CurrentMagazine, weapon.MaxMagazine);
     }
 
     void DisableUI()
@@ -170,6 +176,11 @@ public class WeaponPanelUI : NetworkBehaviour
         }
     }
 
+    void SetMagazineCounter(int current, int capacity)
+    {
+        magazineCounter.text = current + "/" + capacity;
+    }
+
     void OnRifleAmmoChange(object sender, AmmoChangedEventArgs e)
     {
         if (e.Item is not IDisplayableWeapon weapon || weapon != currentItem)
@@ -183,6 +194,20 @@ public class WeaponPanelUI : NetworkBehaviour
     {
         SetCurrentAmmo(currentAmmo);
     }
+
+    private void OnGunReloaded(object sender, GunReloadedEventArgs e)
+    {
+        if (e.Item is not IDisplayableWeapon weapon || weapon != currentItem)
+            return;
+
+        SetMagazineCounterClientRpc(e.CurrentMagazine, e.MaxMagazine, RpcTarget.Single(e.PlayerID, RpcTargetUse.Temp));
+    }
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void SetMagazineCounterClientRpc(int currentMagazine, int capacity, RpcParams rpcParams)
+    {
+        SetMagazineCounter(currentMagazine, capacity);
+    }
 }
 
 public interface IDisplayableWeapon
@@ -193,4 +218,6 @@ public interface IDisplayableWeapon
     public Sprite Icon { get; }
     public Sprite AmmoIcon { get; }
     public Sprite EmptyAmmoIcon { get; }
+    public int CurrentMagazine { get; }
+    public int MaxMagazine { get; }
 }
