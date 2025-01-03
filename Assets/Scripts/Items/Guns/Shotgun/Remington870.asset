@@ -18,11 +18,11 @@ MonoBehaviour:
   <AmmoIcon>k__BackingField: {fileID: 21300000, guid: d952d75612b214b09aec23f24d8dedd0, type: 3}
   <EmptyAmmoIcon>k__BackingField: {fileID: 21300000, guid: 704fe501057d042049d2dc9366b238eb, type: 3}
   <BulletGO>k__BackingField: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
-  <DamagePerBullet>k__BackingField: 10
-  <BulletsPerShot>k__BackingField: 10
+  <DamagePerBullet>k__BackingField: 15
+  <BulletsPerShot>k__BackingField: 20
   <Penetration>k__BackingField: 3
   <Recoil>k__BackingField: 50
-  <Spread>k__BackingField: 5
+  <Focus>k__BackingField: 4
   <Range>k__BackingField: 5
   <MagazineSize>k__BackingField: 6
   <MaxAmmoToHold>k__BackingField: 20

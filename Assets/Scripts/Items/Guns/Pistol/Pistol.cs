@@ -131,6 +131,13 @@ public class Pistol : NetworkBehaviour, IItem, IDisplayableWeapon
         if (e.PlayerID != ownerID)
             return;
 
+        InterruptReloading();
+
+        isActive.Value = e.CurrentItem != null && e.CurrentItem.UniqueID == this.guid;
+    }
+
+    void InterruptReloading()
+    {
         if (isReloading)
         {
             StopCoroutine(reloadCoroutine);
@@ -142,14 +149,15 @@ public class Pistol : NetworkBehaviour, IItem, IDisplayableWeapon
             };
             EventManager.EventHandler.GunReloadInterupted(eventArgs);
         }
-
-        isActive.Value = e.CurrentItem != null && e.CurrentItem.UniqueID == this.guid;
     }
 
     void Update()
     {
         if (!isPickedUp)
             return;
+
+        if (IsServer && IsOnFireRateCooldown)
+            fireRateCooldown -= Time.deltaTime;
 
         if (IsOwner)
             HandleWeaponRotation();
@@ -289,8 +297,9 @@ public class Pistol : NetworkBehaviour, IItem, IDisplayableWeapon
         bulletNetworkObject.Spawn();
     }
 
-    public void OnPickUp(NetworkObject owner, ulong ownerID, bool isActive)
+    void OnPickUp(NetworkObject owner, ulong ownerID, bool isActive)
     {
+        InterruptReloading();
         isPickedUp = true;
         this.owner = owner;
         this.ownerID = ownerID;
@@ -311,8 +320,9 @@ public class Pistol : NetworkBehaviour, IItem, IDisplayableWeapon
         owner = networkObject;
     }
 
-    public void OnDrop()
+    void OnDrop()
     {
+        InterruptReloading();
         isPickedUp = false;
         owner = null;
         ownerID = 0;

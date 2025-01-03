@@ -131,17 +131,7 @@ public class Shotgun : NetworkBehaviour, IItem, IDisplayableWeapon
         if (e.PlayerID != ownerID)
             return;
 
-        if (isReloading)
-        {
-            StopCoroutine(reloadingCoroutine);
-            isReloading = false;
-            GunReloadInterruptedEventArgs eventArgs = new()
-            {
-                PlayerID = ownerID,
-                Item = this
-            };
-            EventManager.EventHandler.GunReloadInterupted(eventArgs);
-        }
+        InterruptReloading();
 
         isActive.Value = e.CurrentItem != null && e.CurrentItem.UniqueID == this.guid;
     }
@@ -203,17 +193,7 @@ public class Shotgun : NetworkBehaviour, IItem, IDisplayableWeapon
             return;
         }
 
-        if (isReloading)
-        {
-            StopCoroutine(reloadingCoroutine);
-            isReloading = false;
-            GunReloadInterruptedEventArgs eventArgs = new()
-            {
-                PlayerID = ownerID,
-                Item = this
-            };
-            EventManager.EventHandler.GunReloadInterupted(eventArgs);
-        }
+        InterruptReloading();
 
         // create & shoot the projectile 
         SpawnBullets(transform.rotation);
@@ -309,8 +289,9 @@ public class Shotgun : NetworkBehaviour, IItem, IDisplayableWeapon
         }
     }
 
-    public void OnPickUp(NetworkObject owner, ulong ownerID, bool isActive)
+    void OnPickUp(NetworkObject owner, ulong ownerID, bool isActive)
     {
+        InterruptReloading();
         isPickedUp = true;
         this.owner = owner;
         this.ownerID = ownerID;
@@ -331,8 +312,9 @@ public class Shotgun : NetworkBehaviour, IItem, IDisplayableWeapon
         owner = networkObject;
     }
 
-    public void OnDrop()
+    void OnDrop()
     {
+        InterruptReloading();
         isPickedUp = false;
         owner = null;
         ownerID = 0;
@@ -344,6 +326,21 @@ public class Shotgun : NetworkBehaviour, IItem, IDisplayableWeapon
         EventManager.EventHandler.OnItemLeftClickPressedEvent -= OnLeftClickPressed;
         EventManager.EventHandler.OnItemReloadPressedEvent -= OnReloadPressed;
         EventManager.EventHandler.OnItemSwapPressedEvent -= OnItemSwap;
+    }
+
+    void InterruptReloading()
+    {
+        if (isReloading)
+        {
+            StopCoroutine(reloadingCoroutine);
+            isReloading = false;
+            GunReloadInterruptedEventArgs eventArgs = new()
+            {
+                PlayerID = ownerID,
+                Item = this
+            };
+            EventManager.EventHandler.GunReloadInterupted(eventArgs);
+        }
     }
 
     [Rpc(SendTo.SpecifiedInParams)]
