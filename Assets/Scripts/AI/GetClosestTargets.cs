@@ -33,8 +33,8 @@ public class GetClosestTargets : NetworkBehaviour
 
     void Awake()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
-        NetworkManager.Singleton.OnClientDisconnectCallback += OnPlayerLeft;
+        // NetworkManager.Singleton.OnClientConnectedCallback += OnPlayerJoined;
+        // NetworkManager.Singleton.OnClientDisconnectCallback += OnPlayerLeft;
         GetInfo();
     }
     void GetInfo()

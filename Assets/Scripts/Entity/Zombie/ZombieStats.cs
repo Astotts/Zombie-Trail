@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 
-public class ZombieStats : MonoBehaviour
+[CreateAssetMenu(menuName = "ZombieStats", fileName = "New Zombie")]
+public class ZombieStats : ScriptableObject
 {
-    [SerializeField] string zombieName;
-    [SerializeField] Sprite sprite;
-    [SerializeField] int health;
-    [SerializeField] int damage;
-    [SerializeField] int speed;
-
-    public string ZombieName => zombieName;
-    public Sprite Sprite => sprite;
-    public int Health => health;
-    public int Damage => damage;
-    public int Speed => speed;
+    [field: SerializeField] public AnimatorController Animation { get; private set; }
+    [field: SerializeField] public float Damage { get; private set; }
+    [field: SerializeField] public float MaxHealth { get; private set; }
+    [field: SerializeField] public float Speed { get; private set; }
 }
