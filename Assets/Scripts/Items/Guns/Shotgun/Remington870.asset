@@ -23,7 +23,7 @@ MonoBehaviour:
   <Penetration>k__BackingField: 3
   <Recoil>k__BackingField: 50
   <Focus>k__BackingField: 4
-  <Range>k__BackingField: 5
+  <Range>k__BackingField: 10
   <MagazineSize>k__BackingField: 6
   <MaxAmmoToHold>k__BackingField: 20
   <BulletSpawnOffset>k__BackingField: 1.4

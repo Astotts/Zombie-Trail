@@ -26,10 +26,7 @@ public class ProjectileMovement : NetworkBehaviour
     {
         trailRenderer.Clear();
         if (!IsServer)
-        {
-            enabled = false;
             return;
-        }
         initialPosition = this.transform.position;
         base.OnNetworkSpawn();
     }
@@ -39,8 +36,16 @@ public class ProjectileMovement : NetworkBehaviour
         // rotation angle in degrees
         // rotation of the object
         float marginOfError = Random.Range(-100 / accuracy, 100 / accuracy);
-        this.transform.rotation = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, rotation.eulerAngles.z - 90 + marginOfError);
+        Quaternion initialRotation = Quaternion.Euler(rotation.eulerAngles.x, rotation.eulerAngles.y, rotation.eulerAngles.z - 90 + marginOfError);
+        this.transform.rotation = initialRotation;
+        // SetDirectionClientRpc(initialRotation);
     }
+
+    // [Rpc(SendTo.ClientsAndHost)]
+    // void SetDirectionClientRpc(Quaternion rotation)
+    // {
+    //     transform.rotation = rotation;
+    // }
 
     void Update()
     {
@@ -49,9 +54,12 @@ public class ProjectileMovement : NetworkBehaviour
 
         // Out of bounds code
         float distanceTraveled = Vector2.Distance(initialPosition, this.transform.position);
-        if (distanceTraveled >= range)
+        
+        if (!IsServer) return;
+
+        if (distanceTraveled >= range || penetration < 1)
         {
-            // Destroy the projectile when it goes out of range
+            // Destroy the projectile when it goes out of range or penetrated enough zombies
             DestroySelfServerRpc();
         }
     }
@@ -78,6 +86,8 @@ public class ProjectileMovement : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (!IsServer)
+            return;
         if (other.gameObject.CompareTag("Enemy") && this.CompareTag("Player bullet"))
         {
             if (other.gameObject.transform.parent != null)
