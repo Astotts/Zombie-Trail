@@ -3,10 +3,10 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ZombieHealthDisplay : NetworkBehaviour
+public class ZombieHealthSystem : NetworkBehaviour
 {
     //Health Functionality
-    [SerializeField] private Transform bar;
+    // [SerializeField] private Transform bar;
     [SerializeField] private ZombiePrefabSO zombiePrefabSO;
 
     //Visual Elements
@@ -86,7 +86,7 @@ public class ZombieHealthDisplay : NetworkBehaviour
         if (currentHealth > 0)
         {
             AudioManager.Instance.PlaySFX(sounds[UnityEngine.Random.Range(10, 13)], UnityEngine.Random.Range(0.7f, 1.1f));
-            SetSize(((float)current / (float)zombie.Stats.MaxHealth)); //Since health variables are ints must cast to float values
+            // SetSize(((float)current / (float)zombie.Stats.MaxHealth)); //Since health variables are ints must cast to float values
             // StartCoroutine(HealthFlashing());
             redFlashCoroutine = StartCoroutine(RedFlashing());
         }
@@ -97,10 +97,10 @@ public class ZombieHealthDisplay : NetworkBehaviour
         }
     }
 
-    private void SetSize(float sizeNormalized)
-    {
-        bar.localScale = new Vector3(sizeNormalized, 1f);
-    }
+    // private void SetSize(float sizeNormalized)
+    // {
+    //     bar.localScale = new Vector3(sizeNormalized, 1f);
+    // }
 
     IEnumerator RedFlashing()
     {

@@ -30,6 +30,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
     private readonly NetworkVariable<float> currentHealth = new();
 
     private IEnumerator healthFlashing;
+    private bool isHealthFlashing;
 
     private bool IsDead => currentHealth.Value <= 0;
 
@@ -96,22 +97,31 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
 
     public void Die()
     {
-        StopCoroutine(healthFlashing);
-        // Death animation, game over screen, etc.
-        Debug.LogWarning("You Are Dead.");
+        if (isHealthFlashing)
+            StopCoroutine(healthFlashing);
 
-        GameObject spawnPoint = GameObject.FindWithTag("PlayerSpawn");
-        transform.position = spawnPoint.transform.position;
+        Debug.Log("Damaged");
 
-        //Removes gameObject
-        //Destroy(gameObject);
+        // // Death animation, game over screen, etc.
+        // Debug.LogWarning("You Are Dead.");
 
-        //!DEBUG RESET TO HEALTH DELETE LATER
-        currentHealth.Value = maxHealth;
+        // GameObject spawnPoint = GameObject.FindWithTag("PlayerSpawn");
+        // transform.position = spawnPoint.transform.position;
+
+        // //Removes gameObject
+        // //Destroy(gameObject);
+
+        // //!DEBUG RESET TO HEALTH DELETE LATER
+        // currentHealth.Value = maxHealth;
     }
 
     IEnumerator HealthFlashing()
     {
+        if (isHealthFlashing)
+            StopCoroutine(healthFlashing);
+
+        isHealthFlashing = true;
+
         float elapsed = 0f;
         for (int i = 0; i <= flashCycles; i++)
         {
@@ -133,7 +143,7 @@ public class PlayerHealth : NetworkBehaviour, IDamageable
             elapsed = 0f;
         }
 
-        yield break;
+        isHealthFlashing = false;
     }
 
     IEnumerator ScreenEffect()

@@ -271,7 +271,6 @@ GameObject:
   - component: {fileID: 3989415032831106977}
   - component: {fileID: 6579159938641987789}
   - component: {fileID: 7620577002715323814}
-  - component: {fileID: 4277080930078860087}
   - component: {fileID: 901941190270671904}
   - component: {fileID: 4335375633618873986}
   - component: {fileID: 8008272600805333272}
@@ -440,7 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3566276912
+  GlobalObjectIdHash: 3394246021
   InScenePlacedSourceGlobalObjectIdHash: 3566276912
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -534,38 +533,6 @@ MonoBehaviour:
   m_DefaultActionMap: Movement
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &4277080930078860087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4382690585860579029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 678822d7a49c46d49a983d201b74a25a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthBar: {fileID: 0}
-  sprite: {fileID: 0}
-  displayColor: {r: 0.7075472, g: 0, b: 0, a: 1}
-  singleFlashTime: 0.15
-  flashCycles: 3
-  bloodEffect:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  bloodEffectColor: {r: 1, g: 1, b: 1, a: 1}
-  waitForFade: 1
-  timeToFade: 1
-  networkObject: {fileID: 3989415032831106977}
-  sounds:
-  - PlayerHurt0
-  - PlayerHurt1
-  - PlayerHurt2
-  - PlayerHurt3
-  maxHealth: 100
 --- !u!95 &901941190270671904
 Animator:
   serializedVersion: 5
@@ -771,7 +738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2667df7bf1b4c5b8d268d2c72f353a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: {fileID: 4277080930078860087}
+  playerHealth: {fileID: 0}
   playerInventory: {fileID: 3620888271258052386}
   reloadUI: {fileID: 7185180946255342875}
 --- !u!114 &7185180946255342875

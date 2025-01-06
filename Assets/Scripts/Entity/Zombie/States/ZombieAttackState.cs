@@ -22,7 +22,7 @@ public class ZombieAttackState : IZombieState
     public void Start()
     {
         zombie.Attack();
-        attackTimer = zombie.Stats.AttackTime;
+        attackTimer = 1 / zombie.Stats.AttackSpeed;
     }
 
     public void Update()

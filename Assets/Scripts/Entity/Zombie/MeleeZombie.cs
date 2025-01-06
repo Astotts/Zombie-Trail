@@ -17,8 +17,9 @@ public class MeleeZombie : NetworkBehaviour, IZombie
 
     [SerializeField] NetworkObject networkObject;
     [SerializeField] ZombieStateMachine stateManager;
-    [SerializeField] ZombieHealthDisplay healthDisplay;
+    [SerializeField] ZombieHealthSystem healthDisplay;
     [SerializeField] ZombieMeleeAttack meleeAttack;
+    [SerializeField] ZombieMovement movement;
     [SerializeField] Rigidbody2D rb2D;
 
     void OnValidate()
@@ -32,11 +33,17 @@ public class MeleeZombie : NetworkBehaviour, IZombie
         stateManager.Init(this);
         healthDisplay.Init(this);
         meleeAttack.Init(this);
+        movement.Init(this);
     }
 
     public void Attack()
     {
         meleeAttack.Attack();
+    }
+
+    public bool MoveTowardTarget()
+    {
+        return movement.MoveTowardTarget(Target);
     }
 
     public bool FindTarget()
@@ -60,16 +67,5 @@ public class MeleeZombie : NetworkBehaviour, IZombie
             }
         }
         return false;
-    }
-
-    public bool MoveTowardTarget()
-    {
-        float distanceToTarget = Vector2.Distance(Target.position, transform.position);
-        if (distanceToTarget < Stats.AttackRange)
-            return false;
-
-        Vector2 direction = meleeAttack.transform.rotation * Vector2.right;
-        rb2D.MovePosition(rb2D.position + direction * Stats.MoveSpeed * Time.deltaTime);
-        return true;
     }
 }

@@ -11,7 +11,6 @@ public class ZombieStats : ScriptableObject
     [field: SerializeField] public float MaxHealth { get; private set; }
     [field: SerializeField] public float MoveSpeed { get; private set; }
     [field: SerializeField] public float AttackSpeed { get; private set; }
-    [field: SerializeField] public float AttackTime { get; private set; }
     [field: SerializeField] public float AttackRange { get; private set; }
     [field: SerializeField] public float SearchInterval { get; private set; }
     [field: SerializeField] public Vector2 HitboxCenter { get; private set; }

@@ -44,6 +44,8 @@ public class ZombieMeleeAttack : NetworkBehaviour
 
     void Update()
     {
+        if (zombie.Target == null)
+            return;
         Vector2 targetPos = zombie.Target.position;
 
         // Finding the closest player? Look like a working as a magnet
@@ -82,10 +84,9 @@ public class ZombieMeleeAttack : NetworkBehaviour
             StopCoroutine(attackCoroutine);
         isAttacking = true;
 
-        float attackTime = zombie.Stats.AttackTime;
         float attackSpeed = zombie.Stats.AttackSpeed;
 
-        float totalAttackTime = attackTime / attackSpeed;
+        float totalAttackTime = 0.5f / attackSpeed;
         float timeElapsed = 0;
 
         while (timeElapsed < totalAttackTime)
@@ -98,7 +99,6 @@ public class ZombieMeleeAttack : NetworkBehaviour
 
         DealDamage();
 
-        totalAttackTime = attackTime / attackSpeed;
         timeElapsed = totalAttackTime;
 
         while (timeElapsed > 0)
@@ -114,7 +114,10 @@ public class ZombieMeleeAttack : NetworkBehaviour
 
     void DealDamage()
     {
-        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(transform.rotation * zombie.Stats.HitboxCenter, zombie.Stats.HitboxExtends, transform.eulerAngles.z, layerToAttack);
+        Vector2 hitboxRotated = transform.rotation * zombie.Stats.HitboxCenter;
+        Vector2 attackerPos = transform.position;
+
+        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(attackerPos + hitboxRotated, zombie.Stats.HitboxExtends, transform.eulerAngles.z, layerToAttack);
         if (hitColliders.Length == 0)
             return;
 
