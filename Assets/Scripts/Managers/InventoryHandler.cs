@@ -18,6 +18,7 @@ public class InventoryHandler : NetworkBehaviour
     private ulong ownerID;
 
     [SerializeField] private float pickUpRadius;
+    [SerializeField] private Vector2 itemOrigin;
     [SerializeField] private GameObject pickUpButtonGO;
     [SerializeField] private LayerMask layerToDetect;
     [SerializeField] private AvailableItemsSO availableItems;
@@ -288,7 +289,7 @@ public class InventoryHandler : NetworkBehaviour
     {
         if (networkObjectReference.TryGet(out NetworkObject itemNetworkObject))
         {
-            itemNetworkObject.transform.localPosition = Vector2.zero;
+            itemNetworkObject.transform.localPosition = itemOrigin;
         }
     }
 

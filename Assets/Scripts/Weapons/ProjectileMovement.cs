@@ -54,7 +54,7 @@ public class ProjectileMovement : NetworkBehaviour
 
         // Out of bounds code
         float distanceTraveled = Vector2.Distance(initialPosition, this.transform.position);
-        
+
         if (!IsServer) return;
 
         if (distanceTraveled >= range || penetration < 1)
@@ -88,35 +88,33 @@ public class ProjectileMovement : NetworkBehaviour
     {
         if (!IsServer)
             return;
-        if (other.gameObject.CompareTag("Enemy") && this.CompareTag("Player bullet"))
+
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            if (other.gameObject.transform.parent != null)
-            {
-                if (other.gameObject.transform.parent.gameObject.TryGetComponent<IDamageable>(out var healthSystem))
-                {
-                    healthSystem.Damage(damage);
-                    penetration--;
-                }
-            }
-            else
-            {
-                other.gameObject.GetComponent<IDamageable>().Damage(damage);
-                penetration--;
-            }
-            bloodFX = Instantiate(bloodFX);
-            bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
-            bloodFX.transform.position = transform.position;
-            bloodParticleSystem = bloodFX.GetComponent<ParticleSystem>();
-            bloodParticleSystem.Play();
+            PlayOnDamagedVFX();
         }
         else if (other.CompareTag("Structure"))
         {
             float initialY = initialPosition.y;
             float buildingY = other.transform.position.y;
-            if (initialY < buildingY || initialY > buildingY + other.GetComponent<SpriteRenderer>().size.y)
-                return;
 
-            DestroySelfServerRpc();
+            if (initialY > buildingY && initialY < buildingY + other.GetComponent<SpriteRenderer>().size.y)
+                DestroySelfServerRpc();
         }
+
+        if (!other.TryGetComponent(out IDamageable damageable))
+            return;
+
+        damageable.Damage(damage);
+        penetration--;
+    }
+
+    void PlayOnDamagedVFX()
+    {
+        bloodFX = Instantiate(bloodFX);
+        bloodFX.transform.localEulerAngles = new Vector3(transform.localEulerAngles.z - 90, bloodFX.transform.localEulerAngles.y, bloodFX.transform.localEulerAngles.z);
+        bloodFX.transform.position = transform.position;
+        bloodParticleSystem = bloodFX.GetComponent<ParticleSystem>();
+        bloodParticleSystem.Play();
     }
 }

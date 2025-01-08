@@ -20,7 +20,7 @@ MonoBehaviour:
   <BulletGO>k__BackingField: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
   <Damage>k__BackingField: 20
   <Penetration>k__BackingField: 2
-  <Recoil>k__BackingField: 1000
+  <Recoil>k__BackingField: 5
   <Accuracy>k__BackingField: 10
   <Range>k__BackingField: 50
   <MagazineSize>k__BackingField: 30

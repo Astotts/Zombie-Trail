@@ -521,6 +521,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickUpRadius: 1
+  itemOrigin: {x: 0, y: 1}
   pickUpButtonGO: {fileID: 2310082308868116724}
   layerToDetect:
     serializedVersion: 2

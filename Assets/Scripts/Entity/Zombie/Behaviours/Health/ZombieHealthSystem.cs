@@ -11,6 +11,8 @@ public class ZombieHealthSystem : AbstractHealthSystem, IDamageable
     [SerializeField] NetworkObject networkObject;
     [SerializeField] HealthEffect effect;
 
+    bool isDying;
+
     private float currentHealth;
 
     // private IEnumerator healthFlashing;
@@ -25,7 +27,10 @@ public class ZombieHealthSystem : AbstractHealthSystem, IDamageable
     public override void OnNetworkSpawn()
     {
         if (IsServer)
+        {
+            isDying = false;
             currentHealth = stats.MaxHealth;
+        }
 
         base.OnNetworkSpawn();
     }
@@ -36,12 +41,13 @@ public class ZombieHealthSystem : AbstractHealthSystem, IDamageable
         currentHealth -= amount;
         PlayOnDamagedEffectClientRpc(previous, currentHealth, stats.MaxHealth);
 
-        if (IsDead)
+        if (IsDead && !isDying)
             Die();
     }
 
     public void Die()
     {
+        isDying = true;
         // StopCoroutine(healthFlashing);
         // StopCoroutine(hideHealth);
         if (isRedFlashing)

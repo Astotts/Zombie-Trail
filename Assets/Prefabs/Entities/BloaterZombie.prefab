@@ -121,9 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1f94e8d3ff94c488da69a9a0419737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layerToAttack:
-    serializedVersion: 2
-    m_Bits: 72
   bloaterSprite: {fileID: 4209836755989841064}
   networkObject: {fileID: 2719006665006736146}
   bloodSplatterGO: {fileID: 2003091904605233353, guid: 225965b6ec6c242928615f9b35a81746, type: 3}
@@ -146,7 +143,7 @@ GameObject:
   - component: {fileID: 2794407497147542294}
   m_Layer: 3
   m_Name: Sprite
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -268,7 +265,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1791
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

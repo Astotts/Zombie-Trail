@@ -11,7 +11,6 @@ using static EventManager;
 
 public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
 {
-    private static readonly float GLOBAL_RECOIL_RESISTANCE = 100;       // Only change when you want to change rotation speed for other gun too
     private static readonly float GLOBAL_ROTATE_SPEED = 10000;           // Only change when you want to change rotation speed for other gun too
 
 
@@ -39,7 +38,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     private readonly NetworkVariable<int> currentLayer = new();         // For syncing layer between clients (Rpc doesn't work for late joining clients)
     private readonly NetworkVariable<bool> isActive = new(true);        // For syncing gameobject activation on player pick ups
 
-    private NetworkObject owner;                                        // Owner of the gun
     private Rigidbody2D ownerRigid2D;                                    // Owner Rigid2D for recoils
     private Guid guid;
     private ulong ownerID;                                              // ClientId of owner in ulong
@@ -247,10 +245,10 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         float xOffset = transform.position.x + stats.BulletSpawnOffset * Mathf.Cos(thetaInRadian);
         float yOffset = transform.position.y + stats.BulletSpawnOffset * Mathf.Sin(thetaInRadian);
         Vector2 bulletOffset = new(xOffset, yOffset);
-        Vector2 playerPos = owner.transform.position;
+        Vector2 originPos = transform.position;
 
-        Vector2 fromBulletToPlayer = playerPos - bulletOffset;
-        Vector2 recoilVector = fromBulletToPlayer.normalized * stats.Recoil / GLOBAL_RECOIL_RESISTANCE;
+        Vector2 fromBulletToPlayer = originPos - bulletOffset;
+        Vector2 recoilVector = fromBulletToPlayer.normalized * stats.Recoil;
         ApplyRecoilClientRpc(recoilVector, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
     }
 
@@ -316,7 +314,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     {
         InterruptReloading();
         isPickedUp = true;
-        this.owner = owner;
         this.ownerID = ownerID;
         this.isActive.Value = isActive;
         this.ownerRigid2D = owner.GetComponent<Rigidbody2D>();
@@ -334,7 +331,6 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         if (!networkObjectReference.TryGet(out NetworkObject networkObject))
             return;
         isPickedUp = true;
-        owner = networkObject;
         ownerRigid2D = networkObject.GetComponent<Rigidbody2D>();
     }
 
@@ -342,9 +338,9 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     {
         InterruptReloading();
         isPickedUp = false;
-        owner = null;
         ownerID = 0;
         isActive.Value = true;
+        ownerRigid2D = null;
         currentLayer.Value = LayerMask.NameToLayer("PickUpRaycast");
         OnDropClientRpc(RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
@@ -359,6 +355,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     void OnDropClientRpc(RpcParams rpcParams)
     {
         isPickedUp = false;
+        ownerRigid2D = null;
     }
 
     void OnLeftClickPressed(object sender, ItemLeftClickPressedEventArgs e)
