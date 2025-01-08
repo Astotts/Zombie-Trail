@@ -1,30 +1,26 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using Unity.VisualScripting;
 using UnityEditor.Search;
 using UnityEditor.Tilemaps;
 using UnityEngine;
 
-public class ZombieIdleState : IZombieState
+public class ZombieIdleState : BaseZombieState
 {
-    readonly ZombieStateMachine stateMachine;
-    readonly IZombie zombie;
-
+    [SerializeField] ZombieStateMachine stateMachine;
+    [SerializeField] DirectionManuver directionManuver;
+    [SerializeField] ZombieMovement movement;
+    [SerializeField] AbstractAttack attack;
     private float searchCooldownTimer;
-
     private bool IsOnSearchCooldown { get { return searchCooldownTimer > 0; } }
 
-    public ZombieIdleState(ZombieStateMachine stateMachine, IZombie zombie)
+    void OnValidate()
     {
-        this.zombie = zombie;
-        this.stateMachine = stateMachine;
+        if (stateMachine == null)
+            stateMachine = GetComponent<ZombieStateMachine>();
     }
 
-    public void Start()
-    {
-
-    }
-
-    public void Update()
+    public override void StateUpdate()
     {
         if (IsOnSearchCooldown)
         {
@@ -32,19 +28,19 @@ public class ZombieIdleState : IZombieState
             return;
         }
 
-        searchCooldownTimer = zombie.Stats.SearchInterval;
+        searchCooldownTimer = directionManuver.Stats.SearchCooldown;
 
-        if (zombie.CanAttack)
-        {
-            stateMachine.ChangeState(stateMachine.AttackState);
-        }
-        else if (zombie.FindTarget())
-        {
-            stateMachine.ChangeState(stateMachine.WalkState);
-        }
+        if (!directionManuver.FindNearestTarget())
+            return;
+
+        if (attack.CanAttack())
+            stateMachine.ChangeState(EZombieState.Attack);
+        else
+            stateMachine.ChangeState(EZombieState.Walk);
     }
 
-    public void End()
+    public override void Exit()
     {
+        searchCooldownTimer = 0;
     }
 }

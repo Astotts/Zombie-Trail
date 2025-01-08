@@ -5,35 +5,36 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public class ZombieAttackState : IZombieState
+public class ZombieAttackState : BaseZombieState
 {
-    readonly ZombieStateMachine stateMachine;
-    readonly IZombie zombie;
+    [SerializeField] ZombieStateMachine stateMachine;
+    [SerializeField] AbstractAttack zombieAttack;
+    [SerializeField] DirectionManuver directionManuver;
+    [SerializeField] ZombieMovement movement;
 
     float attackTimer;
-    bool isAttacking => attackTimer > 0;
+    bool IsAttacking => attackTimer > 0;
 
-    public ZombieAttackState(ZombieStateMachine stateMachine, IZombie zombie)
+    void OnValidate()
     {
-        this.stateMachine = stateMachine;
-        this.zombie = zombie;
+        if (stateMachine == null)
+            stateMachine = GetComponent<ZombieStateMachine>();
     }
 
-    public void Start()
+    public override void Enter()
     {
-        zombie.Attack();
-        attackTimer = 1 / zombie.Stats.AttackSpeed;
+        zombieAttack.Attack();
+        attackTimer = zombieAttack.Stats.AttackTime;
     }
 
-    public void Update()
+    public override void StateUpdate()
     {
-        if (isAttacking)
+        if (IsAttacking)
             attackTimer -= Time.deltaTime;
         else
-            stateMachine.ChangeState(stateMachine.IdleState);
-    }
+            stateMachine.ChangeState(EZombieState.Idle);
 
-    public void End()
-    {
+        directionManuver.RotateTowardTarget();
+        movement.MoveForward();
     }
 }

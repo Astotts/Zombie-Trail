@@ -6,6 +6,7 @@ using Unity.Netcode;
 using UnityEditor;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Scripting.APIUpdating;
 using static EventManager;
 
 public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
@@ -39,6 +40,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     private readonly NetworkVariable<bool> isActive = new(true);        // For syncing gameobject activation on player pick ups
 
     private NetworkObject owner;                                        // Owner of the gun
+    private Rigidbody2D ownerRigid2D;                                    // Owner Rigid2D for recoils
     private Guid guid;
     private ulong ownerID;                                              // ClientId of owner in ulong
     private bool isReloading;                                           // Inner variable so we know when the gun is reloading (can't shoot)
@@ -255,7 +257,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
     [Rpc(SendTo.SpecifiedInParams)]
     void ApplyRecoilClientRpc(Vector2 vectorForce, RpcParams rpcParams)
     {
-        owner.transform.position = owner.transform.position + (Vector3)vectorForce;
+        ownerRigid2D.AddForce(vectorForce, ForceMode2D.Impulse);
     }
 
     IEnumerator Reloading()
@@ -317,6 +319,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
         this.owner = owner;
         this.ownerID = ownerID;
         this.isActive.Value = isActive;
+        this.ownerRigid2D = owner.GetComponent<Rigidbody2D>();
         currentLayer.Value = LayerMask.NameToLayer("IgnorePickUpRaycast");
         OnPickUpClientRpc(owner, RpcTarget.Single(ownerID, RpcTargetUse.Temp));
 
@@ -332,6 +335,7 @@ public class RifleGun : NetworkBehaviour, IItem, IDisplayableWeapon
             return;
         isPickedUp = true;
         owner = networkObject;
+        ownerRigid2D = networkObject.GetComponent<Rigidbody2D>();
     }
 
     void OnDrop()

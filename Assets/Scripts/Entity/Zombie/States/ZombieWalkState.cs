@@ -1,30 +1,33 @@
+using System.IO;
 using UnityEngine;
 
-public class ZombieWalkState : IZombieState
+public class ZombieWalkState : BaseZombieState
 {
-    readonly ZombieStateMachine stateMachine;
-    readonly IZombie zombie;
-    public ZombieWalkState(ZombieStateMachine stateMachine, IZombie zombie)
+    [SerializeField] ZombieStateMachine stateMachine;
+    [SerializeField] AbstractAttack attack;
+    [SerializeField] ZombieMovement movement;
+    [SerializeField] DirectionManuver direction;
+
+    void OnValidate()
     {
-        this.stateMachine = stateMachine;
-        this.zombie = zombie;
+        if (stateMachine == null)
+            stateMachine = GetComponent<ZombieStateMachine>();
     }
 
-    public void Start()
+    public override void StateUpdate()
     {
-        
-    }
-
-    public void Update()
-    {
-        if (zombie.MoveTowardTarget())
-            return;
-
-        stateMachine.ChangeState(stateMachine.IdleState);
-    }
-
-    public void End()
-    {
-        
+        if (direction.Target == null)
+        {
+            stateMachine.ChangeState(EZombieState.Idle);
+        }
+        else if (attack.CanAttack())
+        {
+            stateMachine.ChangeState(EZombieState.Attack);
+        }
+        else
+        {
+            movement.MoveForward();
+            direction.RotateTowardTarget();
+        }
     }
 }

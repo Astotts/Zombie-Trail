@@ -6,13 +6,12 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : NetworkBehaviour
 {
-    [SerializeField] float moveSpeed = 1f;
     PlayerInput playerInput;       // Use this to pull all the values needed for the inputs
     PlayerControls playerControls;          // Input Action Asset - This allows the controls for the player. Check the file out to see the set up. (This will be obsolete, will use PlayerInput)
-    Vector2 movement;                       // Controls the player movement
+    Vector2 input;                       // Controls the player movement
     Vector2 prevMovement = Vector2.zero;
+    [SerializeField] PlayerMovement playerMovement;
 
-    Rigidbody2D rb;                         // Controls the player rigidbody
 
     //----------------------------------------
 
@@ -41,8 +40,6 @@ public class PlayerController : NetworkBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         playerControls = new PlayerControls();
-        rb = GetComponent<Rigidbody2D>();
-
     }
 
     // Enable the controls for the players
@@ -63,49 +60,44 @@ public class PlayerController : NetworkBehaviour
         PlayerInputs();
     }
 
-    private void FixedUpdate()
-    {
-        MovePlayer();
-    }
-
     void PlayerInputs()
     {
         // Get the x/y values from the "Input Action" asset, which has the keys assigned x +/-, y +/-
         //movement = playerInput.actions                      //.Movement.Move.ReadValue<Vector2>();
         //movement = playerInput.
-        movement = playerControls.Movement.Move.ReadValue<Vector2>();
+        input = playerControls.Movement.Move.ReadValue<Vector2>();
 
         walkingElapsed += Time.deltaTime;
 
-        if (movement != prevMovement || (audioSource.clip != null && audioSource.clip.length < walkingElapsed))
+        if (input != prevMovement || (audioSource.clip != null && audioSource.clip.length < walkingElapsed))
         {
             audioSource.pitch = UnityEngine.Random.Range(0.7f, 1.1f);
             audioSource.clip = sounds[UnityEngine.Random.Range(0, 3)];
             walkingElapsed = 0f;
-            if (movement != Vector2.zero)
+            if (input != Vector2.zero)
             {
                 audioSource.Play();
             }
         }
 
-        if (movement == Vector2.zero)
+        if (input == Vector2.zero)
         {
             audioSource.Stop();
             animator.Play("Idle");
         }
-        else if (movement.x < 0f)
+        else if (input.x < 0f)
         {
             animator.Play("Player-Walk-Left");
         }
-        else if (movement.x > 0f)
+        else if (input.x > 0f)
         {
             animator.Play("Player-Walk-Right");
         }
-        else if (movement.y > 0f)
+        else if (input.y > 0f)
         {
             animator.Play("Player-Walk-Up");
         }
-        else if (movement.y < 0f)
+        else if (input.y < 0f)
         {
             animator.Play("Player-Walk-Down");
         }
@@ -113,10 +105,7 @@ public class PlayerController : NetworkBehaviour
         //Debug.Log("Movement y: " + movement.y);
 
         prevMovement = playerControls.Movement.Move.ReadValue<Vector2>();
-    }
 
-    void MovePlayer()
-    {
-        transform.position += (Vector3)movement * (moveSpeed * Time.fixedDeltaTime);  // Current position + where to move * (the movement speed * timing of movement)
+        playerMovement.Input(input);
     }
 }

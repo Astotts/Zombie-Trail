@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] PlayerHealth playerHealth;
+    [SerializeField] PlayerHealthSystem playerHealth;
     [SerializeField] InventoryHandler playerInventory;
     [SerializeField] ReloadUI reloadUI;
 

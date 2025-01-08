@@ -66,7 +66,7 @@ public class RelayManager : MonoBehaviour
             NetworkManager.Singleton.SceneManager.OnUnloadComplete += OnWorldSceneUnloaded;
 
             // NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
-            NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene("ZombieTest", LoadSceneMode.Single);
 
         }
         catch (RelayServiceException e)
