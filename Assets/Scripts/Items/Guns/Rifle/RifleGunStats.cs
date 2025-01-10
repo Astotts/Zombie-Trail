@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item/RifleGun/Stats", fileName = "New Gun Stats")]
+[CreateAssetMenu(menuName = "Stats/Item/RifleGun", fileName = "New Gun Stats")]
 public class RifleGunStats : ScriptableObject
 {
     // [field: SerializeField] Can display variables on inspector, PEAK!

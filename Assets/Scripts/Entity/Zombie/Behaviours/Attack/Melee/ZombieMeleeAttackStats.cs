@@ -1,7 +1,7 @@
 using System.IO.Enumeration;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Zombie/AttackStats/Melee", fileName = "New Zombie Melee Stats")]
+[CreateAssetMenu(menuName = "Stats/Zombie/Attack/Melee", fileName = "New Zombie Melee Stats")]
 public class ZombieMeleeAttackStats : AbstractAttackStats
 {
     [field: SerializeField] public float Damage { get; private set; }

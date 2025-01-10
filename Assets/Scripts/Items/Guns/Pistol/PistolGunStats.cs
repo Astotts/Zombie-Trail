@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item/PistolGun/Stats", fileName = "New Pistol Stats")]
+[CreateAssetMenu(menuName = "Stats/Item/PistolGun", fileName = "New Pistol Stats")]
 public class PistolGunStats : ScriptableObject
 {
     // Tbh it is the same as rifle, but pistols won't be automatic

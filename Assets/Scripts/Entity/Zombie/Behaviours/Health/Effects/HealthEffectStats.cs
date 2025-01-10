@@ -6,7 +6,7 @@ using UnityEngine.Assertions.Comparers;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.TextCore.Text;
 
-[CreateAssetMenu(menuName = "Zombie/Health/VFXStats", fileName = "New Health VFX Stats")]
+[CreateAssetMenu(menuName = "Stats/Zombie/VFX/Health", fileName = "New Health VFX Stats")]
 public class HealthVFXStats : ScriptableObject
 {
     [field: SerializeField] public float SpriteFlashTime { get; private set; }

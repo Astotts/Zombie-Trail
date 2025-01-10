@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Zombie/Health/SFXStats", fileName = "New SFX Stats")]
+[CreateAssetMenu(menuName = "Stats/Zombie/SFX/Health", fileName = "New SFX Stats")]
 public class HealthSFXStats : ScriptableObject
 {
     [field: SerializeField] public RandomPitchSound[] OnDamagedSFX { get; private set; }

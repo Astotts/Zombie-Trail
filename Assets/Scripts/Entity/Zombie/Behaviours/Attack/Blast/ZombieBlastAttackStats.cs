@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Zombie/AttackStats/Blast", fileName = "New Blast Attack Stats")]
+[CreateAssetMenu(menuName = "Stats/Zombie/Attack/Blast", fileName = "New Blast Attack Stats")]
 public class ZombieBlastAttackStats : AbstractAttackStats
 {
     [field: SerializeField] public float Damage { get; private set; }

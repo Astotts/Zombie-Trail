@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Zombie/ManuverStats")]
+[CreateAssetMenu(menuName = "Stats/Zombie/DirectionManuver")]
 public class DirectionManuverStats : ScriptableObject
 {
     [field: SerializeField] public float SearchCooldown { get; private set; }

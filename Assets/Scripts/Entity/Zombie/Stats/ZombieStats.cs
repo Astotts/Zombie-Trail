@@ -7,7 +7,6 @@ using UnityEngine;
 public class ZombieStats : ScriptableObject
 {
     [field: SerializeField] public GameObject Prefab { get; private set; }
-    [field: SerializeField] public AnimatorController Animation { get; private set; }
     [field: SerializeField] public float Damage { get; private set; }
     [field: SerializeField] public float MaxHealth { get; private set; }
     [field: SerializeField] public float MoveSpeed { get; private set; }
@@ -15,6 +14,4 @@ public class ZombieStats : ScriptableObject
     [field: SerializeField] public float AttackRange { get; private set; }
     [field: SerializeField] public float SearchInterval { get; private set; }
     [field: SerializeField] public float Weight { get; private set; }
-    [field: SerializeField] public Vector2 HitboxCenter { get; private set; }
-    [field: SerializeField] public Vector2 HitboxExtends { get; private set; }
 }
