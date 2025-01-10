@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 8112534753906683582}
-  directionManuver: {fileID: 4643592880992140823}
+  directionManuver: {fileID: 574462144292478210}
   movement: {fileID: 5117163991149561637}
   attack: {fileID: 8967972609156715535}
 --- !u!114 &4479063688901994068
@@ -564,7 +564,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 8112534753906683582}
   zombieAttack: {fileID: 8967972609156715535}
-  directionManuver: {fileID: 4643592880992140823}
+  directionManuver: {fileID: 574462144292478210}
   movement: {fileID: 5117163991149561637}
 --- !u!114 &8066673363442231009
 MonoBehaviour:
@@ -581,7 +581,7 @@ MonoBehaviour:
   stateMachine: {fileID: 8112534753906683582}
   attack: {fileID: 8967972609156715535}
   movement: {fileID: 5117163991149561637}
-  direction: {fileID: 4643592880992140823}
+  direction: {fileID: 574462144292478210}
 --- !u!23 &2585554843095258688
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -726,7 +726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7104741632621745154}
   - component: {fileID: 3051836947936107872}
-  - component: {fileID: 4643592880992140823}
+  - component: {fileID: 574462144292478210}
   m_Layer: 3
   m_Name: DirectionManuver
   m_TagString: Untagged
@@ -781,7 +781,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &4643592880992140823
+--- !u!114 &574462144292478210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -790,7 +790,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8944424882270534424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed80c25916bd84be4ad48e8b9d24337c, type: 3}
+  m_Script: {fileID: 11500000, guid: 097fa5a9f422c4b64887ab70d307ad3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <Stats>k__BackingField: {fileID: 11400000, guid: ac2f98adc872247cfabc4ce22ad64605, type: 2}

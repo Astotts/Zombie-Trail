@@ -5,8 +5,8 @@ using UnityEngine;
 public class ZombieThrowAttackStats : AbstractAttackStats
 {
     [field: SerializeField] public float Range { get; private set; }
-    [field: SerializeField] public GameObject ProjectilePrefab { get; private set; }
-    [field: SerializeField] public ThrownProjectileStats projectileStats { get; private set; }
+    [field: SerializeField] public float Cooldown { get; private set; }
+    [field: SerializeField] public ThrownProjectileStats ProjectileStats { get; private set; }
 }
 
 [Serializable]

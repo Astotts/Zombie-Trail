@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.VisualScripting;
@@ -41,6 +42,7 @@ public class ThrownProjectileMovement : NetworkBehaviour
             enabled = false;
             return;
         }
+        isReached = false;
     }
 
     void FixedUpdate()
@@ -80,6 +82,28 @@ public class ThrownProjectileMovement : NetworkBehaviour
         orbParticle.Stop();
 
         splashParticle.Play();
+        DealDamage();
+    }
+
+    void DealDamage()
+    {
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(targetPosition + stats.HitboxOrigin, stats.HitboxExtends, 0, stats.LayerToAttack);
+
+        foreach (Collider2D collider2D in collider2Ds)
+        {
+            if (collider2D.TryGetComponent(out IDamageable damageable))
+            {
+                damageable.Damage(stats.Damage);
+            }
+
+            if (collider2D.TryGetComponent(out IKnockable knockable))
+            {
+                Vector2 directionToTarget = (Vector2)collider2D.transform.position - targetPosition;
+                Vector2 forceVector = directionToTarget.normalized * stats.Force;
+
+                knockable.Knock(forceVector);
+            }
+        }
     }
 
     private void UpdatePositionWithXCurve()
@@ -142,12 +166,11 @@ public class ThrownProjectileMovement : NetworkBehaviour
 
     public void Despawn()
     {
-        Destroy(gameObject);
-        // GameObject prefab = stats.Prefab;
+        GameObject prefab = stats.Prefab;
 
-        // NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
+        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
 
-        // networkObject.Despawn();
+        networkObject.Despawn(false);
     }
 
     public void InitializeInfo(ThrownProjectileStats stats, Vector2 targetPosition)

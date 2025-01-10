@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: SpitterThrowAttackStats
   m_EditorClassIdentifier: 
   <AttackTime>k__BackingField: 1
-  <Range>k__BackingField: 0
-  <ProjectilePrefab>k__BackingField: {fileID: 470217986686738941, guid: ce29d10edff564f37bc2ee52604a9eaa, type: 3}
-  <projectileStats>k__BackingField:
+  <Range>k__BackingField: 7
+  <Cooldown>k__BackingField: 5
+  <ProjectileStats>k__BackingField:
     <Damage>k__BackingField: 10
-    <MaxSpeed>k__BackingField: 5
-    <MaxHeight>k__BackingField: 0.5
+    <MaxSpeed>k__BackingField: 2
+    <MaxHeight>k__BackingField: 1
     <Force>k__BackingField: 5
     <DistanceAroundTargetToStop>k__BackingField: 0.25
     <LayerToAttack>k__BackingField:
       serializedVersion: 2
       m_Bits: 72
     <HitboxOrigin>k__BackingField: {x: 0, y: 0}
-    <HitboxExtends>k__BackingField: {x: 3, y: 2}
+    <HitboxExtends>k__BackingField: {x: 3, y: 2.5}
     <MovementCurve>k__BackingField:
       serializedVersion: 2
       m_Curve:
@@ -41,11 +41,11 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 1
         value: 0
-        inSlope: -3.6955884
-        outSlope: -3.6955884
+        inSlope: -4.0282865
+        outSlope: -4.0282865
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.06332463
+        inWeight: 0.023746789
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -80,20 +80,20 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: -0.8679866
-        outSlope: -0.8679866
-        tangentMode: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
         weightedMode: 0
         inWeight: 0
-        outWeight: 0.07387862
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 1.3248206
-        outSlope: 1.3248206
-        tangentMode: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.10026395
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

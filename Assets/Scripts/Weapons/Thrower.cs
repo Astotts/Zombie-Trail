@@ -29,7 +29,7 @@ public class Thrower : MonoBehaviour
 
             ThrownProjectileMovement movement = gameObject.GetComponent<ThrownProjectileMovement>();
 
-            movement.InitializeInfo(stats.projectileStats, targetPos);
+            movement.InitializeInfo(stats.ProjectileStats, targetPos);
 
             time = timePerThrow;
         }

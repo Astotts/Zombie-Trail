@@ -6,7 +6,7 @@ public class ZombieMovement : MonoBehaviour, IKnockable
     [SerializeField] Transform eyeDirection;
     [SerializeField] Rigidbody2D rb2D;
     [SerializeField] Animator animator;
-    [SerializeField] ZombieMovementStats stats;
+    [SerializeField] BaseZombieMovementStats stats;
 
     public void MoveForward()
     {

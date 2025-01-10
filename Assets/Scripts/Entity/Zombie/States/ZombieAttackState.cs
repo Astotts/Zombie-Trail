@@ -9,7 +9,7 @@ public class ZombieAttackState : BaseZombieState
 {
     [SerializeField] ZombieStateMachine stateMachine;
     [SerializeField] AbstractAttack zombieAttack;
-    [SerializeField] DirectionManuver directionManuver;
+    [SerializeField] AbstractDirectionManuver directionManuver;
     [SerializeField] ZombieMovement movement;
 
     float attackTimer;

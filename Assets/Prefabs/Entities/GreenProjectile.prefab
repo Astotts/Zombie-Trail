@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3715522017827474653}
   - component: {fileID: 575605496829322476}
   - component: {fileID: 5075097880561193761}
+  - component: {fileID: 5296360576594697964}
   m_Layer: 0
   m_Name: GreenProjectile
   m_TagString: Untagged
@@ -70,6 +71,37 @@ MonoBehaviour:
   networkObject: {fileID: 575605496829322476}
   orbParticle: {fileID: 5462840789383843032}
   splashParticle: {fileID: 2244755295321861003}
+--- !u!114 &5296360576594697964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470217986686738941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 0
+  SlerpPosition: 0
 --- !u!1 &2012716215151091579
 GameObject:
   m_ObjectHideFlags: 0

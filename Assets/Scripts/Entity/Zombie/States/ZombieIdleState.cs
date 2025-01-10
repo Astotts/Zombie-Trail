@@ -8,7 +8,7 @@ using UnityEngine;
 public class ZombieIdleState : BaseZombieState
 {
     [SerializeField] ZombieStateMachine stateMachine;
-    [SerializeField] DirectionManuver directionManuver;
+    [SerializeField] AbstractDirectionManuver directionManuver;
     [SerializeField] ZombieMovement movement;
     [SerializeField] AbstractAttack attack;
     private float searchCooldownTimer;

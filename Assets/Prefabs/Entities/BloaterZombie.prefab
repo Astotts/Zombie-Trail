@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2912173971720018071}
   - component: {fileID: 8042622187174648845}
-  - component: {fileID: 8781085344172529428}
+  - component: {fileID: 2032206384979765348}
   m_Layer: 3
   m_Name: DirectionManuver
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &8781085344172529428
+--- !u!114 &2032206384979765348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1929280365185939474}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed80c25916bd84be4ad48e8b9d24337c, type: 3}
+  m_Script: {fileID: 11500000, guid: 097fa5a9f422c4b64887ab70d307ad3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <Stats>k__BackingField: {fileID: 11400000, guid: ac2f98adc872247cfabc4ce22ad64605, type: 2}
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 1159882409576049990}
-  directionManuver: {fileID: 8781085344172529428}
+  directionManuver: {fileID: 2032206384979765348}
   movement: {fileID: 3519003580847593270}
   attack: {fileID: 8488535849841889105}
 --- !u!114 &3104969185001300540
@@ -625,7 +625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 1159882409576049990}
   zombieAttack: {fileID: 8488535849841889105}
-  directionManuver: {fileID: 8781085344172529428}
+  directionManuver: {fileID: 2032206384979765348}
   movement: {fileID: 3519003580847593270}
 --- !u!114 &2330623564788324009
 MonoBehaviour:
@@ -642,7 +642,7 @@ MonoBehaviour:
   stateMachine: {fileID: 1159882409576049990}
   attack: {fileID: 8488535849841889105}
   movement: {fileID: 3519003580847593270}
-  direction: {fileID: 8781085344172529428}
+  direction: {fileID: 2032206384979765348}
 --- !u!23 &2832876447643564106
 MeshRenderer:
   m_ObjectHideFlags: 0

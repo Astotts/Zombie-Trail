@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Diagnostics;
-using Unity.Mathematics;
 using Unity.Netcode;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class ZombieThrowAttack : AbstractAttack
@@ -10,15 +7,23 @@ public class ZombieThrowAttack : AbstractAttack
     public override AbstractAttackStats Stats => stats;
 
     [SerializeField] ZombieThrowAttackStats stats;
-    [SerializeField] DirectionManuver direction;
+    [SerializeField] AbstractDirectionManuver direction;
     [SerializeField] SpriteRenderer bodySprite;
 
     Coroutine throwCoroutine;
     bool isThrowing;
+    float cooldownTimer;
 
     public override void Attack()
     {
+        cooldownTimer = stats.Cooldown;
         throwCoroutine = StartCoroutine(ThrowProjectile());
+    }
+
+    void FixedUpdate()
+    {
+        if (cooldownTimer > 0)
+            cooldownTimer -= Time.fixedDeltaTime;
     }
 
     IEnumerator ThrowProjectile()
@@ -32,7 +37,7 @@ public class ZombieThrowAttack : AbstractAttack
         while (elapsed > 0)
         {
             elapsed -= Time.deltaTime;
-            Color color = Color.Lerp(Color.white, Color.green, elapsed / attackTime);
+            Color color = Color.Lerp(Color.green, Color.white, elapsed / attackTime);
             bodySprite.color = color;
             yield return null;
         }
@@ -42,7 +47,7 @@ public class ZombieThrowAttack : AbstractAttack
         while (elapsed < attackTime)
         {
             elapsed += Time.deltaTime;
-            Color color = Color.Lerp(Color.white, Color.green, elapsed / attackTime);
+            Color color = Color.Lerp(Color.green, Color.white, elapsed / attackTime);
             bodySprite.color = color;
             yield return null;
         }
@@ -50,17 +55,17 @@ public class ZombieThrowAttack : AbstractAttack
 
     void SpawnProjectile(Transform target)
     {
-        NetworkObject projectile = NetworkObjectPool.Singleton.GetNetworkObject(stats.ProjectilePrefab, transform.position, Quaternion.identity);
+        NetworkObject projectile = NetworkObjectPool.Singleton.GetNetworkObject(stats.ProjectileStats.Prefab, transform.position, Quaternion.identity);
 
         ThrownProjectileMovement projectileMovement = projectile.GetComponent<ThrownProjectileMovement>();
 
-        projectileMovement.InitializeInfo(stats.projectileStats, target.position);
+        projectileMovement.InitializeInfo(stats.ProjectileStats, target.position);
 
         projectile.Spawn();
     }
 
     public override bool CanAttack()
     {
-        return Vector2.Distance(transform.position, direction.Target.position) < stats.Range;
+        return cooldownTimer <= 0 && Vector2.Distance(transform.position, direction.Target.position) < stats.Range;
     }
 }

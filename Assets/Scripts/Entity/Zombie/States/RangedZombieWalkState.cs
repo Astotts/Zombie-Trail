@@ -1,12 +1,16 @@
-using System.IO;
+
 using UnityEngine;
 
-public class ZombieWalkState : BaseZombieState
+public class RangedZombieWalkState : BaseZombieState
 {
     [SerializeField] ZombieStateMachine stateMachine;
     [SerializeField] AbstractAttack attack;
     [SerializeField] ZombieMovement movement;
-    [SerializeField] AbstractDirectionManuver direction;
+    [SerializeField] RangedZombieDirectionManuver direction;
+
+    bool IsTargetTooClose =>
+        direction.Stats is RangedDirectionManuverStats stats
+        && Vector2.Distance(transform.position, direction.Target.position) < stats.DistanceToKeep;
 
     void OnValidate()
     {
@@ -20,14 +24,19 @@ public class ZombieWalkState : BaseZombieState
         {
             stateMachine.ChangeState(EZombieState.Idle);
         }
+        else if (IsTargetTooClose)
+        {
+            direction.RotateAwayFromTarget();
+            movement.MoveForward();
+        }
         else if (attack.CanAttack())
         {
             stateMachine.ChangeState(EZombieState.Attack);
         }
         else
         {
-            movement.MoveForward();
             direction.RotateTowardTarget();
+            movement.MoveForward();
         }
     }
 }

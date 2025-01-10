@@ -50,11 +50,7 @@ public class PlayerHealthSystem : AbstractHealthSystem
 
     public void Die()
     {
-        GameObject prefab = stats.Prefab;
-
-        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
-
-        networkObject.Despawn(false);
+        Debug.Log("Player Died, Game Over!");
     }
 
     [Rpc(SendTo.ClientsAndHost)]

@@ -1,16 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
-[RequireComponent(typeof(NetworkTransform))]
-public class DirectionManuver : NetworkBehaviour
+public class MeleeDirectioNanuver : AbstractDirectionManuver
 {
-    [field: SerializeField] public DirectionManuverStats Stats { get; private set; }
-
-    public Transform Target { get; private set; }
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
@@ -18,12 +11,10 @@ public class DirectionManuver : NetworkBehaviour
         if (IsServer)
             return;
 
-        // this.enabled = false;
+        this.enabled = false;
     }
 
-
-
-    public bool FindNearestTarget()
+    public override Transform FindNearestTarget()
     {
         // IReadOnlyList<NetworkClient> playerList = NetworkManager.Singleton.ConnectedClientsList;
         List<GameObject> playerList = GameObject.FindGameObjectsWithTag("Player").ToList();
@@ -40,13 +31,13 @@ public class DirectionManuver : NetworkBehaviour
             {
                 closestDistance = distance;
                 Target = player.transform;
-                return true;
+                return Target;
             }
         }
-        return false;
+        return null;
     }
 
-    public void RotateTowardTarget()
+    public override void RotateTowardTarget()
     {
         if (Target == null)
             return;
