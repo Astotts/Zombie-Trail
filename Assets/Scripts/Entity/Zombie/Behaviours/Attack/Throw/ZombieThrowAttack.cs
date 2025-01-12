@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class ZombieThrowAttack : AbstractAttack
 {
-    public override AbstractAttackStats Stats => stats;
+    public override float AttackTime => stats.AttackTime;
+    public override float AttackAnimationTime => stats.AttackAnimationTime;
 
     [SerializeField] ZombieThrowAttackStats stats;
     [SerializeField] AbstractDirectionManuver direction;
@@ -32,7 +33,7 @@ public class ZombieThrowAttack : AbstractAttack
             StopCoroutine(throwCoroutine);
         isThrowing = true;
 
-        float attackTime = stats.AttackTime;
+        float attackTime = stats.AttackTime / 2;
         float elapsed = attackTime;
         while (elapsed > 0)
         {

@@ -77,4 +77,10 @@ public class RangedZombieDirectionManuver : AbstractDirectionManuver
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, singleStep);
     }
+
+
+    public override Vector2 GetDirection()
+    {
+        return gameObject.transform.rotation * Vector2.right;
+    }
 }

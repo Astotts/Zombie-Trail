@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: BloaterZombieMoveStats
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 20
+  <MoveAnimationSpeed>k__BackingField: 1.25

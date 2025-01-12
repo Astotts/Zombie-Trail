@@ -123,6 +123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloaterSprite: {fileID: 4209836755989841064}
   networkObject: {fileID: 2719006665006736146}
+  directionManuver: {fileID: 2032206384979765348}
   bloodSplatterGO: {fileID: 2003091904605233353, guid: 225965b6ec6c242928615f9b35a81746, type: 3}
   stats: {fileID: 11400000, guid: a500e67ba0e944e4887e2eeb261d4ec0, type: 2}
   selfCollider: {fileID: 4700363050941888289}
@@ -204,7 +205,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: -2047566621, guid: 04f3d1538da8d3445961fb2530e17747, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b7875301af28a4752a5e19b2924b02b5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -225,7 +226,7 @@ Animator:
   m_GameObject: {fileID: 3405653068175947450}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 77ef1b543daa66046b1a4d5c8d93d806, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1338725114f194dfb875470f2edd3b3b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -299,7 +300,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyeDirection: {fileID: 2912173971720018071}
   rb2D: {fileID: 3056423275041506154}
-  animator: {fileID: 52215596832091103}
   stats: {fileID: 11400000, guid: e5a3ca196e12344499a9607983628e69, type: 2}
 --- !u!114 &2794407497147542294
 MonoBehaviour:
@@ -627,6 +627,7 @@ MonoBehaviour:
   zombieAttack: {fileID: 8488535849841889105}
   directionManuver: {fileID: 2032206384979765348}
   movement: {fileID: 3519003580847593270}
+  animator: {fileID: 52215596832091103}
 --- !u!114 &2330623564788324009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -643,6 +644,7 @@ MonoBehaviour:
   attack: {fileID: 8488535849841889105}
   movement: {fileID: 3519003580847593270}
   direction: {fileID: 2032206384979765348}
+  animator: {fileID: 52215596832091103}
 --- !u!23 &2832876447643564106
 MeshRenderer:
   m_ObjectHideFlags: 0

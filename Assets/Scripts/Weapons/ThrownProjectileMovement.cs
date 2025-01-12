@@ -121,8 +121,7 @@ public class ThrownProjectileMovement : NetworkBehaviour
         {
             nextXTrajectoryPosition = -nextXTrajectoryPosition;
         }
-
-        if (range.x < 0 && range.y < 0)
+        else if (range.x < 0 && range.y < 0)
         {
             nextXTrajectoryPosition = -nextXTrajectoryPosition;
         }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MeleeDirectioNanuver : AbstractDirectionManuver
+public class MeleeDirectionManuver : AbstractDirectionManuver
 {
     public override void OnNetworkSpawn()
     {
@@ -61,5 +61,10 @@ public class MeleeDirectioNanuver : AbstractDirectionManuver
         Quaternion targetRotation = Quaternion.LookRotation(forward: Vector3.forward, upwards: rotatedVectorToTarget);
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, singleStep);
+    }
+
+    public override Vector2 GetDirection()
+    {
+        return gameObject.transform.rotation * Vector2.right;
     }
 }

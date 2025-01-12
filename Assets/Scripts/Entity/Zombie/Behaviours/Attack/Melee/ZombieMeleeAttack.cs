@@ -10,7 +10,9 @@ using UnityEngine.WSA;
 
 public class ZombieMeleeAttack : AbstractAttack
 {
-    public override AbstractAttackStats Stats => stats;
+    public override float AttackTime => stats.AttackTime;
+    public override float AttackAnimationTime => stats.AnimationAttackTime;
+
     [SerializeField] SpriteRenderer hitboxDisplay;
     [SerializeField] LayerMask layerToAttack;
     [SerializeField] ZombieMeleeAttackStats stats;
@@ -61,7 +63,7 @@ public class ZombieMeleeAttack : AbstractAttack
             StopCoroutine(attackCoroutine);
         isAttacking = true;
 
-        float totalAttackTime = stats.AttackTime;
+        float totalAttackTime = stats.AttackTime / 2;
         float timeElapsed = 0;
 
         while (timeElapsed < totalAttackTime)

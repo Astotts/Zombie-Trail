@@ -126,10 +126,10 @@ TextureImporter:
       name: SpitterWalk_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 96
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -147,10 +147,10 @@ TextureImporter:
       name: SpitterWalk_1
       rect:
         serializedVersion: 2
-        x: 15
+        x: 17
         y: 96
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -168,10 +168,10 @@ TextureImporter:
       name: SpitterWalk_2
       rect:
         serializedVersion: 2
-        x: 30
+        x: 32
         y: 96
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -189,10 +189,10 @@ TextureImporter:
       name: SpitterWalk_3
       rect:
         serializedVersion: 2
-        x: 45
+        x: 47
         y: 96
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -210,10 +210,10 @@ TextureImporter:
       name: SpitterWalk_4
       rect:
         serializedVersion: 2
-        x: 60
+        x: 63
         y: 96
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -231,10 +231,10 @@ TextureImporter:
       name: SpitterWalk_5
       rect:
         serializedVersion: 2
-        x: 75
+        x: 79
         y: 96
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -252,10 +252,10 @@ TextureImporter:
       name: SpitterWalk_6
       rect:
         serializedVersion: 2
-        x: 90
+        x: 95
         y: 96
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -273,10 +273,10 @@ TextureImporter:
       name: SpitterWalk_7
       rect:
         serializedVersion: 2
-        x: 105
+        x: 110
         y: 96
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -294,10 +294,10 @@ TextureImporter:
       name: SpitterWalk_8
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 64
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -315,10 +315,10 @@ TextureImporter:
       name: SpitterWalk_9
       rect:
         serializedVersion: 2
-        x: 15
+        x: 16
         y: 64
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -336,10 +336,10 @@ TextureImporter:
       name: SpitterWalk_10
       rect:
         serializedVersion: 2
-        x: 30
+        x: 31
         y: 64
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -357,10 +357,10 @@ TextureImporter:
       name: SpitterWalk_11
       rect:
         serializedVersion: 2
-        x: 45
+        x: 47
         y: 64
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -378,10 +378,10 @@ TextureImporter:
       name: SpitterWalk_12
       rect:
         serializedVersion: 2
-        x: 60
+        x: 63
         y: 64
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -399,10 +399,10 @@ TextureImporter:
       name: SpitterWalk_13
       rect:
         serializedVersion: 2
-        x: 75
+        x: 80
         y: 64
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -420,10 +420,10 @@ TextureImporter:
       name: SpitterWalk_14
       rect:
         serializedVersion: 2
-        x: 90
+        x: 95
         y: 64
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -441,10 +441,10 @@ TextureImporter:
       name: SpitterWalk_15
       rect:
         serializedVersion: 2
-        x: 105
+        x: 110
         y: 64
-        width: 15
-        height: 32
+        width: 11
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -462,10 +462,10 @@ TextureImporter:
       name: SpitterWalk_16
       rect:
         serializedVersion: 2
-        x: 0
+        x: 3
         y: 32
-        width: 15
-        height: 32
+        width: 7
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -483,10 +483,10 @@ TextureImporter:
       name: SpitterWalk_17
       rect:
         serializedVersion: 2
-        x: 15
+        x: 17
         y: 32
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -506,8 +506,8 @@ TextureImporter:
         serializedVersion: 2
         x: 30
         y: 32
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -527,8 +527,8 @@ TextureImporter:
         serializedVersion: 2
         x: 45
         y: 32
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -546,10 +546,10 @@ TextureImporter:
       name: SpitterWalk_20
       rect:
         serializedVersion: 2
-        x: 60
+        x: 61
         y: 32
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -567,10 +567,10 @@ TextureImporter:
       name: SpitterWalk_21
       rect:
         serializedVersion: 2
-        x: 75
+        x: 79
         y: 32
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -588,10 +588,10 @@ TextureImporter:
       name: SpitterWalk_22
       rect:
         serializedVersion: 2
-        x: 90
+        x: 96
         y: 32
-        width: 15
-        height: 32
+        width: 9
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -609,10 +609,10 @@ TextureImporter:
       name: SpitterWalk_23
       rect:
         serializedVersion: 2
-        x: 105
+        x: 111
         y: 32
-        width: 15
-        height: 32
+        width: 9
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -630,10 +630,10 @@ TextureImporter:
       name: SpitterWalk_24
       rect:
         serializedVersion: 2
-        x: 0
+        x: 4
         y: 0
-        width: 15
-        height: 32
+        width: 7
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -651,10 +651,10 @@ TextureImporter:
       name: SpitterWalk_25
       rect:
         serializedVersion: 2
-        x: 15
+        x: 18
         y: 0
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -672,10 +672,10 @@ TextureImporter:
       name: SpitterWalk_26
       rect:
         serializedVersion: 2
-        x: 30
+        x: 31
         y: 0
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -693,10 +693,10 @@ TextureImporter:
       name: SpitterWalk_27
       rect:
         serializedVersion: 2
-        x: 45
+        x: 46
         y: 0
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -714,10 +714,10 @@ TextureImporter:
       name: SpitterWalk_28
       rect:
         serializedVersion: 2
-        x: 60
+        x: 61
         y: 0
-        width: 15
-        height: 32
+        width: 12
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -735,10 +735,10 @@ TextureImporter:
       name: SpitterWalk_29
       rect:
         serializedVersion: 2
-        x: 75
+        x: 80
         y: 0
-        width: 15
-        height: 32
+        width: 10
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -756,10 +756,10 @@ TextureImporter:
       name: SpitterWalk_30
       rect:
         serializedVersion: 2
-        x: 90
+        x: 97
         y: 0
-        width: 15
-        height: 32
+        width: 9
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -777,10 +777,10 @@ TextureImporter:
       name: SpitterWalk_31
       rect:
         serializedVersion: 2
-        x: 105
+        x: 111
         y: 0
-        width: 15
-        height: 32
+        width: 9
+        height: 31
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

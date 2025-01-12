@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
@@ -9,6 +10,7 @@ public abstract class AbstractDirectionManuver : NetworkBehaviour
 {
     [field: SerializeField] public virtual BaseDirectionManuverStats Stats { get; private set; }
     public Transform Target { get; set; }
-    abstract public void RotateTowardTarget();
-    abstract public Transform FindNearestTarget();
+    public abstract void RotateTowardTarget();
+    public abstract Transform FindNearestTarget();
+    public abstract Vector2 GetDirection();
 }

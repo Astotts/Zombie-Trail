@@ -290,6 +290,153 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_8
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c365d9c34f524ae0b911d39a659f628
+      internalID: -1818477630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_9
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a466c954f3791417ebce2aaf772ce664
+      internalID: -221193396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_10
+      rect:
+        serializedVersion: 2
+        x: 110
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65fbadf3b05b94908b8ff4742340b244
+      internalID: 108913383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_11
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f8584a923ac79488b887d5821a6ec22b
+      internalID: 1851114830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_12
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35ef05bf50ec0463b9071200d92935a9
+      internalID: -1132507584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_13
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 425a707e01dc34b2196fddf28871eebe
+      internalID: 907250985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SpitterShootSheet_14
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 0
+        width: 11
+        height: 31
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c17cfbd9b5cf94ba8ab83cb9756344a3
+      internalID: -1798272432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -303,12 +450,19 @@ TextureImporter:
     nameFileIdTable:
       SpitterShootSheet_0: 1722889366
       SpitterShootSheet_1: -321877912
+      SpitterShootSheet_10: 108913383
+      SpitterShootSheet_11: 1851114830
+      SpitterShootSheet_12: -1132507584
+      SpitterShootSheet_13: 907250985
+      SpitterShootSheet_14: -1798272432
       SpitterShootSheet_2: -1127042435
       SpitterShootSheet_3: -221143761
       SpitterShootSheet_4: -1355327061
       SpitterShootSheet_5: -1407682769
       SpitterShootSheet_6: -1933424503
       SpitterShootSheet_7: -1045234054
+      SpitterShootSheet_8: -1818477630
+      SpitterShootSheet_9: -221193396
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

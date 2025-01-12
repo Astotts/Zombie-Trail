@@ -11,6 +11,7 @@ public class ZombieAttackState : BaseZombieState
     [SerializeField] AbstractAttack zombieAttack;
     [SerializeField] AbstractDirectionManuver directionManuver;
     [SerializeField] ZombieMovement movement;
+    [SerializeField] Animator animator;
 
     float attackTimer;
     bool IsAttacking => attackTimer > 0;
@@ -23,8 +24,12 @@ public class ZombieAttackState : BaseZombieState
 
     public override void Enter()
     {
+        attackTimer = zombieAttack.AttackTime;
+
         zombieAttack.Attack();
-        attackTimer = zombieAttack.Stats.AttackTime;
+
+        animator.SetFloat("attackSpeed", zombieAttack.AttackAnimationTime);
+        animator.Play("Attack");
     }
 
     public override void StateUpdate()
@@ -33,8 +38,5 @@ public class ZombieAttackState : BaseZombieState
             attackTimer -= Time.deltaTime;
         else
             stateMachine.ChangeState(EZombieState.Idle);
-
-        directionManuver.RotateTowardTarget();
-        movement.MoveForward();
     }
 }

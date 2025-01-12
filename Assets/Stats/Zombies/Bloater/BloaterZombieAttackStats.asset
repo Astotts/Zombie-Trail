@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c8e7f418d1f645d3a0fbd413415f3e9, type: 3}
   m_Name: BloaterZombieAttackStats
   m_EditorClassIdentifier: 
-  <AttackTime>k__BackingField: 2
+  <AttackTime>k__BackingField: 1.5
+  <AnimationAttackTime>k__BackingField: 0.667
+  <AttackRange>k__BackingField: 1.5
   <Damage>k__BackingField: 10
   <Force>k__BackingField: 10
   <LayerToDetect>k__BackingField:

@@ -13,6 +13,12 @@ MonoBehaviour:
   m_Name: MeleeZombieSFXStats
   m_EditorClassIdentifier: 
   <OnDamagedSFX>k__BackingField:
-  - <SoundID>k__BackingField: 
-    <MinPitch>k__BackingField: 0
-    <MaxPitch>k__BackingField: 0
+  - <SoundID>k__BackingField: ZombieHurt0
+    <MinPitch>k__BackingField: 0.7
+    <MaxPitch>k__BackingField: 1.3
+  - <SoundID>k__BackingField: ZombieHurt1
+    <MinPitch>k__BackingField: 0.7
+    <MaxPitch>k__BackingField: 1.3
+  - <SoundID>k__BackingField: ZombieHurt2
+    <MinPitch>k__BackingField: 0.7
+    <MaxPitch>k__BackingField: 1.3

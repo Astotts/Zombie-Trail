@@ -1,15 +1,20 @@
 using System;
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.Netcode;
 using Unity.Services.Relay.Scheduler;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 
 public class ZombieBlastAttack : AbstractAttack
 {
-    public override AbstractAttackStats Stats => stats;
+    public override float AttackTime => stats.AttackTime;
+    public override float AttackAnimationTime => stats.AnimationAttackTime;
+
     [SerializeField] SpriteRenderer bloaterSprite;
     [SerializeField] NetworkObject networkObject;
+    [SerializeField] MeleeDirectionManuver directionManuver;
     [SerializeField] GameObject bloodSplatterGO;
     [SerializeField] ZombieBlastAttackStats stats;
     [SerializeField] Collider2D selfCollider;
@@ -52,13 +57,16 @@ public class ZombieBlastAttack : AbstractAttack
             yield return null;
         }
 
-        GameObject bloodFX = Instantiate(bloodSplatterGO, transform.position, Quaternion.identity);
-
         if (IsServer)
         {
             DealDamage();
             Despawn();
         }
+
+        selfCollider.enabled = false;
+        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(bloodSplatterGO, transform.position, Quaternion.identity);
+        networkObject.Spawn();
+        selfCollider.enabled = true;
 
         isAttacking = false;
     }
@@ -100,6 +108,9 @@ public class ZombieBlastAttack : AbstractAttack
 
     public override bool CanAttack()
     {
+        if (Vector2.Distance(directionManuver.Target.transform.position, selfCollider.transform.position) > stats.AttackRange)
+            return false;
+
         Vector2 hitboxOrigin = (Vector2)transform.position + stats.HitboxCenter;
         selfCollider.enabled = false;
         Collider2D[] hitColliders = Physics2D.OverlapBoxAll(hitboxOrigin, stats.HitboxExtends, transform.eulerAngles.z, stats.LayerToDetect);

@@ -173,7 +173,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyeDirection: {fileID: 7104741632621745154}
   rb2D: {fileID: 3538038659050634910}
-  animator: {fileID: 8141303136063175555}
   stats: {fileID: 11400000, guid: 43d287518316641dd9caf87acc7849ad, type: 2}
 --- !u!114 &6505768363961571013
 MonoBehaviour:
@@ -566,6 +565,7 @@ MonoBehaviour:
   zombieAttack: {fileID: 8967972609156715535}
   directionManuver: {fileID: 574462144292478210}
   movement: {fileID: 5117163991149561637}
+  animator: {fileID: 8141303136063175555}
 --- !u!114 &8066673363442231009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -582,6 +582,7 @@ MonoBehaviour:
   attack: {fileID: 8967972609156715535}
   movement: {fileID: 5117163991149561637}
   direction: {fileID: 574462144292478210}
+  animator: {fileID: 8141303136063175555}
 --- !u!23 &2585554843095258688
 MeshRenderer:
   m_ObjectHideFlags: 0

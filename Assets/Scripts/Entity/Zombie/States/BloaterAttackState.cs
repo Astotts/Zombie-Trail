@@ -6,6 +6,7 @@ public class BloaterAttackState : BaseZombieState
 {
     [SerializeField] ZombieStateMachine stateMachine;
     [SerializeField] AbstractAttack zombieAttack;
+    [SerializeField] Animator animator;
 
     float attackTimer;
     bool IsAttacking => attackTimer > 0;
@@ -19,7 +20,9 @@ public class BloaterAttackState : BaseZombieState
     public override void Enter()
     {
         zombieAttack.Attack();
-        attackTimer = zombieAttack.Stats.AttackTime;
+        attackTimer = zombieAttack.AttackTime;
+
+        animator.Play("Attack");
     }
 
     public override void StateUpdate()

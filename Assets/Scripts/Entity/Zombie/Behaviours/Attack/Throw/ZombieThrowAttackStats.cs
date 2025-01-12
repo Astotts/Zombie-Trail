@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Stats/Zombie/Attack/Throw", fileName = "New Zombie Throw Attack Stats")]
-public class ZombieThrowAttackStats : AbstractAttackStats
+public class ZombieThrowAttackStats : ScriptableObject
 {
+    [field: SerializeField] public float AttackTime { get; private set; }
+    [field: SerializeField] public float AttackAnimationTime { get; private set; }
     [field: SerializeField] public float Range { get; private set; }
     [field: SerializeField] public float Cooldown { get; private set; }
     [field: SerializeField] public ThrownProjectileStats ProjectileStats { get; private set; }
