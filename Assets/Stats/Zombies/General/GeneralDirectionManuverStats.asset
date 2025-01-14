@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SearchCooldown>k__BackingField: 0.5
   <RotateSpeed>k__BackingField: 100
+  <TargetOffset>k__BackingField: {x: 0, y: 1}

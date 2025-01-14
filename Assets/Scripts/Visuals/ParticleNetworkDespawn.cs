@@ -6,7 +6,6 @@ using UnityEngine;
 public class ParticleNetworkDespawn : NetworkBehaviour
 {
     [SerializeField] NetworkObject ownerNetworkObject;
-    [SerializeField] ParticlePrefabSO particlePrefabSO;
 
     void OnValidate()
     {
@@ -14,11 +13,11 @@ public class ParticleNetworkDespawn : NetworkBehaviour
             ownerNetworkObject = GetComponent<NetworkObject>();
     }
 
-    public void OnParticleSystemEnd()
+    public void OnParticleSystemStopped()
     {
         if (!IsServer)
             return;
 
-        NetworkObjectPool.Singleton.ReturnNetworkObject(ownerNetworkObject, particlePrefabSO.Prefab);
+        ownerNetworkObject.Despawn();
     }
 }

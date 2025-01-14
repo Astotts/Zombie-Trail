@@ -11,8 +11,6 @@ public class ZombieIdleState : BaseZombieState
     [SerializeField] AbstractDirectionManuver directionManuver;
     [SerializeField] ZombieMovement movement;
     [SerializeField] AbstractAttack attack;
-    private float searchCooldownTimer;
-    private bool IsOnSearchCooldown { get { return searchCooldownTimer > 0; } }
 
     void OnValidate()
     {
@@ -22,25 +20,13 @@ public class ZombieIdleState : BaseZombieState
 
     public override void StateUpdate()
     {
-        if (IsOnSearchCooldown)
-        {
-            searchCooldownTimer -= Time.deltaTime;
-            return;
-        }
-
-        searchCooldownTimer = directionManuver.Stats.SearchCooldown;
-
-        if (!directionManuver.FindNearestTarget())
+        Transform target = directionManuver.FindNearestTarget();
+        if (target == null)
             return;
 
-        if (attack.CanAttack())
+        if (attack.CanAttack(target))
             stateMachine.ChangeState(EZombieState.Attack);
         else
             stateMachine.ChangeState(EZombieState.Walk);
-    }
-
-    public override void Exit()
-    {
-        searchCooldownTimer = 0;
     }
 }

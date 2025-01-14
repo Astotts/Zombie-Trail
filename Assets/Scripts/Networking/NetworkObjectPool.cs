@@ -84,9 +84,9 @@ public class NetworkObjectPool : NetworkBehaviour
     /// <returns></returns>
     public NetworkObject GetNetworkObject(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        var networkObject = m_PooledObjects[prefab].Get();
+        NetworkObject networkObject = m_PooledObjects[prefab].Get();
 
-        var noTransform = networkObject.transform;
+        Transform noTransform = networkObject.transform;
         noTransform.SetPositionAndRotation(position, rotation);
         return networkObject;
     }
@@ -130,12 +130,12 @@ public class NetworkObjectPool : NetworkBehaviour
         m_PooledObjects[prefab] = new ObjectPool<NetworkObject>(CreateFunc, ActionOnGet, ActionOnRelease, ActionOnDestroy, defaultCapacity: prewarmCount);
 
         // Populate the pool
-        var prewarmNetworkObjects = new List<NetworkObject>();
-        for (var i = 0; i < prewarmCount; i++)
+        List<NetworkObject> prewarmNetworkObjects = new();
+        for (int i = 0; i < prewarmCount; i++)
         {
             prewarmNetworkObjects.Add(m_PooledObjects[prefab].Get());
         }
-        foreach (var networkObject in prewarmNetworkObjects)
+        foreach (NetworkObject networkObject in prewarmNetworkObjects)
         {
             m_PooledObjects[prefab].Release(networkObject);
         }

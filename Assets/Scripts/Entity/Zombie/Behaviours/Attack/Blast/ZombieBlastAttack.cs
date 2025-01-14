@@ -14,31 +14,40 @@ public class ZombieBlastAttack : AbstractAttack
 
     [SerializeField] SpriteRenderer bloaterSprite;
     [SerializeField] NetworkObject networkObject;
-    [SerializeField] MeleeDirectionManuver directionManuver;
-    [SerializeField] GameObject bloodSplatterGO;
     [SerializeField] ZombieBlastAttackStats stats;
     [SerializeField] Collider2D selfCollider;
+    Coroutine explodeCoroutine;
     bool isAttacking;
 
     #region Debug
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(stats.HitboxCenter, stats.HitboxExtends);
+        Gizmos.DrawWireCube((Vector2)transform.position + stats.HitboxCenter, stats.HitboxExtends);
     }
     #endregion
 
-    public override void Attack()
+    public override void OnNetworkSpawn()
+    {
+        isAttacking = false;
+    }
+
+    public override void OnNetworkDespawn()
     {
         if (isAttacking)
-            return;
+            StopCoroutine(explodeCoroutine);
 
+        base.OnNetworkDespawn();
+    }
+
+    public override void Attack(Transform target)
+    {
         PlayAttackEffectClientRpc();
     }
 
     [Rpc(SendTo.ClientsAndHost)]
     void PlayAttackEffectClientRpc()
     {
-        StartCoroutine(AttackEffect());
+        explodeCoroutine = StartCoroutine(AttackEffect());
     }
 
     IEnumerator AttackEffect()
@@ -57,27 +66,24 @@ public class ZombieBlastAttack : AbstractAttack
             yield return null;
         }
 
+        selfCollider.enabled = false;
+        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(stats.ParticleOnBlast, transform.position, Quaternion.identity);
+        networkObject.GetComponent<ParticleSystem>().Play();
+        networkObject.Spawn();
+        selfCollider.enabled = true;
+
         if (IsServer)
         {
             DealDamage();
             Despawn();
         }
 
-        selfCollider.enabled = false;
-        NetworkObject networkObject = NetworkObjectPool.Singleton.GetNetworkObject(bloodSplatterGO, transform.position, Quaternion.identity);
-        networkObject.Spawn();
-        selfCollider.enabled = true;
-
         isAttacking = false;
     }
 
     private void Despawn()
     {
-        GameObject prefab = stats.Prefab;
-
-        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
-
-        networkObject.Despawn(false);
+        networkObject.Despawn();
     }
 
     private void DealDamage()
@@ -85,7 +91,7 @@ public class ZombieBlastAttack : AbstractAttack
         Vector2 hitboxOrigin = (Vector2)transform.position + stats.HitboxCenter;
 
         selfCollider.enabled = false;
-        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(hitboxOrigin, stats.HitboxExtends, transform.eulerAngles.z, stats.LayerToAttack);
+        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(hitboxOrigin, stats.HitboxExtends, 0, stats.LayerToAttack);
         selfCollider.enabled = true;
         if (hitColliders.Length == 0)
             return;
@@ -106,9 +112,9 @@ public class ZombieBlastAttack : AbstractAttack
         }
     }
 
-    public override bool CanAttack()
+    public override bool CanAttack(Transform target)
     {
-        if (Vector2.Distance(directionManuver.Target.transform.position, selfCollider.transform.position) > stats.AttackRange)
+        if (Vector2.Distance(target.position, transform.position) > stats.AttackRange)
             return false;
 
         Vector2 hitboxOrigin = (Vector2)transform.position + stats.HitboxCenter;

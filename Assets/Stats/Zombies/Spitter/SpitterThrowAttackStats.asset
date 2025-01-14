@@ -17,16 +17,15 @@ MonoBehaviour:
   <Range>k__BackingField: 7
   <Cooldown>k__BackingField: 5
   <ProjectileStats>k__BackingField:
-    <Damage>k__BackingField: 10
-    <MaxSpeed>k__BackingField: 2
-    <MaxHeight>k__BackingField: 1
+    <Damage>k__BackingField: 7
+    <MaxSpeed>k__BackingField: 4
+    <MaxHeight>k__BackingField: 0.5
     <Force>k__BackingField: 5
-    <DistanceAroundTargetToStop>k__BackingField: 0.25
     <LayerToAttack>k__BackingField:
       serializedVersion: 2
       m_Bits: 72
     <HitboxOrigin>k__BackingField: {x: 0, y: 0}
-    <HitboxExtends>k__BackingField: {x: 3, y: 2.5}
+    <HitboxExtends>k__BackingField: {x: 3, y: 2}
     <MovementCurve>k__BackingField:
       serializedVersion: 2
       m_Curve:
@@ -47,54 +46,6 @@ MonoBehaviour:
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.023746789
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    <CorrectionCurve>k__BackingField:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 1
-        outSlope: 1
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    <SpeedCurve>k__BackingField:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

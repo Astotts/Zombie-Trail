@@ -14,80 +14,78 @@ public class ThrownProjectileMovement : NetworkBehaviour
     [SerializeField] ParticleSystem orbParticle;
     [SerializeField] ParticleSystem splashParticle;
 
+    [SerializeField] bool debug;
+    [SerializeField] Vector2 debugHitboxCenter;
+    [SerializeField] Vector2 debugHitboxExtends;
+
     ThrownProjectileStats stats;
-    private Vector2 targetPosition;
-    float currentSpeed;
     private float maxRelativeHeight;
-    Vector2 range;
-    Vector2 initialPosition;
-
-    float nextYTrajectoryPosition;
-    float nextXTrajectoryPosition;
-    float nextPosYCorrectionAbsolute;
-    float nextPosXCorrectionAbsolute;
-
-    bool isReached;
+    Vector2 targetPos;
+    Vector2 initialPos;
 
     void OnDrawGizmos()
     {
+        if (debug)
+            Gizmos.DrawWireCube(debugHitboxCenter, debugHitboxExtends);
+
         if (stats == null)
             return;
-        Gizmos.DrawWireCube(targetPosition + stats.HitboxOrigin, stats.HitboxExtends);
+        Gizmos.DrawWireCube(targetPos + stats.HitboxOrigin, stats.HitboxExtends);
     }
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         if (!IsServer)
         {
             enabled = false;
             return;
         }
-        isReached = false;
+        StartCoroutine(FlyAnimation());
     }
 
-    void FixedUpdate()
+    private IEnumerator FlyAnimation()
     {
-        if (isReached)
-            return;
+        float distance = Vector2.Distance(targetPos, initialPos);
+        float timeToReach = distance / stats.MaxSpeed;
+        float elapsed = 0;
+        while (elapsed < timeToReach)
+        {
+            elapsed += Time.deltaTime;
+            float time = elapsed / timeToReach;
+            float height = GetHeight(time);
+            Vector2 newPos = Vector2.Lerp(initialPos, targetPos, time);
+            transform.position = new(newPos.x, newPos.y + height);
 
-        if (Mathf.Abs(range.normalized.x) < Mathf.Abs(range.normalized.y))
-        {
-            // Projectile will be curved on the X axis
-            if (range.y < 0)
-            {
-                // Target is located under shooter
-                currentSpeed = -currentSpeed;
-            }
-            UpdatePositionWithXCurve();
-        }
-        else
-        {
-            // Projectile will be curved on the Y axis
-            if (range.x < 0)
-            {
-                // Target is located behind shooter
-                currentSpeed = -currentSpeed;
-            }
-            UpdatePositionWithYCurve();
+            yield return null;
         }
 
-        if (Vector2.Distance(transform.position, targetPosition) < stats.DistanceAroundTargetToStop)
-            OnReach();
+        OnReach();
+    }
+
+    float GetHeight(float time)
+    {
+        return stats.MovementCurve.Evaluate(time) * maxRelativeHeight;
     }
 
     void OnReach()
     {
-        isReached = true;
-        transform.position = targetPosition;
+        transform.position = targetPos;
+        PlayExplosionVFXClientRpc();
+        DealDamage();
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void PlayExplosionVFXClientRpc()
+    {
         orbParticle.Stop();
 
         splashParticle.Play();
-        DealDamage();
     }
 
     void DealDamage()
     {
-        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(targetPosition + stats.HitboxOrigin, stats.HitboxExtends, 0, stats.LayerToAttack);
+        Collider2D[] collider2Ds = Physics2D.OverlapBoxAll(targetPos + stats.HitboxOrigin, stats.HitboxExtends, 0, stats.LayerToAttack);
 
         foreach (Collider2D collider2D in collider2Ds)
         {
@@ -98,7 +96,7 @@ public class ThrownProjectileMovement : NetworkBehaviour
 
             if (collider2D.TryGetComponent(out IKnockable knockable))
             {
-                Vector2 directionToTarget = (Vector2)collider2D.transform.position - targetPosition;
+                Vector2 directionToTarget = (Vector2)collider2D.transform.position - targetPos;
                 Vector2 forceVector = directionToTarget.normalized * stats.Force;
 
                 knockable.Knock(forceVector);
@@ -106,81 +104,13 @@ public class ThrownProjectileMovement : NetworkBehaviour
         }
     }
 
-    private void UpdatePositionWithXCurve()
-    {
-        float nextPosY = transform.position.y + currentSpeed * Time.deltaTime;
-        float nextPosYNormalized = (nextPosY - initialPosition.y) / range.y;
-
-        float nextPosXNormalized = stats.MovementCurve.Evaluate(nextPosYNormalized);
-        nextXTrajectoryPosition = nextPosXNormalized * maxRelativeHeight;
-
-        float nextPosXCorrectionNormalized = stats.CorrectionCurve.Evaluate(nextPosYNormalized);
-        nextPosXCorrectionAbsolute = nextPosXCorrectionNormalized * range.x;
-
-        if (range.x > 0 && range.y > 0)
-        {
-            nextXTrajectoryPosition = -nextXTrajectoryPosition;
-        }
-        else if (range.x < 0 && range.y < 0)
-        {
-            nextXTrajectoryPosition = -nextXTrajectoryPosition;
-        }
-
-        float nextPosX = initialPosition.x + nextXTrajectoryPosition + nextPosXCorrectionAbsolute;
-
-        Vector2 newPosition = new(nextPosX, nextPosY);
-
-        CalculateNextProjectileSpeed(nextPosYNormalized);
-
-        transform.position = newPosition;
-    }
-
-
-    private void UpdatePositionWithYCurve()
-    {
-        float nextPosX = transform.position.x + currentSpeed * Time.deltaTime;
-        float nextPosXNormalized = (nextPosX - initialPosition.x) / range.x;
-
-        float nextPosYNormalized = stats.MovementCurve.Evaluate(nextPosXNormalized);
-        nextYTrajectoryPosition = nextPosYNormalized * maxRelativeHeight;
-
-        float nextPosYCorrectionNormalized = stats.CorrectionCurve.Evaluate(nextPosXNormalized);
-        nextPosYCorrectionAbsolute = nextPosYCorrectionNormalized * range.y;
-
-        float nextPosY = initialPosition.y + nextYTrajectoryPosition + nextPosYCorrectionAbsolute;
-
-        Vector2 newPosition = new(nextPosX, nextPosY);
-
-        CalculateNextProjectileSpeed(nextPosXNormalized);
-
-        transform.position = newPosition;
-    }
-
-    private void CalculateNextProjectileSpeed(float nextPosXNormalized)
-    {
-        float nextMoveSpeedNormalized = stats.SpeedCurve.Evaluate(nextPosXNormalized);
-
-        currentSpeed = nextMoveSpeedNormalized * stats.MaxSpeed;
-    }
-
-    public void Despawn()
-    {
-        GameObject prefab = stats.Prefab;
-
-        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
-
-        networkObject.Despawn(false);
-    }
-
-    public void InitializeInfo(ThrownProjectileStats stats, Vector2 targetPosition)
+    public void InitializeInfo(ThrownProjectileStats stats, Vector2 targetPos)
     {
         this.stats = stats;
-        this.targetPosition = targetPosition;
-        initialPosition = transform.position;
+        this.targetPos = targetPos;
+        initialPos = transform.position;
 
-        float xDistanceToTarget = targetPosition.x - transform.position.x;
-        maxRelativeHeight = Mathf.Abs(xDistanceToTarget) * stats.MaxHeight;
-
-        range = targetPosition - initialPosition;
+        float distanceToTarget = Vector2.Distance(initialPos, targetPos);
+        maxRelativeHeight = Mathf.Abs(distanceToTarget) * stats.MaxHeight;
     }
 }

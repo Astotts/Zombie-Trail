@@ -16,10 +16,13 @@ public class ZombieMeleeAttack : AbstractAttack
     [SerializeField] SpriteRenderer hitboxDisplay;
     [SerializeField] LayerMask layerToAttack;
     [SerializeField] ZombieMeleeAttackStats stats;
+    [SerializeField] MeleeDirectionManuver directionManuver;
+    [SerializeField] Transform body;
 
     Coroutine attackCoroutine;
     float currentOpacity;
     bool isAttacking;
+    bool isOnCooldownTimer;
 
     #region Debug
     void OnDrawGizmos()
@@ -33,17 +36,39 @@ public class ZombieMeleeAttack : AbstractAttack
 
     void Start()
     {
-        if (IsServer)
-            return;
+        if (!IsServer)
+            enabled = false;
 
-        // this.enabled = false;
         currentOpacity = hitboxDisplay.color.a;
     }
 
-
-    public override void Attack()
+    public override void OnNetworkSpawn()
     {
+        if (IsServer)
+            isOnCooldownTimer = false;
+
+        base.OnNetworkSpawn();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (isAttacking)
+            StopCoroutine(attackCoroutine);
+
+        base.OnNetworkDespawn();
+    }
+
+    public override void Attack(Transform target)
+    {
+        StartCoroutine(AttackCooldown(stats.Cooldown));
         PlayAttackEffectClientRpc();
+    }
+
+    IEnumerator AttackCooldown(float seconds)
+    {
+        isOnCooldownTimer = true;
+        yield return new WaitForSeconds(seconds);
+        isOnCooldownTimer = false;
     }
 
     [Rpc(SendTo.ClientsAndHost)]
@@ -94,7 +119,7 @@ public class ZombieMeleeAttack : AbstractAttack
     {
         Color original = spriteRenderer.color;
 
-        Color newColor = new Color(original.r, original.g, original.b, opacity);
+        Color newColor = new(original.r, original.g, original.b, opacity);
 
         spriteRenderer.color = newColor;
     }
@@ -117,9 +142,12 @@ public class ZombieMeleeAttack : AbstractAttack
         }
     }
 
-    public override bool CanAttack()
+    public override bool CanAttack(Transform target)
     {
-        Vector2 hitboxRotated = transform.rotation * stats.HitboxCenter;
+        if (isOnCooldownTimer || Vector2.Distance(target.position, body.position) > stats.AttackRange)
+            return false;
+
+        Vector2 hitboxRotated = directionManuver.transform.rotation * stats.HitboxCenter;
         Vector2 attackerPos = transform.position;
 
         Collider2D[] hitColliders = Physics2D.OverlapBoxAll(attackerPos + hitboxRotated, stats.HitboxExtends, transform.eulerAngles.z, layerToAttack);

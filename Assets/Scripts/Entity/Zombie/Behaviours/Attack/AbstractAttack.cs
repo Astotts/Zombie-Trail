@@ -6,6 +6,6 @@ public abstract class AbstractAttack : NetworkBehaviour
 {
     public abstract float AttackTime { get; }
     public abstract float AttackAnimationTime { get; }
-    public abstract bool CanAttack();
-    public abstract void Attack();
+    public abstract bool CanAttack(Transform target);
+    public abstract void Attack(Transform target);
 }

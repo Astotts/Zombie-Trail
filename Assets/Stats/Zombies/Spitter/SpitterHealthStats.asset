@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SpitterHealthStats
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
-  <MaxHealth>k__BackingField: 10
+  <MaxHealth>k__BackingField: 15

@@ -14,9 +14,12 @@ public class ZombieStateMachine : NetworkBehaviour
 
     BaseZombieState currentState;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        // if (IsServer)
+        base.OnNetworkSpawn();
+        if (!IsServer)
+            enabled = false;
+
         currentState = idleState;
     }
 

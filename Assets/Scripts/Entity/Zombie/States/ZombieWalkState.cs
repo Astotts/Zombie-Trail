@@ -12,6 +12,8 @@ public class ZombieWalkState : BaseZombieState
     [SerializeField] AbstractDirectionManuver direction;
     [SerializeField] Animator animator;
 
+    Transform currentTarget;
+
     void OnValidate()
     {
         if (stateMachine == null)
@@ -21,15 +23,17 @@ public class ZombieWalkState : BaseZombieState
     public override void Enter()
     {
         animator.SetFloat("moveSpeed", movement.MoveAnimationSpeed);
+        currentTarget = direction.FindNearestTarget();
     }
 
     public override void StateUpdate()
     {
-        if (direction.Target == null)
+        currentTarget = direction.FindNearestTarget();
+        if (currentTarget == null)
         {
             stateMachine.ChangeState(EZombieState.Idle);
         }
-        else if (attack.CanAttack())
+        else if (attack.CanAttack(currentTarget))
         {
             stateMachine.ChangeState(EZombieState.Attack);
         }

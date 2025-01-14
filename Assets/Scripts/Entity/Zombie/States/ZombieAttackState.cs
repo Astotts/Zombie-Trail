@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Data;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [Serializable]
@@ -9,8 +10,7 @@ public class ZombieAttackState : BaseZombieState
 {
     [SerializeField] ZombieStateMachine stateMachine;
     [SerializeField] AbstractAttack zombieAttack;
-    [SerializeField] AbstractDirectionManuver directionManuver;
-    [SerializeField] ZombieMovement movement;
+    [SerializeField] AbstractDirectionManuver direction;
     [SerializeField] Animator animator;
 
     float attackTimer;
@@ -25,8 +25,14 @@ public class ZombieAttackState : BaseZombieState
     public override void Enter()
     {
         attackTimer = zombieAttack.AttackTime;
+        Transform target = direction.FindNearestTarget();
+        if (target == null)
+        {
+            stateMachine.ChangeState(EZombieState.Idle);
+            return;
+        }
 
-        zombieAttack.Attack();
+        zombieAttack.Attack(target);
 
         animator.SetFloat("attackSpeed", zombieAttack.AttackAnimationTime);
         animator.Play("Attack");
@@ -38,5 +44,7 @@ public class ZombieAttackState : BaseZombieState
             attackTimer -= Time.deltaTime;
         else
             stateMachine.ChangeState(EZombieState.Idle);
+
+        direction.RotateTowardTarget();
     }
 }

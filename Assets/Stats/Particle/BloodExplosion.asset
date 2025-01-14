@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f40baabd24d1c4eddac66847c885f451, type: 3}
-  m_Name: BloaterBloodExplosion
+  m_Name: BloodExplosion
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 2003091904605233353, guid: 225965b6ec6c242928615f9b35a81746, type: 3}

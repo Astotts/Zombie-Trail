@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.U2D;
 
-public class HealthEffect : MonoBehaviour
+public class HealthEffect : NetworkBehaviour
 {
     [SerializeField] HealthVFXStats VFXStats;
     [SerializeField] HealthSFXStats SFXStats;
@@ -30,6 +31,13 @@ public class HealthEffect : MonoBehaviour
     {
         originalFillColor = healthBarFill.color;
         HideHealthImmediate();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (IsServer)
+            ResetZombie();
     }
 
     public void PlayOnDamaged(string health)
@@ -77,6 +85,14 @@ public class HealthEffect : MonoBehaviour
             if (isHidingHealth)
                 StopCoroutine(hideHealthCoroutine);
         }
+    }
+
+    void ResetZombie()
+    {
+        bodySprite.color = Color.white;
+        SetSize(1);
+        healthBarFill.color = originalFillColor;
+        HideHealthImmediate();
     }
 
     private void SetSize(float sizeNormalized)

@@ -79,9 +79,7 @@ public class ProjectileMovement : NetworkBehaviour
     [Rpc(SendTo.Server)]
     void DestroySelfServerRpc()
     {
-        // Return to its network pool (Probably Destroyed, need to check this soon)
-        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
-        networkObject.Despawn(false);
+        networkObject.Despawn();
     }
 
     void OnTriggerEnter2D(Collider2D other)

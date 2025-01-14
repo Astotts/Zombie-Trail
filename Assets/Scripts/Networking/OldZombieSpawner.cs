@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 
-public class ZombieSpawner : NetworkBehaviour
+public class OldZombieSpawner : NetworkBehaviour
 {
     [SerializeField] GameObject zombiePrefab;
     [SerializeField] float timePerZombie = 1f;

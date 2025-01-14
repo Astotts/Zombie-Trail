@@ -3,7 +3,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ZombieHealthSystem : AbstractHealthSystem, IDamageable
+public class ZombieHealthSystem : AbstractHealthSystem
 {
     public override HealthSystemStats Stats => stats;
 
@@ -53,11 +53,7 @@ public class ZombieHealthSystem : AbstractHealthSystem, IDamageable
         if (isRedFlashing)
             StopCoroutine(redFlashCoroutine);
 
-        GameObject prefab = stats.Prefab;
-
-        NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, prefab);
-
-        networkObject.Despawn(false);
+        networkObject.Despawn();
     }
 
     [Rpc(SendTo.ClientsAndHost)]

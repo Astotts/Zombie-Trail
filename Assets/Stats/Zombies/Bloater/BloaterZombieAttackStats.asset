@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: BloaterZombieAttackStats
   m_EditorClassIdentifier: 
   <AttackTime>k__BackingField: 1.5
-  <AnimationAttackTime>k__BackingField: 0.667
-  <AttackRange>k__BackingField: 1.5
-  <Damage>k__BackingField: 10
-  <Force>k__BackingField: 10
+  <AnimationAttackTime>k__BackingField: 0.7
+  <AttackRange>k__BackingField: 2
+  <Damage>k__BackingField: 15
+  <Force>k__BackingField: 35
+  <Cooldown>k__BackingField: 0
   <LayerToDetect>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
@@ -24,5 +25,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 72
   <HitboxCenter>k__BackingField: {x: 0, y: 0}
-  <HitboxExtends>k__BackingField: {x: 4.5, y: 3}
-  <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+  <HitboxExtends>k__BackingField: {x: 7, y: 6}
+  <ParticleOnBlast>k__BackingField: {fileID: 2003091904605233353, guid: 225965b6ec6c242928615f9b35a81746, type: 3}

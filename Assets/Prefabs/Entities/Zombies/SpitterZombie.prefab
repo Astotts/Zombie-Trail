@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 769f3c848f1ef4e81a2d80de3737bc0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Stats>k__BackingField: {fileID: 11400000, guid: 43b4bd7f91dab4f8993852c2f3e4c199, type: 2}
+  stats: {fileID: 11400000, guid: 43b4bd7f91dab4f8993852c2f3e4c199, type: 2}
 --- !u!1 &3883322441710146976
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8275713305304142281
 RectTransform:
   m_ObjectHideFlags: 0
@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1537179966
+  GlobalObjectIdHash: 3546946648
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -855,8 +855,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 5236106466307953610}
   zombieAttack: {fileID: 3127131610853602858}
-  directionManuver: {fileID: 2514997659312714392}
-  movement: {fileID: 1520662132781410760}
+  direction: {fileID: 2514997659312714392}
   animator: {fileID: 6231104222734173979}
 --- !u!114 &7282665206861807709
 MonoBehaviour:

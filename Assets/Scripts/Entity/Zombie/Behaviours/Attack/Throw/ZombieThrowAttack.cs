@@ -13,21 +13,29 @@ public class ZombieThrowAttack : AbstractAttack
 
     Coroutine throwCoroutine;
     bool isThrowing;
-    float cooldownTimer;
+    bool isOnCooldownTimer;
 
-    public override void Attack()
+    public override void OnNetworkSpawn()
     {
-        cooldownTimer = stats.Cooldown;
-        throwCoroutine = StartCoroutine(ThrowProjectile());
+        isOnCooldownTimer = false;
+
+        base.OnNetworkSpawn();
     }
 
-    void FixedUpdate()
+    public override void Attack(Transform target)
     {
-        if (cooldownTimer > 0)
-            cooldownTimer -= Time.fixedDeltaTime;
+        StartCoroutine(AttackCooldown(stats.Cooldown));
+        throwCoroutine = StartCoroutine(ThrowProjectile(target));
     }
 
-    IEnumerator ThrowProjectile()
+    IEnumerator AttackCooldown(float seconds)
+    {
+        isOnCooldownTimer = true;
+        yield return new WaitForSeconds(seconds);
+        isOnCooldownTimer = false;
+    }
+
+    IEnumerator ThrowProjectile(Transform target)
     {
         if (isThrowing)
             StopCoroutine(throwCoroutine);
@@ -43,7 +51,7 @@ public class ZombieThrowAttack : AbstractAttack
             yield return null;
         }
 
-        SpawnProjectile(direction.Target);
+        ShootProjectileAt(target);
 
         while (elapsed < attackTime)
         {
@@ -54,7 +62,7 @@ public class ZombieThrowAttack : AbstractAttack
         }
     }
 
-    void SpawnProjectile(Transform target)
+    void ShootProjectileAt(Transform target)
     {
         NetworkObject projectile = NetworkObjectPool.Singleton.GetNetworkObject(stats.ProjectileStats.Prefab, transform.position, Quaternion.identity);
 
@@ -65,8 +73,8 @@ public class ZombieThrowAttack : AbstractAttack
         projectile.Spawn();
     }
 
-    public override bool CanAttack()
+    public override bool CanAttack(Transform target)
     {
-        return cooldownTimer <= 0 && Vector2.Distance(transform.position, direction.Target.position) < stats.Range;
+        return !isOnCooldownTimer && Vector2.Distance(transform.position, target.position) < stats.Range;
     }
 }

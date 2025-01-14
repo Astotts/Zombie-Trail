@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097fa5a9f422c4b64887ab70d307ad3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Stats>k__BackingField: {fileID: 11400000, guid: ac2f98adc872247cfabc4ce22ad64605, type: 2}
+  stats: {fileID: 11400000, guid: ac2f98adc872247cfabc4ce22ad64605, type: 2}
 --- !u!1 &2617922241355188608
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 6673304315395851476}
   - component: {fileID: 4700363050941888289}
   - component: {fileID: 3519003580847593270}
-  - component: {fileID: 2794407497147542294}
+  - component: {fileID: 7060072712314810710}
   m_Layer: 3
   m_Name: Sprite
   m_TagString: Enemy
@@ -301,7 +301,7 @@ MonoBehaviour:
   eyeDirection: {fileID: 2912173971720018071}
   rb2D: {fileID: 3056423275041506154}
   stats: {fileID: 11400000, guid: e5a3ca196e12344499a9607983628e69, type: 2}
---- !u!114 &2794407497147542294
+--- !u!114 &7060072712314810710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -310,11 +310,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3405653068175947450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb9171e8e5ebd6d4882c314834a1771b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f153c946cc984051949943df36490bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   stats: {fileID: 11400000, guid: dbcb7bb57290f453fad931893532eca0, type: 2}
-  networkObject: {fileID: 2719006665006736146}
+  stateMachine: {fileID: 1159882409576049990}
   effect: {fileID: 5955966986870133318}
 --- !u!1 &3595210386877573089
 GameObject:
@@ -524,7 +524,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 20
+  m_LinearDrag: 40
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -625,8 +625,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 1159882409576049990}
   zombieAttack: {fileID: 8488535849841889105}
-  directionManuver: {fileID: 2032206384979765348}
-  movement: {fileID: 3519003580847593270}
+  direction: {fileID: 2032206384979765348}
   animator: {fileID: 52215596832091103}
 --- !u!114 &2330623564788324009
 MonoBehaviour:

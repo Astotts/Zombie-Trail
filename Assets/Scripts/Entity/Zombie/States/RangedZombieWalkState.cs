@@ -9,9 +9,8 @@ public class RangedZombieWalkState : BaseZombieState
     [SerializeField] RangedZombieDirectionManuver direction;
     [SerializeField] Animator animator;
 
-    bool IsTargetTooClose =>
-        direction.Stats is RangedDirectionManuverStats stats
-        && Vector2.Distance(transform.position, direction.Target.position) < stats.DistanceToKeep;
+    Transform currentTarget;
+
 
     void OnValidate()
     {
@@ -22,19 +21,21 @@ public class RangedZombieWalkState : BaseZombieState
     public override void Enter()
     {
         animator.SetFloat("moveSpeed", movement.MoveAnimationSpeed);
+        currentTarget = direction.FindNearestTarget();
     }
 
     public override void StateUpdate()
     {
-        if (direction.Target == null)
+        currentTarget = direction.FindNearestTarget();
+        if (currentTarget == null)
         {
             stateMachine.ChangeState(EZombieState.Idle);
         }
-        else if (attack.CanAttack())
+        else if (attack.CanAttack(currentTarget))
         {
             stateMachine.ChangeState(EZombieState.Attack);
         }
-        else if (IsTargetTooClose)
+        else if (direction.IsTargetTooClose)
         {
             direction.RotateAwayFromTarget();
             movement.MoveForward();

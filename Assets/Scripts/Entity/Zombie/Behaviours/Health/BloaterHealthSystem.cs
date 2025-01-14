@@ -10,22 +10,13 @@ public class BloaterHealthSystem : AbstractHealthSystem
 
     [SerializeField] HealthSystemStats stats;
     [SerializeField] ZombieStateMachine stateMachine;
-    [SerializeField] NetworkObject networkObject;
-    [SerializeField] SpriteRenderer zombieSprite;
-    [SerializeField] ZombieBlastAttack blastAttack;
     [SerializeField] HealthEffect effect;
 
     //Sound Functionality
-    [SerializeField] private string[] sounds;
 
     private float currentHealth;
-
-    // private IEnumerator healthFlashing;
-    // private IEnumerator hideHealth;
     private bool IsDead => currentHealth <= 0;
-    Coroutine redFlashCoroutine;
     bool isDying;
-    bool isRedFlashing;
 
     // Server Behaviours
 
@@ -52,13 +43,8 @@ public class BloaterHealthSystem : AbstractHealthSystem
 
     public void Die()
     {
-        // StopCoroutine(healthFlashing);
-        // StopCoroutine(hideHealth);
-        if (isRedFlashing)
-            StopCoroutine(redFlashCoroutine);
-
         isDying = true;
-        blastAttack.Attack();
+        stateMachine.ChangeState(EZombieState.Attack);
     }
 
     [Rpc(SendTo.ClientsAndHost)]
