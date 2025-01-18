@@ -18,7 +18,7 @@ public class WaveManagerStats : ScriptableObject
 public class DisplayTime
 {
     public int Hour => hour;
-    public int Minute => hour;
+    public int Minute => minute;
     [SerializeField] int hour;
     [SerializeField] int minute;
 }

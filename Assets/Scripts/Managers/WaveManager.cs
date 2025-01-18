@@ -97,7 +97,8 @@ public class WaveManager : NetworkBehaviour
         for (int i = dayTime; i > 0; i--)
         {
             string key = i % 2 == 0 ? skipKey : underlinedSkipKey;
-            subTitle.text = String.Format(stats.DayTitle, i, key);
+            title.text = string.Format(stats.DayTitle, i.ToString());
+            subTitle.text = string.Format(stats.DaySubtitle, key);
             yield return new WaitForSeconds(1.0f);
         }
 

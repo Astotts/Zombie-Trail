@@ -15,8 +15,8 @@ MonoBehaviour:
   <StartTime>k__BackingField:
     hour: 18
     minute: 0
-  <SecondsPerNight>k__BackingField: 5
+  <SecondsPerNight>k__BackingField: 0
   <SecondsPerDay>k__BackingField: 60
-  <SkipKey>k__BackingField: Y
-  <DayTitle>k__BackingField: Rest Time!
-  <DaySubtitle>k__BackingField: '{0} Seconds Until Next Wave! Skip? {1}'
+  <SkipKey>k__BackingField: Press Y
+  <DayTitle>k__BackingField: '{0} Seconds until next Wave!'
+  <DaySubtitle>k__BackingField: Skip? {0}
