@@ -15,7 +15,7 @@ MonoBehaviour:
   <StartTime>k__BackingField:
     hour: 18
     minute: 0
-  <SecondsPerNight>k__BackingField: 720
+  <SecondsPerNight>k__BackingField: 5
   <SecondsPerDay>k__BackingField: 60
   <SkipKey>k__BackingField: Y
   <DayTitle>k__BackingField: Rest Time!

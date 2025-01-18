@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983a34a2aad8747bc8c6c7d5f68de04b, type: 3}
   m_Name: ZombieSpawnerStats
   m_EditorClassIdentifier: 
-  <BaseSpawnTime>k__BackingField: 0.5
+  <BaseMaxZombie>k__BackingField: 50
+  <MaxZombiePerLevel>k__BackingField: 5
+  <BaseSpawnTime>k__BackingField: 1
   <SpawnRatePerLevel>k__BackingField: 1
   <BaseLeashTime>k__BackingField: 3
   <LeashRatePerLevel>k__BackingField: 1

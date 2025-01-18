@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MeleeZombieMoveStats
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 25
-  <MoveAnimationSpeed>k__BackingField: 1.5
+  <MoveAnimationSpeed>k__BackingField: 1.2

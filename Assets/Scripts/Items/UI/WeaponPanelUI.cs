@@ -164,11 +164,22 @@ public class WeaponPanelUI : NetworkBehaviour
         ammoImage.sprite = ammoIcon;
         ammoImage.SetNativeSize();
         ammoIconWidth = ammoImageRectTransform.sizeDelta.x;
+
         float rectWidth = maxAmount * ammoIconWidth;
         float ammoAreaWidth = ammoAreaRectTransform.sizeDelta.x;
+
         if (rectWidth > ammoAreaWidth)
         {
             float scale = ammoAreaWidth / rectWidth;
+            ammoImageRectTransform.localScale = new Vector3(scale, scale, scale);
+        }
+
+        float rectHeight = ammoImageRectTransform.sizeDelta.y;
+        float ammoAreaHeight = ammoAreaRectTransform.sizeDelta.y;
+
+        if (rectHeight * ammoImageRectTransform.localScale.y > ammoAreaHeight)
+        {
+            float scale = ammoAreaHeight / rectHeight;
             ammoImageRectTransform.localScale = new Vector3(scale, scale, scale);
         }
     }
@@ -183,15 +194,29 @@ public class WeaponPanelUI : NetworkBehaviour
         emptyAmmoImage.sprite = emptyAmmoIcon;
         emptyAmmoImage.SetNativeSize();
         emptyAmmoIconWidth = emptyAmmoImageRectTransform.sizeDelta.x;
+
         float rectWidth = maxAmount * emptyAmmoIconWidth;
-        float rectHeight = emptyAmmoImageRectTransform.sizeDelta.y;
-        emptyAmmoImageRectTransform.sizeDelta = new(rectWidth, rectHeight);
         float ammoAreaWidth = ammoAreaRectTransform.sizeDelta.x;
+
+        // Arrange the ammo sprite if its height is outside the bound
+
+        // Then arrange the width, making the bullet stay inside of bound (no overflow)
         if (rectWidth > ammoAreaWidth)
         {
             float scale = ammoAreaWidth / rectWidth;
             emptyAmmoImageRectTransform.localScale = new Vector3(scale, scale, scale);
         }
+
+        float rectHeight = emptyAmmoImageRectTransform.sizeDelta.y;
+        float ammoAreaHeight = ammoAreaRectTransform.sizeDelta.y;
+
+        if (rectHeight * emptyAmmoImageRectTransform.localScale.y > ammoAreaHeight)
+        {
+            float scale = ammoAreaHeight / rectHeight;
+            emptyAmmoImageRectTransform.localScale = new Vector3(scale, scale, scale);
+        }
+
+        emptyAmmoImageRectTransform.sizeDelta = new(rectWidth, rectHeight);
     }
 
     void SetMagazineCounter(int current, int capacity)

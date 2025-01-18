@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SpitterMoveStats
   m_EditorClassIdentifier: 
   <MoveSpeed>k__BackingField: 10
-  <MoveAnimationSpeed>k__BackingField: 1
+  <MoveAnimationSpeed>k__BackingField: 0.9
