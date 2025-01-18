@@ -265,6 +265,11 @@ public class InventoryHandler : NetworkBehaviour
             }
         }
 
+        if (pickUpSlot == currentSlot)
+        {
+            DropCurrentItemServerRpc();
+        }
+
         IItem pickedUpItem = closestGO.GetComponent<IItem>();
         inventory[pickUpSlot] = pickedUpItem;
 
