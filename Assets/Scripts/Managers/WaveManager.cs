@@ -1,102 +1,128 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using TMPro;
+using Unity.Netcode;
+using Unity.VisualScripting;
+using UnityEditor.Searcher;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
-public class WaveManager : MonoBehaviour
+public class WaveManager : NetworkBehaviour
 {
-    [SerializeField] GameObject[] spawnPoints;
-    [SerializeField] GameObject[] zombiePrefabs;
+    public static WaveManager Instance { get; private set; }
+    public int CurrentDay { get; private set; }
 
-    [SerializeField] public GameObject[] zombies; // used to track the number of zombies 
+    public event EventHandler<WaveState> OnStateChange;
 
-    public int difficulity = 0; // depending on the difficulity number, there will be either more or less zombs
-    public float spawnRate = 0.5f; // the spawn rate of the zombies
+    [SerializeField] WaveManagerStats stats;
+    [SerializeField] TMP_Text title;
+    [SerializeField] TMP_Text subTitle;
 
-    public bool readyForNextWave = false;  
+    readonly NetworkVariable<WaveState> currentState = new();
 
-    // Start is called before the first frame update
+    DateTime currentTime;
+    Coroutine dayCoroutine;
+
+    bool isDay;
+
+    string skipKey;
+    string underlinedSkipKey;
+
+    void Awake()
+    {
+        if (Instance != null)
+            Debug.LogError("There are more than one WaveManager Instance!");
+        Instance = this;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsClient)
+            OnStateChange?.Invoke(this, currentState.Value);
+
+        currentState.OnValueChanged += OnCurrentStateChange;
+
+        base.OnNetworkSpawn();
+    }
+
     void Start()
     {
-        zombies = new GameObject[50];
-        StartCoroutine(SpawnWave(difficulity));
-    }
-
-    void OnEnable()
-    {
-        GameManager.OnStateChange += StartNewWave;
-    }
-
-    void OnDisable()
-    {
-        GameManager.OnStateChange -= StartNewWave;
-    }
-
-    public void StartNewWave(GameState state)
-    {
-        if (state != GameState.WaitEnd)
+        if (!IsServer)
             return;
 
-        GameManager.StateUpdate(GameState.WaveStart);
-        difficulity += 0;      // Update this later, testings
+        StartNight();
 
-        StartCoroutine(SpawnWave(difficulity));     // Start wave
-        readyForNextWave = false;
+        skipKey = stats.SkipKey;
+        underlinedSkipKey = "<u>" + skipKey + "</u>";
+    }
+    void StartNight()
+    {
+        if (isDay)
+            StopCoroutine(dayCoroutine);
+
+        StartCoroutine(NightTimer());
     }
 
-    IEnumerator SpawnWave(int numOfZombs)
+    IEnumerator NightTimer()
     {
-        for (int i = 0; i < numOfZombs; i++)
+        currentTime = new DateTime().AddHours(stats.StartTime.Hour).AddMinutes(stats.StartTime.Minute);
+        ChangeState(WaveState.StartNight);
+
+        int nightTime = stats.SecondsPerNight;
+        for (int i = 0; i < nightTime; i++)
         {
-            int randIndex = GenerateRandomIndex(zombiePrefabs);
-            GameObject newZomb = Instantiate(zombiePrefabs[randIndex], GenerateRandomPos(), zombiePrefabs[randIndex].transform.rotation);
-            GameManager.Instance.AddZombieToList(newZomb);
-            //zombies[i] = newZomb; 
-            yield return new WaitForSeconds(spawnRate);
+            title.text = currentTime.AddMinutes(i).ToString("hh:mm tt");
+            yield return new WaitForSeconds(1.0f);
         }
-        readyForNextWave = true;
-        yield break;
+
+        title.text = "";
+        ChangeState(WaveState.EndNight);
+
+        StartDay();
     }
-    
-    // generates a random position at a random spawn point
-    private Vector2 GenerateRandomPos()
+
+    void StartDay()
     {
-        int randomSpawnPointIndex = GenerateRandomIndex(spawnPoints);
-        float sizeOfSpawn = spawnPoints[randomSpawnPointIndex].GetComponent<BoxCollider2D>().size.y; // only need y bc that's the long portion
-        //on both the left/right and upper/lower spawn points (since I just rotated the spawn point)
-
-        // initializing lowermost/leftmost and uppermost/rightmost bounds for spawning 
-        float lowerBound;
-        float upperBound;
-        
-        // initializing random x and y positions. 
-        float randomPosX = 0;
-        float randomPosY = 0; 
-
-        if (randomSpawnPointIndex % 2 == 0) // index 0 is left, index 2 is right
-        { // if left or right, x value will be the same, just need a random y value
-            lowerBound = spawnPoints[randomSpawnPointIndex].transform.position.y - (sizeOfSpawn/2);
-            upperBound = spawnPoints[randomSpawnPointIndex].transform.position.y + (sizeOfSpawn / 2);
-
-            randomPosX = spawnPoints[randomSpawnPointIndex].transform.position.x;
-            randomPosY = Random.Range(lowerBound, upperBound);
-        }
-        else // non even indexes, so 1(lower) and 3(upper)
-        { // only need a random x value
-            lowerBound = spawnPoints[randomSpawnPointIndex].transform.position.x - (sizeOfSpawn / 2);
-            upperBound = spawnPoints[randomSpawnPointIndex].transform.position.x + (sizeOfSpawn / 2);
-
-            randomPosX = Random.Range(lowerBound, upperBound);
-            randomPosY = spawnPoints[randomSpawnPointIndex].transform.position.y; 
-        }
-
-        Vector2 randomPos = new Vector2(randomPosX, randomPosY);
-
-        return randomPos;
+        dayCoroutine = StartCoroutine(DayTimer());
     }
 
-    // generates a random index for an array of game objects
-    private int GenerateRandomIndex(GameObject[] arr)
+    IEnumerator DayTimer()
     {
-        return Random.Range(0, arr.Length);
+        isDay = true;
+        ChangeState(WaveState.StartDay);
+
+        int dayTime = stats.SecondsPerDay;
+        for (int i = dayTime; i > 0; i--)
+        {
+            string key = i % 2 == 0 ? skipKey : underlinedSkipKey;
+            subTitle.text = String.Format(stats.DayTitle, i, key);
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        ChangeState(WaveState.EndDay);
+        CurrentDay++;
+        isDay = false;
+
+        StartNight();
     }
+
+    void ChangeState(WaveState waveState)
+    {
+        currentState.Value = waveState;
+    }
+
+    void OnCurrentStateChange(WaveState previous, WaveState current)
+    {
+        OnStateChange?.Invoke(this, current);
+    }
+}
+
+public enum WaveState
+{
+    StartNight,
+    EndNight,
+    StartDay,
+    EndDay
 }

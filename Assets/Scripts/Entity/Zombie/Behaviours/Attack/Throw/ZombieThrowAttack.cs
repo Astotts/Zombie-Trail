@@ -14,6 +14,7 @@ public class ZombieThrowAttack : AbstractAttack
     Coroutine throwCoroutine;
     bool isThrowing;
     bool isOnCooldownTimer;
+    Transform currentTarget;
 
     public override void OnNetworkSpawn()
     {
@@ -25,9 +26,10 @@ public class ZombieThrowAttack : AbstractAttack
     public override void Attack(Transform target)
     {
         StartCoroutine(AttackCooldown(stats.Cooldown));
-        throwCoroutine = StartCoroutine(ThrowProjectile(target));
-    }
+        currentTarget = target;
+        ThrowProjectileClientRpc();
 
+    }
     IEnumerator AttackCooldown(float seconds)
     {
         isOnCooldownTimer = true;
@@ -35,7 +37,13 @@ public class ZombieThrowAttack : AbstractAttack
         isOnCooldownTimer = false;
     }
 
-    IEnumerator ThrowProjectile(Transform target)
+    [Rpc(SendTo.ClientsAndHost)]
+    void ThrowProjectileClientRpc()
+    {
+        throwCoroutine = StartCoroutine(ThrowProjectile());
+    }
+
+    IEnumerator ThrowProjectile()
     {
         if (isThrowing)
             StopCoroutine(throwCoroutine);
@@ -51,7 +59,8 @@ public class ZombieThrowAttack : AbstractAttack
             yield return null;
         }
 
-        ShootProjectileAt(target);
+        if (IsServer)
+            ShootProjectileAt(currentTarget);
 
         while (elapsed < attackTime)
         {

@@ -11,9 +11,10 @@ using UnityEngine.SceneManagement;
 public class PlayerManager : NetworkBehaviour, IPersistentData
 {
     public static PlayerManager Instance { get; private set; }
+    public event EventHandler<NetworkObject> OnPlayerSpawned;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] Transform carTransform;
-    Dictionary<ulong, Player> playerMap = new();
+    readonly Dictionary<ulong, Player> playerMap = new();
     Dictionary<ulong, PlayerData> clientDataMap = new();
 
     void Awake()
@@ -75,6 +76,8 @@ public class PlayerManager : NetworkBehaviour, IPersistentData
             player.LoadData(data);
         else
             clientDataMap.Add(clientID, new PlayerData());
+
+        OnPlayerSpawned?.Invoke(this, playerNetworkObject);
     }
 
     public void LoadData(WorldData worldData)

@@ -2,6 +2,7 @@ using System;
 using System.Net.Sockets;
 using TMPro;
 using Unity.Netcode;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.UI;
 using static EventManager;
@@ -9,6 +10,8 @@ using static EventManager;
 public class WeaponPanelUI : NetworkBehaviour
 {
     [SerializeField] TMP_Text weaponNameTMP;
+    [SerializeField] RectTransform weaponFrameRecTransform;
+    [SerializeField] RectTransform weaponRecTransform;
     [SerializeField] Image weaponImage;
     [SerializeField] RectTransform ammoAreaRectTransform;
     [SerializeField] RectTransform ammoImageRectTransform;
@@ -120,8 +123,8 @@ public class WeaponPanelUI : NetworkBehaviour
 
     void HandleDisplableWeapon(IDisplayableWeapon weapon)
     {
-        weaponImage.sprite = weapon.Icon;
         weaponNameTMP.text = weapon.WeaponName;
+        SetWeaponIcon(weapon.Icon);
         SetEmptyAmmoIcon(weapon.EmptyAmmoIcon, weapon.MagazineSize);
         SetAmmoIcon(weapon.AmmoIcon, weapon.MagazineSize);
         SetCurrentAmmo(weapon.CurrentAmmo);
@@ -130,15 +133,30 @@ public class WeaponPanelUI : NetworkBehaviour
 
     void DisableUI()
     {
+        // Dear future me, disabled GameObjects won't receive event
+        // So I had to disable the components
         weaponNameTMP.gameObject.SetActive(false);
         weaponImage.gameObject.SetActive(false);
         ammoAreaRectTransform.gameObject.SetActive(false);
+        magazineCounter.gameObject.SetActive(false);
     }
     void EnableUI()
     {
         weaponNameTMP.gameObject.SetActive(true);
         weaponImage.gameObject.SetActive(true);
         ammoAreaRectTransform.gameObject.SetActive(true);
+        magazineCounter.gameObject.SetActive(true);
+    }
+
+    void SetWeaponIcon(Sprite weaponIcon)
+    {
+        weaponImage.sprite = weaponIcon;
+        weaponImage.SetNativeSize();
+        float weaponNativeHeight = weaponRecTransform.sizeDelta.y / 2;
+        float weaponFrameHeight = weaponFrameRecTransform.sizeDelta.y;
+        float scale = weaponFrameHeight / weaponNativeHeight;
+        weaponRecTransform.localScale = new Vector3(scale, scale, scale);
+
     }
 
     void SetAmmoIcon(Sprite ammoIcon, int maxAmount)

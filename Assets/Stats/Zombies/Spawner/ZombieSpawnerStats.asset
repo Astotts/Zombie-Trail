@@ -12,13 +12,97 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983a34a2aad8747bc8c6c7d5f68de04b, type: 3}
   m_Name: ZombieSpawnerStats
   m_EditorClassIdentifier: 
-  <zombieList>k__BackingField:
-  - <ID>k__BackingField: 0
-    <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
-    <Weight>k__BackingField: 5
-  - <ID>k__BackingField: 1
-    <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
-    <Weight>k__BackingField: 5
-  - <ID>k__BackingField: 2
-    <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
-    <Weight>k__BackingField: 1
+  <BaseSpawnTime>k__BackingField: 0.5
+  <SpawnRatePerLevel>k__BackingField: 1
+  <BaseLeashTime>k__BackingField: 3
+  <LeashRatePerLevel>k__BackingField: 1
+  <DistanceBetweenOffsets>k__BackingField: 1
+  <LayerWhitelist>k__BackingField:
+    serializedVersion: 2
+    m_Bits: 4096
+  <SpawnAreaCenter>k__BackingField: {x: 0, y: 0}
+  <SpawnAreaExtends>k__BackingField: {x: 24, y: 15}
+  <LeashAreaCenter>k__BackingField: {x: 0, y: 0}
+  <LeashAreaExtends>k__BackingField: {x: 30, y: 20}
+  <SpawnPools>k__BackingField:
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 0
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 5
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 10
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 1
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 20
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 5
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 50
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 10
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 75
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 25
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 90
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 50
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 75
+  - <Zombies>k__BackingField:
+    - <ID>k__BackingField: 2
+      <Prefab>k__BackingField: {fileID: 2807094060826339487, guid: 6202b6b8133074e5f83239be22544ff4, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 8359261420180277422, guid: 0379548cf52ba40e680e62f32c4b5b71, type: 3}
+      <Weight>k__BackingField: 100
+    - <ID>k__BackingField: 1
+      <Prefab>k__BackingField: {fileID: 5946573703921342333, guid: dbc6b7387ac6946b4a2eb8e43985e9b3, type: 3}
+      <Weight>k__BackingField: 100

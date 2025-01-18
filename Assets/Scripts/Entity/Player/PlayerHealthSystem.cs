@@ -24,7 +24,9 @@ public class PlayerHealthSystem : AbstractHealthSystem
     public override void OnNetworkSpawn()
     {
         if (IsServer)
+        {
             currentHealth = stats.MaxHealth;
+        }
 
         base.OnNetworkSpawn();
     }

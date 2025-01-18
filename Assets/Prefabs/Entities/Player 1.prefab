@@ -271,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3053717500
+  GlobalObjectIdHash: 1496578598
   InScenePlacedSourceGlobalObjectIdHash: 3566276912
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -566,7 +566,7 @@ GameObject:
   - component: {fileID: 496969883123572101}
   - component: {fileID: 5954502857740793625}
   - component: {fileID: 3153705054677012225}
-  - component: {fileID: 82155287664601102}
+  - component: {fileID: 8957778489644556765}
   - component: {fileID: 852643007681248432}
   - component: {fileID: 6254892825549106797}
   - component: {fileID: 3214280048580602291}
@@ -700,7 +700,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.825}
   m_Size: {x: 0.6, y: 1.65}
   m_Direction: 0
---- !u!114 &82155287664601102
+--- !u!114 &8957778489644556765
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -709,7 +709,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7413327184841586671}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Script: {fileID: 11500000, guid: b8a0fe9365dbb4ae782dc0f214786360, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []

@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class ZombieStateMachine : NetworkBehaviour
 {
-    [SerializeField] TMP_Text text;
     [SerializeField] BaseZombieState idleState;
     [SerializeField] BaseZombieState attackState;
     [SerializeField] BaseZombieState walkState;
@@ -29,7 +28,6 @@ public class ZombieStateMachine : NetworkBehaviour
             currentState.Exit();
 
         currentState = GetState(state);
-        text.text = currentState.ToString();
 
         currentState.Enter();
     }
