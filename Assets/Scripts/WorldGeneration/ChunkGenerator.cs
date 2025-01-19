@@ -1,6 +1,6 @@
 using System;
 
-public interface ChunkGenerator
+public interface IChunkGenerator
 {
     void LoadChunkAt(Random random, int chunkX, int chunkY, GenerateDirection generateDirection, RoadType roadType);
     void UnloadChunkAt(int chunkX, int chunkY);

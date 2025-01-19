@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class DecorationGenerator : MonoBehaviour, ChunkGenerator
+public class DecorationGenerator : MonoBehaviour, IChunkGenerator
 {
     [SerializeField] int chunkSize;
     [SerializeField] int zLevel;

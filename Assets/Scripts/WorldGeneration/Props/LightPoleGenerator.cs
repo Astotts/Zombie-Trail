@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
-public class LightPoleGenerator : MonoBehaviour, ChunkGenerator
+public class LightPoleGenerator : MonoBehaviour, IChunkGenerator
 {
     [SerializeField] int chunkSize;
     [SerializeField] List<GameObject> pooledObjects;

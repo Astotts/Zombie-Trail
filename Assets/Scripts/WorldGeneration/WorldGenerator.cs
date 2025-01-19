@@ -8,22 +8,21 @@ public class WorldGenerator : MonoBehaviour
     public int maxWidth;
     public int maxHeight;
     [SerializeField] int seed;
-    [SerializeField] Vector3 offset;
     [SerializeField] RoadTile initialTile;
-    [SerializeField] GameObject cam;
+    [SerializeField] Transform cam;
     [SerializeField] Tilemap tilemap5x5;
     [SerializeField] List<GameObject> generatorGameObjects = new();
     readonly Dictionary<Vector2Int, RoadTile> tiles = new();
     private Vector2Int currentRightRoadPos;
     private Vector2Int currentLeftRoadPos;
     private System.Random random;
-    private List<ChunkGenerator> chunkGenerators = new();
+    private readonly List<IChunkGenerator> chunkGenerators = new();
     [HideInInspector] public float chunkSize;
     void Awake()
     {
         foreach (GameObject generatorGO in generatorGameObjects)
         {
-            ChunkGenerator generator = generatorGO.GetComponent<ChunkGenerator>();
+            IChunkGenerator generator = generatorGO.GetComponent<IChunkGenerator>();
             chunkGenerators.Add(generator);
         }
         chunkSize = tilemap5x5.transform.localScale.x;
@@ -31,8 +30,8 @@ public class WorldGenerator : MonoBehaviour
     void Start()
     {
         random = new(seed);
-        int x = (int)offset.x;
-        int y = (int)offset.y;
+        int x = 0;
+        int y = 0;
         SetRoadTile(initialTile, x, y);
         GenerateVerticalTiles(initialTile, x, y, GenerateDirection.EAST);
         currentRightRoadPos = new Vector2Int(x, y);
@@ -49,7 +48,7 @@ public class WorldGenerator : MonoBehaviour
 
     void GenerateRightHorizontalRoad()
     {
-        int cameraRightBound = (int)(cam.transform.position.x / chunkSize + maxWidth);
+        int cameraRightBound = (int)(cam.position.x / chunkSize + maxWidth);
         int x = currentRightRoadPos.x;
         if (x > cameraRightBound)
         {
@@ -64,7 +63,7 @@ public class WorldGenerator : MonoBehaviour
     }
     void GenerateLeftHorizontalRoad()
     {
-        int cameraLeftBound = (int)(cam.transform.position.x / chunkSize - maxWidth);
+        int cameraLeftBound = (int)(cam.position.x / chunkSize - maxWidth);
         int x = currentLeftRoadPos.x;
         if (x < cameraLeftBound)
         {
@@ -100,7 +99,7 @@ public class WorldGenerator : MonoBehaviour
 
     void UnloadChunkGenerators(int x, int y)
     {
-        foreach (ChunkGenerator chunkGenerator in chunkGenerators)
+        foreach (IChunkGenerator chunkGenerator in chunkGenerators)
         {
             chunkGenerator.UnloadChunkAt(x, y);
         }
@@ -155,7 +154,7 @@ public class WorldGenerator : MonoBehaviour
 
     void LoadChunkGenerators(int chunkX, int chunkY, GenerateDirection generateDirection, RoadType roadType)
     {
-        foreach (ChunkGenerator chunkGenerator in chunkGenerators)
+        foreach (IChunkGenerator chunkGenerator in chunkGenerators)
         {
             System.Random chunkRandom = new(seed + chunkX * maxWidth + chunkY);
             chunkGenerator.LoadChunkAt(chunkRandom, chunkX, chunkY, generateDirection, roadType);

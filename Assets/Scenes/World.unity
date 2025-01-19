@@ -1770,7 +1770,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5.625
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2549,15 +2549,14 @@ MonoBehaviour:
   maxWidth: 4
   maxHeight: 4
   seed: 0
-  offset: {x: 0, y: 0, z: 0}
   initialTile: {fileID: 11400000, guid: 4a37305fb463f4478b742d3999381a67, type: 2}
-  cam: {fileID: 1009907589}
+  cam: {fileID: 1009907592}
   tilemap5x5: {fileID: 2120422779}
   generatorGameObjects:
+  - {fileID: 15363774}
+  - {fileID: 1372603296}
   - {fileID: 1508514302}
   - {fileID: 2046980228}
-  - {fileID: 1372603296}
-  - {fileID: 15363774}
   - {fileID: 496588500}
   - {fileID: 1706142126}
   chunkSize: 0
@@ -3911,7 +3910,7 @@ TilemapCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 6143
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

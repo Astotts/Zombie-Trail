@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class TrafficLightGenerator : MonoBehaviour, ChunkGenerator
+public class TrafficLightGenerator : MonoBehaviour, IChunkGenerator
 {
     [SerializeField] float zLevel;
     [SerializeField] Vector3 northOffset;

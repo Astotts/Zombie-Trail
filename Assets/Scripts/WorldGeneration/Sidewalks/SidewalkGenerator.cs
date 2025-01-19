@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class SidewalkGenerator : MonoBehaviour, ChunkGenerator
+public class SidewalkGenerator : MonoBehaviour, IChunkGenerator
 {
     [SerializeField] int zLevel;
     [SerializeField] int chunkSize;

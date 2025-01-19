@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
-public class SpawnPointGenerator : NetworkBehaviour, ChunkGenerator
+public class SpawnPointGenerator : NetworkBehaviour, IChunkGenerator
 {
     [SerializeField] int spawnCount;
     [SerializeField] int chunkSize;
