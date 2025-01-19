@@ -23,6 +23,8 @@ public class EventManager
     public event EventHandler<GunReloadInterruptedEventArgs> OnGunReloadInterruptedEvent;
     public event EventHandler<GunReloadedEventArgs> OnGunReloadedEvent;
     public event EventHandler<PlayerDamagedEventArgs> OnPlayerDamagedEvent;
+    public event EventHandler<PlayerHealthLoadedEventArgs> OnPlayerHealthLoadedEvent;
+
     #endregion
 
     #region InventoryLoadedEvent
@@ -204,7 +206,20 @@ public class EventManager
     }
     #endregion
 
+    #region PlayerHealthLoadedEvent
 
+    public void OnPlayerHealthLoaded(PlayerHealthLoadedEventArgs eventArgs)
+    {
+        OnPlayerHealthLoadedEvent?.Invoke(this, eventArgs);
+    }
+    public class PlayerHealthLoadedEventArgs : EventArgs
+    {
+        public ulong PlayerID { get; set; }
+        public float CurrentHealth { get; set; }
+        public float MaxHealth { get; set; }
+    }
+
+    #endregion
 
     #region PlayerDamagedEvent
     public void OnPlayerDamaged(PlayerDamagedEventArgs eventArgs)
@@ -216,6 +231,7 @@ public class EventManager
         public ulong PlayerID { get; set; }
         public float PreviousHealth { get; set; }
         public float CurrentHealth { get; set; }
+        public float MaxHealth { get; set; }
     }
     #endregion
 }

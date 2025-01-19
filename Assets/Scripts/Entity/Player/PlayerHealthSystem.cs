@@ -41,7 +41,8 @@ public class PlayerHealthSystem : AbstractHealthSystem
         {
             PlayerID = OwnerClientId,
             PreviousHealth = previous,
-            CurrentHealth = currentHealth
+            CurrentHealth = currentHealth,
+            MaxHealth = stats.MaxHealth
         };
 
         EventManager.EventHandler.OnPlayerDamaged(eventArgs);
@@ -63,6 +64,15 @@ public class PlayerHealthSystem : AbstractHealthSystem
 
     public void LoadData(PlayerData data)
     {
+        PlayerHealthLoadedEventArgs eventArgs = new()
+        {
+            PlayerID = OwnerClientId,
+            CurrentHealth = currentHealth,
+            MaxHealth = stats.MaxHealth
+        };
+
+        EventManager.EventHandler.OnPlayerHealthLoaded(eventArgs);
+
         currentHealth = data.CurrentHealth;
     }
 
