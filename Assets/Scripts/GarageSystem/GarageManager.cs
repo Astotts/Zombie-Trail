@@ -28,7 +28,6 @@ public class GarageManager : MonoBehaviour
 
     public void Explore()
     {
-        RelayManager.Instance.LockRelay();
         NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
     }
 

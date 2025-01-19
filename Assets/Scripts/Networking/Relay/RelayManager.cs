@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Xml;
 using Unity.Netcode;
@@ -19,9 +20,10 @@ public class RelayManager : MonoBehaviour
 {
     public static RelayManager Instance { get; private set; }
     public static string JoinCode;
-    bool IsLocked;
 
     public const int MAX_PLAYER = 4;
+
+    bool isConnecting;
 
     void Awake()
     {
@@ -46,6 +48,10 @@ public class RelayManager : MonoBehaviour
 
     public async void CreateRelay()
     {
+        if (isConnecting)
+            return;
+        isConnecting = true;
+
         try
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(MAX_PLAYER - 1); // Max player = host + others
@@ -58,21 +64,19 @@ public class RelayManager : MonoBehaviour
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(relayServerData);
 
-            NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
-
             NetworkManager.Singleton.StartHost();
 
             NetworkManager.Singleton.SceneManager.OnLoadComplete += OnWorldSceneLoaded;
             NetworkManager.Singleton.SceneManager.OnUnloadComplete += OnWorldSceneUnloaded;
 
-            // NetworkManager.Singleton.SceneManager.LoadScene("Garage", LoadSceneMode.Single);
             NetworkManager.Singleton.SceneManager.LoadScene("World", LoadSceneMode.Single);
-
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
+
+        isConnecting = false;
     }
 
     private void OnWorldSceneLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
@@ -92,15 +96,12 @@ public class RelayManager : MonoBehaviour
         WorldDataManager.Instance.SaveWorld("World");
     }
 
-
-    public void ApprovalCheck(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
-    {
-        response.Approved = true;
-        response.Reason = "The owners is currently away from the base, please wait for them to return.";
-    }
-
     public async void JoinRelay(string code)
     {
+        if (isConnecting)
+            return;
+        isConnecting = true;
+
         try
         {
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(code);
@@ -115,15 +116,7 @@ public class RelayManager : MonoBehaviour
         {
             Debug.Log(e);
         }
-    }
 
-    public void LockRelay()
-    {
-        IsLocked = true;
-    }
-
-    public void UnLockRelay()
-    {
-        IsLocked = false;
+        isConnecting = false;
     }
 }
