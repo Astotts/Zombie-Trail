@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cba9aea5b75f426298fa18fc9781f7f, type: 3}
+  m_Name: AK47
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  <GunName>k__BackingField: AK 47
+  <Icon>k__BackingField: {fileID: 21300000, guid: 64fa0edddd2a2324bbc7d1a4f29d8e2d, type: 3}
+  <WeaponSprite>k__BackingField: {fileID: 21300000, guid: 64fa0edddd2a2324bbc7d1a4f29d8e2d, type: 3}
+  <AmmoIcon>k__BackingField: {fileID: 21300000, guid: c80140d48808d4195a2a90a120807bf2, type: 3}
+  <EmptyAmmoIcon>k__BackingField: {fileID: 21300000, guid: b50883d85cd5941b6b67989b092b142e, type: 3}
+  <BulletGO>k__BackingField: {fileID: 7165678972314528935, guid: 54484c134b014ef4c83fc4a2a91bc4ed, type: 3}
+  <Damage>k__BackingField: 20
+  <Penetration>k__BackingField: 2
+  <Recoil>k__BackingField: 15
+  <Accuracy>k__BackingField: 10
+  <Range>k__BackingField: 50
+  <MagazineSize>k__BackingField: 30
+  <MaxMagazine>k__BackingField: 10
+  <BulletSpawnOffset>k__BackingField: 1.3
+  <BulletVelocity>k__BackingField: 20
+  <FireRate>k__BackingField: 0.1
+  <ReloadTime>k__BackingField: 4
+  <Weight>k__BackingField: 10
+  <GunShotSFXs>k__BackingField:
+  - GunShot0
+  - GunShot1
+  <ReloadSFXs>k__BackingField:
+  - ReloadSound0
+  - ReloadSound1
+  - ReloadSound2
+  <EquipSFXs>k__BackingField:
+  - Equip
+  <HolsterSFXs>k__BackingField:
+  - Holster

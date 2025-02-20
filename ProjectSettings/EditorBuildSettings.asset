@@ -5,15 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SoundTestingWWorldGen.unity
+    guid: fe15ef6cc59863844a99768f2793274c
+  - enabled: 1
+    path: Assets/Scripts/Networking/Multiplayer.unity
+    guid: 870c598e5ab364ebfb687444a066d599
+  - enabled: 1
+    path: Assets/Scenes/Garage.unity
+    guid: a51ca1606a27e4629a5ed1d41f622339
+  - enabled: 1
+    path: Assets/Scenes/World.unity
+    guid: 22f502a0630f28a43ac6ccbdc47d7aea
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
-    guid: 28249a787e1d845ac9fe2c426382a2a1
-  - enabled: 1
-    path: Assets/Scenes/WorldScene.unity
-    guid: c1ed18455e4324da78b53f3556666639
-  m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7684c7aed6c104e4fae2b763e6806cd0, type: 3}
-  m_UseUCBPForAssetBundles: 0
+    path: Assets/Scenes/WeaponSystemTest.unity
+    guid: ac039aec29b30422cad7bfacf7eec5be
+  - enabled: 0
+    path: Assets/Scenes/WorldGenTest.unity
+    guid: 1eb1f861fe2cf46448828bda65bd6968
+  m_configObjects: {}

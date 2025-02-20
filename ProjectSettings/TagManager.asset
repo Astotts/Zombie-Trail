@@ -3,21 +3,27 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Player bullet
+  - Road
+  - Structure
+  - PlayerSpawn
+  - Car
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemies
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Allies
+  - 'Attackable '
+  - Projectile
+  - PickUpRaycast
+  - IgnorePickUpRaycast
+  - Structure
+  - Road
   - 
   - 
   - 
@@ -40,4 +46,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Unaffected
+    uniqueID: 1385374429
+    locked: 0
+  - name: Reload
+    uniqueID: 1120230839
+    locked: 0
+  - name: PickUp
+    uniqueID: 1785130139
     locked: 0
