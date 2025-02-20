@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ce720a09f5a4a11bec797da9632074, type: 3}
+  m_Name: PlayerAnimation
+  m_EditorClassIdentifier: 
+  <AnimationClips>k__BackingField:
+  - <Id>k__BackingField: idle
+    <Clip>k__BackingField: {fileID: 11400000, guid: fe52e9b0751cb400abfcfd290eeeca30, type: 2}
+  - <Id>k__BackingField: walk_down
+    <Clip>k__BackingField: {fileID: 11400000, guid: 00c37bc3a9d7a41d098775689a3d37dd, type: 2}
+  - <Id>k__BackingField: walk_left
+    <Clip>k__BackingField: {fileID: 11400000, guid: 423c0f3c82c7844ab91e3ba551fc93f0, type: 2}
+  - <Id>k__BackingField: walk_right
+    <Clip>k__BackingField: {fileID: 11400000, guid: 88764396d511a4377aab24314404c366, type: 2}
+  - <Id>k__BackingField: walk_up
+    <Clip>k__BackingField: {fileID: 11400000, guid: 070fb033f99be475da1652b874088886, type: 2}
