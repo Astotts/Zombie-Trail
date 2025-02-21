@@ -1,5 +1,6 @@
 using NUnit.Framework.Constraints;
 using Unity.Entities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 class PlayerAuthoring : MonoBehaviour
@@ -15,7 +16,7 @@ class PlayerTagAuthoringBaker : Baker<PlayerAuthoring>
         AddComponent(entity, new PlayerTag());
         AddComponent(entity, new PlayerMoveInput());
         AddComponent(entity, new PlayerLookInput());
-        AddComponent(entity, new PlayerMoveTag());
+        AddComponent(entity, new PlayerMoveDirection());
         AddComponent(entity, new MovingTag());
         AddComponent(entity, new LookDirection());
         AddComponent(entity, new MoveDirection());

@@ -1,7 +1,8 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.NetCode;
 
-public struct PlayerMoveTag : IComponentData, IEnableableComponent
+public struct PlayerMoveDirection : IComponentData
 {
-    [GhostField] public byte Unsued; // Have to add this because unity doesn't sync enableable components
+    [GhostField] public float2 Value;
 }
