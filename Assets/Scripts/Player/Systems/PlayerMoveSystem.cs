@@ -3,10 +3,13 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
+using Unity.Physics;
+using Unity.Physics.Systems;
 using Unity.Transforms;
 using UnityEngine;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
+[UpdateBefore(typeof(PhysicsInitializeGroup))]
 partial struct PlayerMoveSystem : ISystem
 {
     EntityQuery playerQuery;
@@ -17,7 +20,7 @@ partial struct PlayerMoveSystem : ISystem
         state.RequireForUpdate<PlayerTag>();      
         playerQuery = SystemAPI
             .QueryBuilder()
-            .WithAllRW<LocalTransform>()
+            .WithAllRW<PhysicsVelocity>()
             .WithAll<PlayerMoveInput, Simulate>()
             .Build();  
     }
@@ -40,12 +43,10 @@ partial struct PlayerMoveSystem : ISystem
         [ReadOnly] public float DeltaTime;
         [ReadOnly] public float MoveSpeed;
 
-        public void Execute(ref LocalTransform playerTransform, in PlayerMoveInput moveInput)
+        public void Execute(ref PhysicsVelocity physicsVelocity, in PlayerMoveInput moveInput)
         {
-            if (moveInput.Value.x == 0 && moveInput.Value.y == 0)
-                return;
-
-            playerTransform.Position += MoveSpeed * DeltaTime * new float3(moveInput.Value.x, moveInput.Value.y, 0);
+            physicsVelocity.Angular = float3.zero;
+            physicsVelocity.Linear = MoveSpeed * new float3(moveInput.Value.x, moveInput.Value.y, 0);
         }
     }
 }

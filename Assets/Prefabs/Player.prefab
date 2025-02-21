@@ -15,7 +15,8 @@ GameObject:
   - component: {fileID: 5608694196646845754}
   - component: {fileID: 8156840539539483717}
   - component: {fileID: 3236827467857033118}
-  - component: {fileID: 5280492599978422981}
+  - component: {fileID: 280602920682231274}
+  - component: {fileID: 236962897625132265}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -165,8 +166,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_CenterOfMass: {x: 0, y: 0, z: Infinity}
+  m_InertiaTensor: {x: 100000, y: 100000, z: 100000}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
   m_IncludeLayers:
     serializedVersion: 2
@@ -175,13 +176,13 @@ Rigidbody:
     serializedVersion: 2
     m_Bits: 0
   m_ImplicitCom: 1
-  m_ImplicitTensor: 1
+  m_ImplicitTensor: 0
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!135 &5280492599978422981
+--- !u!135 &280602920682231274
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -201,4 +202,19 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.25
-  m_Center: {x: 0, y: -0.85, z: 0}
+  m_Center: {x: 0, y: -0.8, z: 0}
+--- !u!114 &236962897625132265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7718711071449277949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ef08e8acb17c4874ae6adfbb4687568, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsInfinityX: 1
+  IsInfinityY: 1
+  IsInfinityZ: 1
