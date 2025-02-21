@@ -8,7 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-// [UpdateAfter(typeof(PredictedSimulationSystemGroup))]
+[UpdateAfter(typeof(PredictedSimulationSystemGroup))]
 partial struct MoveAnimationSystem : ISystem
 {
     EntityQuery movableQuery;
@@ -49,7 +49,7 @@ partial struct MoveAnimationSystem : ISystem
         
         public void Execute(ref SpriteFrame frame, ref SpriteFrameElapsed frameElapsed, ref SpriteClipIndex clipIndex,
             EnabledRefRO<MovingTag> movingTag, in SpriteAnimation spriteAnimationBlobRef,
-            in MoveDirection moveDirection, Entity entity, [EntityIndexInQuery] int index)
+            in MoveDirection moveDirection, Entity entity)
         {
             // Calculate what clip to show`
             int clipId;

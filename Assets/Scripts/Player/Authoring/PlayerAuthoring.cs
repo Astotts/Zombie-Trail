@@ -17,8 +17,9 @@ class PlayerTagAuthoringBaker : Baker<PlayerAuthoring>
         AddComponent(entity, new PlayerMoveInput());
         AddComponent(entity, new PlayerLookInput());
         AddComponent(entity, new PlayerMoveDirection());
-        AddComponent(entity, new MovingTag());
         AddComponent(entity, new LookDirection());
         AddComponent(entity, new MoveDirection());
+        AddComponent(entity, new MovingTag());
+        SetComponentEnabled<MovingTag>(entity, false);
     }
 }

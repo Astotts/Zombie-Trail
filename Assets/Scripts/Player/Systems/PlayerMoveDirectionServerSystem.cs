@@ -6,7 +6,6 @@ using Unity.NetCode;
 using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-[UpdateBefore(typeof(MoveAnimationSystem))]
 public partial struct PlayerMoveDirectionServerSystem : ISystem
 {
     EntityQuery playerQuery;

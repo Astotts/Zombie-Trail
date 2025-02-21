@@ -39,7 +39,7 @@ public partial struct PlayerMoveDirectionClientSystem : ISystem
             if (playerMoveDirection.Value.x == moveDirection.Value.x && playerMoveDirection.Value.y == moveDirection.Value.y)
                 return;
             
-            bool isMoving = playerMoveDirection.Value.x != 0 && playerMoveDirection.Value.y != 0;
+            bool isMoving = playerMoveDirection.Value.x != 0 || playerMoveDirection.Value.y != 0;
 
             moveDirection.Value = playerMoveDirection.Value;
             moveTagLookup.SetComponentEnabled(playerEntity, isMoving);
