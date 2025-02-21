@@ -6,7 +6,7 @@ using Unity.NetCode;
 using Unity.Transforms;
 using UnityEngine;
 
-[UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
+[UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
 partial struct PlayerMoveSystem : ISystem
 {
     EntityQuery playerQuery;
@@ -17,7 +17,7 @@ partial struct PlayerMoveSystem : ISystem
         state.RequireForUpdate<PlayerTag>();      
         playerQuery = SystemAPI
             .QueryBuilder()
-            .WithAllRW<LocalTransform, MoveDirection>()
+            .WithAllRW<LocalTransform>()
             .WithAll<PlayerMoveInput, Simulate>()
             .Build();  
     }
@@ -31,7 +31,7 @@ partial struct PlayerMoveSystem : ISystem
         {
             MoveSpeed = stats.MoveSpeed,
             DeltaTime = SystemAPI.Time.DeltaTime,
-            MovingLookup = SystemAPI.GetComponentLookup<MovingTag>(false)
+            MovingLookup = SystemAPI.GetComponentLookup<PlayerMoveTag>(false)
         }.ScheduleParallel(playerQuery);
     }
 
@@ -40,9 +40,9 @@ partial struct PlayerMoveSystem : ISystem
     {
         [ReadOnly] public float DeltaTime;
         [ReadOnly] public float MoveSpeed;
-        [NativeDisableParallelForRestriction] public ComponentLookup<MovingTag> MovingLookup;
+        [NativeDisableParallelForRestriction] public ComponentLookup<PlayerMoveTag> MovingLookup;
 
-        public void Execute(Entity entity, ref LocalTransform playerTransform, ref MoveDirection moveDirection, in PlayerMoveInput moveInput, [EntityIndexInQuery] int index)
+        public void Execute(Entity entity, ref LocalTransform playerTransform, in PlayerMoveInput moveInput)
         {
             if (moveInput.Value.x == 0 && moveInput.Value.y == 0)
             {
@@ -50,7 +50,6 @@ partial struct PlayerMoveSystem : ISystem
                 return;
             }
 
-            moveDirection.Value = moveInput.Value;
             playerTransform.Position += MoveSpeed * DeltaTime * new float3(moveInput.Value.x, moveInput.Value.y, 0);
             MovingLookup.SetComponentEnabled(entity, true);
         }

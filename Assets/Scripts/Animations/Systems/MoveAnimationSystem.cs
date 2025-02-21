@@ -8,7 +8,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
-[UpdateAfter(typeof(PredictedSimulationSystemGroup))]
+// [UpdateAfter(typeof(PredictedSimulationSystemGroup))]
 partial struct MoveAnimationSystem : ISystem
 {
     EntityQuery movableQuery;
@@ -51,14 +51,12 @@ partial struct MoveAnimationSystem : ISystem
             EnabledRefRO<MovingTag> movingTag, in SpriteAnimation spriteAnimationBlobRef,
             in MoveDirection moveDirection, Entity entity, [EntityIndexInQuery] int index)
         {
-            // Debug.Log($"{index}: {moveDirection.Value}");
             // Calculate what clip to show`
             int clipId;
             if (!movingTag.ValueRO)
             {
                 clipId = animationSettings.IdleHash;
             } else {
-                // Debug.Log("Is moving");
                 float2 moveDir = math.normalize(moveDirection.Value);
                 // Up and down direction
                 if (math.abs(moveDir.y) > math.abs(moveDir.x))

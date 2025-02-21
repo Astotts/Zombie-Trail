@@ -2,7 +2,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
 
+[GhostComponent(OwnerSendType = SendToOwnerType.SendToNonOwner, PrefabType = GhostPrefabType.AllPredicted)]
 public struct PlayerMoveInput : IInputComponentData
 {
-    public float2 Value;
+    [GhostField] public float2 Value;
 }
