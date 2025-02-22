@@ -13,16 +13,21 @@ class PlayerTagAuthoringBaker : Baker<PlayerAuthoring>
     {
         Entity entity = GetEntity(TransformUsageFlags.Dynamic);
         
-        AddComponent(entity, new PlayerTag());
-        AddComponent(entity, new PlayerMoveInput());
-        AddComponent(entity, new PlayerMousePositionInput());
-        AddComponent(entity, new PlayerSpawnItemInput());
-        AddComponent(entity, new PlayerPickUpItemInput());
-        AddComponent(entity, new PlayerDropItemInput());
-        AddComponent(entity, new PlayerMoveDirection());
-        AddComponent(entity, new MoveDirection());
-        AddComponent(entity, new MovingTag());
-        SetComponentEnabled<MovingTag>(entity, false);
+        AddComponent<PlayerTag>(entity);
+        AddComponent<PlayerMoveInput>(entity);
+        AddComponent<PlayerMousePositionInput>(entity);
+        AddComponent<PlayerSpawnItemInput>(entity);
+        AddComponent<PlayerPickUpItemInput>(entity);
+        AddComponent<PlayerDropItemInput>(entity);
+        AddComponent<PlayerMoveDirection>(entity);
+        AddComponent<MoveDirection>(entity);
+        AddComponent<MovingTag>(entity);
+        AddComponent<CurrentSlot>(entity);
+        
         AddBuffer<ItemSlot>(entity);
+        for (int i = 0; i < 6; i++)
+            AppendToBuffer(entity, new ItemSlot());
+
+        SetComponentEnabled<MovingTag>(entity, false);
     }
 }

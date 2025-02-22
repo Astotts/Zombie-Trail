@@ -5,5 +5,5 @@ using Unity.Transforms;
 
 public struct ItemSlot : IBufferElementData
 {
-    public Entity Value;
+    [GhostField] public Entity Item;
 }

@@ -4,7 +4,6 @@ using Unity.Entities;
 using UnityEngine;
 
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
-[UpdateAfter(typeof(GoInGameServerSystem))]
 partial struct DestroyExtraCompanionSystem : ISystem
 {
     [BurstCompile]

@@ -5,6 +5,7 @@ using UnityEngine;
 public class EntitiesReferencesAuthoring : MonoBehaviour
 {
     public GameObject playerPrefab;
+    public GameObject itemPrefab;
 
     public class Baker : Baker<EntitiesReferencesAuthoring>
     {
@@ -14,6 +15,7 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
             AddComponent(entity, new EntitiesReferences()
             {
                 PlayerPrefabEntity = GetEntity(authoring.playerPrefab, TransformUsageFlags.Dynamic),
+                Item = GetEntity(authoring.itemPrefab, TransformUsageFlags.Dynamic),
             });
         }
     }
@@ -22,4 +24,5 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
 public struct EntitiesReferences : IComponentData
 {
     public Entity PlayerPrefabEntity;
+    public Entity Item;
 }

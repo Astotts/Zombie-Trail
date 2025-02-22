@@ -39,8 +39,8 @@ partial struct PlayerMoveSystem : ISystem
     [BurstCompile]
     private partial struct MoveJob : IJobEntity
     {
-        [ReadOnly] public float DeltaTime;
-        [ReadOnly] public float MoveSpeed;
+        public float DeltaTime;
+        public float MoveSpeed;
 
         public void Execute(ref PhysicsVelocity physicsVelocity, in PlayerMoveInput moveInput)
         {
