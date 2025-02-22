@@ -15,11 +15,14 @@ class PlayerTagAuthoringBaker : Baker<PlayerAuthoring>
         
         AddComponent(entity, new PlayerTag());
         AddComponent(entity, new PlayerMoveInput());
-        AddComponent(entity, new PlayerLookInput());
+        AddComponent(entity, new PlayerMousePositionInput());
+        AddComponent(entity, new PlayerSpawnItemInput());
+        AddComponent(entity, new PlayerPickUpItemInput());
+        AddComponent(entity, new PlayerDropItemInput());
         AddComponent(entity, new PlayerMoveDirection());
-        AddComponent(entity, new LookDirection());
         AddComponent(entity, new MoveDirection());
         AddComponent(entity, new MovingTag());
         SetComponentEnabled<MovingTag>(entity, false);
+        AddBuffer<ItemSlot>(entity);
     }
 }

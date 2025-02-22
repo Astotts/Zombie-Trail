@@ -1,8 +1,7 @@
 using Unity.Mathematics;
 using Unity.NetCode;
 
-public struct PlayerLookInput : IInputComponentData
+public struct PlayerMousePositionInput : IInputComponentData
 {
-    public float2 ScreenPos;
-    public float2 WorldPos;
+    public float2 Value;
 }

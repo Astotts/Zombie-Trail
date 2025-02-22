@@ -9,7 +9,6 @@ using Unity.Transforms;
 using UnityEngine;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
-[UpdateBefore(typeof(PhysicsInitializeGroup))]
 partial struct PlayerMoveSystem : ISystem
 {
     EntityQuery playerQuery;
