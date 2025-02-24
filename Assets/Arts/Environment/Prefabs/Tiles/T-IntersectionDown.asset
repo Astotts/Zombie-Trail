@@ -10,43 +10,46 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80256dae8285640409fe4b7cbcdeef10, type: 3}
-  m_Name: CrossWalkWest
+  m_Name: T-IntersectionDown
   m_EditorClassIdentifier: 
   chunkSize: {fileID: 11400000, guid: 4b6a7297479a3400d9c8f7c77eb25402, type: 2}
   Sprites:
     RowNum: 5
     ColNum: 5
+    PreviewWidth: 30
+    PreviewHeight: 30
+    PreviewSpace: 0
     Rows:
     - Columns:
       - {fileID: 862118845, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 862118845, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 862118845, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: 945422432, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: 945422432, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 862118845, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 862118845, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
     - Columns:
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -1463225321, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -1463225321, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-    - Columns:
-      - {fileID: 248731888, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: 759937271, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: 759937271, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
     - Columns:
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
       - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -522794768, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -522794768, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
     - Columns:
-      - {fileID: -1963798356, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -1963798356, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -1963798356, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -2110181755, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
-      - {fileID: -2110181755, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+    - Columns:
+      - {fileID: 469099291, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1996748811, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
   roadDirection:
     North: []
     South: []

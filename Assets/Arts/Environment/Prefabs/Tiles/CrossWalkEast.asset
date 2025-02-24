@@ -16,6 +16,9 @@ MonoBehaviour:
   Sprites:
     RowNum: 5
     ColNum: 5
+    PreviewWidth: 30
+    PreviewHeight: 30
+    PreviewSpace: 0
     Rows:
     - Columns:
       - {fileID: 945422432, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}

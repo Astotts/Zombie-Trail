@@ -28,7 +28,11 @@ public struct AdjacentRoad
 public struct SpriteGrid
 {
     public int RowNum;
-    public int ColNum;
+    public int ColNum;  
+
+    public float PreviewWidth;
+    public float PreviewHeight;
+    public float PreviewSpace;
     
     [Serializable]
     public struct SpriteColumn
