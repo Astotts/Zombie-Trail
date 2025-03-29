@@ -20,7 +20,6 @@ public class GroundGenerator : ChunkGenerator
     {
         foreach (GroundChunk groundChunk in groundList)
         {
-                Debug.Log(groundChunk.Type);
             PossibleGrounds possibleGrounds = new()
             {
                 North = GetGroundID(groundChunk.adjacentRoads.North),
@@ -65,7 +64,7 @@ public class GroundGenerator : ChunkGenerator
         return idList;
     }
 
-    public override void OnChunkLoad(Vector2 chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
+    public override void OnChunkLoad(Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
         GroundData groundData;
         if (currentData.TryGetValue(GROUND_GENERATOR_DATA_ID, out object data))
@@ -88,7 +87,7 @@ public class GroundGenerator : ChunkGenerator
         }
 
         Dictionary<Vector2Int, TileBase> sprites = groundSpriteGridMap[groundType];
-        Vector2Int worldPos = new((int)chunkPos.x * ChunkSize.Value, (int)chunkPos.y * ChunkSize.Value);
+        Vector2Int worldPos = chunkPos * ChunkSize.Value;
         foreach (Vector2Int offset in sprites.Keys)
         {
             Vector2Int pos = worldPos + offset;
@@ -157,14 +156,26 @@ public class GroundGenerator : ChunkGenerator
         return possibleGroundType[UnityEngine.Random.Range(0, possibleGroundType.Count)];
     }
 
-    bool IsTypePossible(GroundType groundType, HashSet<GroundType> possible)
+    public override void OnChunkUnload(Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
-        return possible == null || possible.Contains(groundType);
-    }
+        // Debug.Log("Unloading");
+        if (!currentData.TryGetValue(GROUND_GENERATOR_DATA_ID, out object data))
+            return;
+        // Debug.Log("Found Grounddata");
+        GroundData groundData = (GroundData) data;
 
-    public override void OnChunkUnload(Vector2 chunkPos, Tilemap tilemap)
-    {
-        throw new System.NotImplementedException();
+        if (!groundData.groundMap.TryGetValue(chunkPos, out GroundType groundType))
+            return;
+
+        // Debug.Log("Found groundtype");
+        Dictionary<Vector2Int, TileBase> sprites = groundSpriteGridMap[groundType];
+        Vector2Int worldPos = chunkPos * ChunkSize.Value;
+
+        foreach (Vector2Int offset in sprites.Keys)
+        {
+            Vector2Int pos = worldPos + offset;
+            tilemap.SetTile(new Vector3Int(pos.x, pos.y, groundHeight), null);
+        }
     }
 
     public class PossibleGrounds
