@@ -1,0 +1,197 @@
+using System.Collections.Generic;
+using JetBrains.Annotations;
+using Unity.Collections;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+[CreateAssetMenu(menuName = "Scriptable Objects/WorldGenerator/GroundGenerator", fileName = "New Ground Generator")]
+public class GroundGenerator : ChunkGenerator
+{
+    public static readonly string GROUND_GENERATOR_DATA_ID = "GROUND_GEN_DATA";
+    [SerializeField] private List<GroundChunk> groundList = new();
+    [SerializeField] private List<Tile> tileBaseList = new();
+    [SerializeField] private int groundHeight;
+
+    private readonly Dictionary<GroundType, PossibleGrounds> possibleGroundMap = new();
+    private readonly Dictionary<GroundType, Dictionary<Vector2Int, TileBase>> groundSpriteGridMap = new();
+
+    void OnEnable()
+    {
+        foreach (GroundChunk groundChunk in groundList)
+        {
+                Debug.Log(groundChunk.Type);
+            PossibleGrounds possibleGrounds = new()
+            {
+                North = GetGroundID(groundChunk.adjacentRoads.North),
+                South = GetGroundID(groundChunk.adjacentRoads.South),
+                East = GetGroundID(groundChunk.adjacentRoads.East),
+                West = GetGroundID(groundChunk.adjacentRoads.West),
+            };
+
+            possibleGroundMap.Add(groundChunk.Type, possibleGrounds);
+
+
+            SpriteGrid.SpriteColumn[] rows = groundChunk.Sprites.Rows;
+            Dictionary<Vector2Int, TileBase> spriteMap = new();
+
+            for (int y = rows.Length - 1; y >= 0; y--)
+            {
+                for (int x = rows[y].Columns.Length - 1; x >= 0; x--)
+                {
+                    Vector2Int pos = new(x, -y);
+                    foreach (Tile tile in tileBaseList)
+                    {
+                        if (tile.sprite != rows[y].Columns[x])
+                            continue;
+                        
+                        spriteMap.Add(pos, tile);
+                        break;
+                    }
+                }
+            }
+
+            groundSpriteGridMap.Add(groundChunk.Type, spriteMap);
+        }
+    }
+
+    HashSet<GroundType> GetGroundID(GroundChunk[] possibleGround)
+    {
+        HashSet<GroundType> idList = new();
+        foreach (GroundChunk ground in possibleGround)
+        {
+            idList.Add(ground.Type);
+        }
+        return idList;
+    }
+
+    public override void OnChunkLoad(Vector2 chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
+    {
+        GroundData groundData;
+        if (currentData.TryGetValue(GROUND_GENERATOR_DATA_ID, out object data))
+        {
+            groundData = (GroundData) data;
+        }
+        else
+        {
+            groundData = new()
+            {
+                groundMap = new()
+            };
+            currentData.Add(GROUND_GENERATOR_DATA_ID, groundData);
+        }
+
+        if (!groundData.groundMap.TryGetValue(chunkPos, out GroundType groundType))
+        {
+            groundType = GetRandomGroundType(chunkPos, groundData.groundMap);
+            groundData.groundMap[chunkPos] = groundType;
+        }
+
+        Dictionary<Vector2Int, TileBase> sprites = groundSpriteGridMap[groundType];
+        Vector2Int worldPos = new((int)chunkPos.x * ChunkSize.Value, (int)chunkPos.y * ChunkSize.Value);
+        foreach (Vector2Int offset in sprites.Keys)
+        {
+            Vector2Int pos = worldPos + offset;
+            tilemap.SetTile(new Vector3Int(pos.x, pos.y, groundHeight), sprites[offset]);
+        }
+    }
+
+    GroundType GetRandomGroundType(Vector2 chunkPos, Dictionary<Vector2, GroundType> groundMap) {
+        Vector2 northPos = new(chunkPos.x, chunkPos.y + 1);
+        Vector2 southPos = new(chunkPos.x, chunkPos.y - 1);
+        Vector2 eastPos = new(chunkPos.x + 1, chunkPos.y);
+        Vector2 westPos = new(chunkPos.x - 1, chunkPos.y);
+        
+        PossibleGrounds northPossible = null;
+        if (groundMap.TryGetValue(northPos, out GroundType northGroundType))
+        {
+            northPossible = possibleGroundMap[northGroundType];
+        }
+
+        PossibleGrounds southPossible = null;
+        if (groundMap.TryGetValue(southPos, out GroundType southGroundType))
+        {
+            southPossible = possibleGroundMap[southGroundType];
+        }
+
+        PossibleGrounds eastPossible = null;
+        if (groundMap.TryGetValue(eastPos, out GroundType eastGroundType))
+        {
+            eastPossible = possibleGroundMap[eastGroundType];
+        }
+
+        PossibleGrounds westPossible = null;
+        if (groundMap.TryGetValue(westPos, out GroundType westGroundType))
+        {
+            westPossible = possibleGroundMap[westGroundType];
+        }
+
+        if (northPossible == null
+        && southPossible == null
+        && eastPossible == null
+        && westPossible == null)
+        {
+            return GroundType.INTERSECTION;
+        }
+
+        List<GroundType> possibleGroundType = new();
+        foreach (GroundChunk groundChunk in groundList)
+        {
+            GroundType type = groundChunk.Type;
+
+            if (
+                (northPossible == null || northPossible.South.Contains(type))
+                && (southPossible == null || southPossible.North.Contains(type))
+                && (eastPossible == null || eastPossible.West.Contains(type))
+                && (westPossible == null || westPossible.East.Contains(type))
+            )
+            {
+                possibleGroundType.Add(type);
+            }
+        }
+
+
+        if (possibleGroundType.Count == 0)
+            return GroundType.INTERSECTION;
+
+        return possibleGroundType[UnityEngine.Random.Range(0, possibleGroundType.Count)];
+    }
+
+    bool IsTypePossible(GroundType groundType, HashSet<GroundType> possible)
+    {
+        return possible == null || possible.Contains(groundType);
+    }
+
+    public override void OnChunkUnload(Vector2 chunkPos, Tilemap tilemap)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public class PossibleGrounds
+    {
+        public HashSet<GroundType> North;
+        public HashSet<GroundType> South;
+        public HashSet<GroundType> East;
+        public HashSet<GroundType> West;
+    }
+
+    public struct GroundData
+    {
+        public Dictionary<Vector2, GroundType> groundMap;
+    }
+
+    public enum GroundType : byte
+    {
+        NONE,
+        HORIZONTAL_ROAD,
+        VERTICAL_ROAD,
+        T_INTERSECTION_UP_ROAD,
+        T_INTERSECTION_DOWN_ROAD,
+        INTERSECTION,
+        CROSSWALK_NORTH,
+        CROSSWALK_SOUTH,
+        CROSSWALK_EAST,
+        CROSSWALK_WEST,
+        PAVEMENT,
+    }
+}
