@@ -11,7 +11,8 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] private IntVariable chunkSize;
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private List<ChunkGenerator> weightedChunkGenerators = new();
-    
+
+    private int seed;
     private readonly Dictionary<string, object> chunkData = new();
     private Transform cameraTransform;
     private int currentRightX;
@@ -19,11 +20,14 @@ public class WorldGenerator : MonoBehaviour
 
     void Awake()
     {
-        currentLeftX = currentRightX = startPos.x;
+        currentLeftX = startPos.x;
+        currentRightX = currentLeftX + 1;
     }
 
     void Start()
     {
+        seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        // seed = 0;
         cameraTransform = Camera.main.transform;
     }
 
@@ -100,7 +104,7 @@ public class WorldGenerator : MonoBehaviour
         // Debug.Log("Loading chunk at " + chunkPos);
         foreach (ChunkGenerator chunkGenerator in weightedChunkGenerators)
         {
-            chunkGenerator.OnChunkLoad(chunkPos, tilemap, chunkData);
+            chunkGenerator.OnChunkLoad(seed, chunkPos, tilemap, chunkData);
         }
     }
 
@@ -109,7 +113,7 @@ public class WorldGenerator : MonoBehaviour
         // Debug.Log("Unloading chunk at " + chunkPos);
         foreach (ChunkGenerator chunkGenerator in weightedChunkGenerators)
         {
-            chunkGenerator.OnChunkUnload(chunkPos, tilemap, chunkData);
+            chunkGenerator.OnChunkUnload(seed, chunkPos, tilemap, chunkData);
         }
     }
 }

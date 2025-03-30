@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -64,7 +61,7 @@ public class GroundGenerator : ChunkGenerator
         return idList;
     }
 
-    public override void OnChunkLoad(Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
+    public override void OnChunkLoad(int seed, Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
         GroundData groundData;
         if (currentData.TryGetValue(GROUND_GENERATOR_DATA_ID, out object data))
@@ -82,7 +79,7 @@ public class GroundGenerator : ChunkGenerator
 
         if (!groundData.groundMap.TryGetValue(chunkPos, out GroundType groundType))
         {
-            groundType = GetRandomGroundType(chunkPos, groundData.groundMap);
+            groundType = GetRandomGroundType(seed, chunkPos, groundData.groundMap);
             groundData.groundMap[chunkPos] = groundType;
         }
 
@@ -95,11 +92,11 @@ public class GroundGenerator : ChunkGenerator
         }
     }
 
-    GroundType GetRandomGroundType(Vector2 chunkPos, Dictionary<Vector2, GroundType> groundMap) {
-        Vector2 northPos = new(chunkPos.x, chunkPos.y + 1);
-        Vector2 southPos = new(chunkPos.x, chunkPos.y - 1);
-        Vector2 eastPos = new(chunkPos.x + 1, chunkPos.y);
-        Vector2 westPos = new(chunkPos.x - 1, chunkPos.y);
+    GroundType GetRandomGroundType(int seed, Vector2Int chunkPos, Dictionary<Vector2Int, GroundType> groundMap) {
+        Vector2Int northPos = new(chunkPos.x, chunkPos.y + 1);
+        Vector2Int southPos = new(chunkPos.x, chunkPos.y - 1);
+        Vector2Int eastPos = new(chunkPos.x + 1, chunkPos.y);
+        Vector2Int westPos = new(chunkPos.x - 1, chunkPos.y);
         
         PossibleGrounds northPossible = null;
         if (groundMap.TryGetValue(northPos, out GroundType northGroundType))
@@ -149,14 +146,13 @@ public class GroundGenerator : ChunkGenerator
             }
         }
 
+        Random.InitState(seed + chunkPos.x);
+        int index = Random.Range(0, possibleGroundType.Count);
 
-        if (possibleGroundType.Count == 0)
-            return GroundType.INTERSECTION;
-
-        return possibleGroundType[UnityEngine.Random.Range(0, possibleGroundType.Count)];
+        return possibleGroundType[index];
     }
 
-    public override void OnChunkUnload(Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
+    public override void OnChunkUnload(int seed, Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
         // Debug.Log("Unloading");
         if (!currentData.TryGetValue(GROUND_GENERATOR_DATA_ID, out object data))
@@ -188,12 +184,11 @@ public class GroundGenerator : ChunkGenerator
 
     public struct GroundData
     {
-        public Dictionary<Vector2, GroundType> groundMap;
+        public Dictionary<Vector2Int, GroundType> groundMap;
     }
 
     public enum GroundType : byte
     {
-        NONE,
         HORIZONTAL_ROAD,
         VERTICAL_ROAD,
         T_INTERSECTION_UP_ROAD,

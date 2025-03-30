@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60cca61d8777140c2bcebdaaeed714b5, type: 3}
   m_Name: TileRoadCrosswalkEast
   m_EditorClassIdentifier: 
-  Type: 8
+  Type: 7
   Sprites:
     RowNum: 5
     ColNum: 5
@@ -56,8 +56,8 @@ MonoBehaviour:
     South:
     - {fileID: 11400000, guid: fd113d65717114065a83381648c00492, type: 2}
     East:
-    - {fileID: 11400000, guid: 8c98e7c3331c54436a38cc7d9c11b843, type: 2}
+    - {fileID: 11400000, guid: 22ffdb88e93d24078a5c7c88ca4b3de3, type: 2}
+    West:
     - {fileID: 11400000, guid: 65cf0f9f178ec447e8026008e58fb227, type: 2}
     - {fileID: 11400000, guid: c9ddb4eacea8740d7a66c75cade45fa4, type: 2}
-    West:
-    - {fileID: 11400000, guid: 22ffdb88e93d24078a5c7c88ca4b3de3, type: 2}
+    - {fileID: 11400000, guid: 8c98e7c3331c54436a38cc7d9c11b843, type: 2}

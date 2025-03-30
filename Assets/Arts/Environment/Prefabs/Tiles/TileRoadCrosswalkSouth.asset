@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60cca61d8777140c2bcebdaaeed714b5, type: 3}
   m_Name: TileRoadCrosswalkSouth
   m_EditorClassIdentifier: 
-  Type: 7
+  Type: 6
   Sprites:
     RowNum: 5
     ColNum: 5

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60cca61d8777140c2bcebdaaeed714b5, type: 3}
   m_Name: TileRoadHorizontal
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 0
   Sprites:
     RowNum: 5
     ColNum: 5
@@ -60,10 +60,10 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 65cf0f9f178ec447e8026008e58fb227, type: 2}
     - {fileID: 11400000, guid: c9ddb4eacea8740d7a66c75cade45fa4, type: 2}
     - {fileID: 11400000, guid: 8c98e7c3331c54436a38cc7d9c11b843, type: 2}
-    - {fileID: 11400000, guid: ba0eb8a2c29314b758e2185fe1916059, type: 2}
+    - {fileID: 11400000, guid: 3c56f6548dcf84f3cb9116d35bbafdf6, type: 2}
     West:
     - {fileID: 11400000}
     - {fileID: 11400000, guid: 65cf0f9f178ec447e8026008e58fb227, type: 2}
     - {fileID: 11400000, guid: c9ddb4eacea8740d7a66c75cade45fa4, type: 2}
     - {fileID: 11400000, guid: 8c98e7c3331c54436a38cc7d9c11b843, type: 2}
-    - {fileID: 11400000, guid: 3c56f6548dcf84f3cb9116d35bbafdf6, type: 2}
+    - {fileID: 11400000, guid: ba0eb8a2c29314b758e2185fe1916059, type: 2}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60cca61d8777140c2bcebdaaeed714b5, type: 3}
   m_Name: TilePavement
   m_EditorClassIdentifier: 
-  Type: 10
+  Type: 9
   Sprites:
     RowNum: 5
     ColNum: 5
@@ -52,16 +52,8 @@ MonoBehaviour:
       - {fileID: -1171908075, guid: 55995f9db9b30414d8b0ce0924040835, type: 3}
   adjacentRoads:
     North:
-    - {fileID: 11400000, guid: ba0eb8a2c29314b758e2185fe1916059, type: 2}
-    - {fileID: 11400000, guid: 3c56f6548dcf84f3cb9116d35bbafdf6, type: 2}
-    - {fileID: 11400000, guid: 22ffdb88e93d24078a5c7c88ca4b3de3, type: 2}
-    - {fileID: 11400000, guid: c9ddb4eacea8740d7a66c75cade45fa4, type: 2}
     - {fileID: 11400000}
     South:
-    - {fileID: 11400000, guid: ba0eb8a2c29314b758e2185fe1916059, type: 2}
-    - {fileID: 11400000, guid: 3c56f6548dcf84f3cb9116d35bbafdf6, type: 2}
-    - {fileID: 11400000, guid: 22ffdb88e93d24078a5c7c88ca4b3de3, type: 2}
-    - {fileID: 11400000, guid: 65cf0f9f178ec447e8026008e58fb227, type: 2}
     - {fileID: 11400000}
     East:
     - {fileID: 11400000, guid: 14984c9012ce94b44bee227359dfbd1a, type: 2}
