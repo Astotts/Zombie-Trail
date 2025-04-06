@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
+using Unity.VisualScripting.ReorderableList;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Tilemaps;
 
 [CreateAssetMenu(fileName = "DecorationGenerator", menuName = "Scriptable Objects/WorldGenerator/DecorationGenerator")]
@@ -12,7 +14,17 @@ public class DecorationGenerator : ChunkGenerator
     [SerializeField] [Range(0, 1)] private float spawnRate;
     [SerializeField] private int tileHeight;
     [SerializeField] private List<WeightedDecoration> decorationList;
+    // [SerializeField] private List<Tile> tileToAdd;
+    // [ContextMenu("Add Tiles")]
+    // void AddTileTo()
+    // {
+    //     foreach (Tile tile in tileToAdd)
+    //     {
+    //         decorationList.Add(new WeightedDecoration { Weight = 1, Tile = tile});
+    //     }
+    // }
     
+    private readonly Dictionary<Vector2Int, Dictionary<Vector3Int, Tile>> decorationData = new();
     private int totalWeight;
 
     void OnEnable()
@@ -26,10 +38,29 @@ public class DecorationGenerator : ChunkGenerator
 
     public override void OnChunkLoad(int seed, Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
+        if (decorationData.TryGetValue(chunkPos, out Dictionary<Vector3Int, Tile> chunkData))
+        {
+            LoadOldChunks(tilemap, chunkData);
+        }
+        else
+        {
+            GenerateNewDecorationChunk(seed, chunkPos, tilemap);
+        }
+    }
+
+    void LoadOldChunks(Tilemap tilemap, Dictionary<Vector3Int, Tile> chunkData)
+    {
+        foreach (Vector3Int tilePos in chunkData.Keys)
+        {
+            tilemap.SetTile(tilePos, chunkData[tilePos]);
+        }
+    }
+
+    void GenerateNewDecorationChunk(int seed, Vector2Int chunkPos, Tilemap tilemap)
+    {
         UnityEngine.Random.InitState(seed + chunkPos.x + chunkPos.y * ChunkSize.Value);
-        
         Vector2 worldPos = chunkPos * ChunkSize.Value;
-        
+        Dictionary<Vector3Int, Tile> generatedTile = new();
         for (int y = 0; y < ChunkSize.Value; y++)
         {
             for (int x = 0; x < ChunkSize.Value; x++)
@@ -39,15 +70,23 @@ public class DecorationGenerator : ChunkGenerator
                     continue;
 
                 Vector3Int tilePos = new((int)(worldPos.x + x), (int)(worldPos.y + y), tileHeight);
-
-                tilemap.SetTile(tilePos, GetRandomDecorationTile());
+                Tile randomTile = GetRandomDecorationTile();
+                generatedTile.Add(tilePos, randomTile);
+                tilemap.SetTile(tilePos, randomTile);
             }
         }
+        decorationData.Add(chunkPos, generatedTile);
     }
 
     public override void OnChunkUnload(int seed, Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
-        throw new System.NotImplementedException();
+        if (!decorationData.TryGetValue(chunkPos, out Dictionary<Vector3Int, Tile> chunkData))
+            return;
+        
+        foreach (Vector3Int tilePos in chunkData.Keys)
+        {
+            tilemap.SetTile(tilePos, null);
+        }
     }
 
     Tile GetRandomDecorationTile()
