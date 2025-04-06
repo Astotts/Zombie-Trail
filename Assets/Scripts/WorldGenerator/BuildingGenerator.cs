@@ -101,6 +101,9 @@ public class BuildingGenerator : ChunkGenerator
             foreach (SpawnedBuilding buildingData in buildingList)
             {
                 Building building = GetBuilding(buildingData.SpawnPos, Quaternion.identity);
+                building.SetBuildingData(buildingData.BuildingSO);
+                building.SetBuildingGenerator(this);
+                building.SetBuildingList(buildingList, buildingData);
                 buildingData.SpawnedGO = building;
             }
         }
@@ -172,7 +175,13 @@ public class BuildingGenerator : ChunkGenerator
 
     public override void OnChunkUnload(int seed, Vector2Int chunkPos, Tilemap tilemap, Dictionary<string, object> currentData)
     {
-
+        if (!buildingData.TryGetValue(chunkPos, out List<SpawnedBuilding> buildingToDespawn))
+            return;
+        
+        foreach (SpawnedBuilding building in buildingToDespawn)
+        {
+            ReturnBuilding(building.SpawnedGO);
+        }
     }
 
     bool IsBuildingSpawnable(Vector2 spawnPos, Vector2 buildingSize)
