@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60cca61d8777140c2bcebdaaeed714b5, type: 3}
+  m_Name: TileRoadCrosswalkSouth
+  m_EditorClassIdentifier: 
+  Type: 6
+  Sprites:
+    RowNum: 5
+    ColNum: 5
+    PreviewSpace: 0
+    Rows:
+    - Columns:
+      - {fileID: 2018137353, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: -782718365, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1287531499, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1640520671, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: -1160863888, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+    - Columns:
+      - {fileID: 2018137353, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: -782718365, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1287531499, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1640520671, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: -1160863888, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+    - Columns:
+      - {fileID: 404380230, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1022295663, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+    - Columns:
+      - {fileID: 404380230, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1022295663, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+    - Columns:
+      - {fileID: 404380230, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: -1497216155, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 7960475709850580378, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+      - {fileID: 1022295663, guid: 8cdc3d407d550470aba6b95cccc39890, type: 3}
+  adjacentRoads:
+    North:
+    - {fileID: 11400000, guid: 65cf0f9f178ec447e8026008e58fb227, type: 2}
+    - {fileID: 11400000, guid: 8c98e7c3331c54436a38cc7d9c11b843, type: 2}
+    South:
+    - {fileID: 11400000, guid: 2b32ede6dcdc640cda1a700401c8cc5d, type: 2}
+    East:
+    - {fileID: 11400000, guid: fd113d65717114065a83381648c00492, type: 2}
+    West:
+    - {fileID: 11400000, guid: fd113d65717114065a83381648c00492, type: 2}

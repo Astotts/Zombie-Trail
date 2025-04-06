@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f705dd6b8172d4ba890896aa6f6f1917, type: 3}
+  m_Name: DefaultBuildingGenerator
+  m_EditorClassIdentifier: 
+  <Weight>k__BackingField: 1
+  <ChunkSize>k__BackingField: {fileID: 11400000, guid: 736224c66ad864a86a7db136f499a26d, type: 2}
+  prewarmGOAmount: 15
+  buildingPrefab: {fileID: 8946073891209238148, guid: 56e4fcaf0fdab4f1ba75c392b5554233, type: 3}
+  lengthRatio: 1
+  buildingOffset: {x: 2, y: 2}
+  buildingLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  frontBuildingPrefabs:
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: bd3137ffcae8c45e4bdb8f4a1cc24d90, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 77e03677354c642f68a97c0d6911dae0, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 39174ebaf0d0e4d0bb38e4ddff217e88, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: e0f4d0c11904f469180a0468aaa9a9ff, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: a4cc0ceca5f6e4f9c87a048a655cbad9, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: eafb187ef174349c6a4c5bf788fa63b7, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: e5850a390d4cb4333b7859a256913998, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: d3c1cf65922b84d6e98d87aa817891e2, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: f55f6f3396ba4450e807bccfa292fa95, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 5dc9e2c48bc4e4d73b998207fc24b167, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 44f8b77c473fb419ab82814a4ed192ac, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 89076e61e1b024d7ca9b8e6124801834, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 7c23117bad6bf443fb84de1dfbd5fadd, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 24befdd261a234265b9511e41b8117ff, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 7b977f245b5904dd796a68d6ce868bda, type: 2}
+  backBuildingPrefabs:
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 9ad0281dbac7a42fb87215fa50fff3dd, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 9ba54e97001a44829a83c6ae56f4e8d4, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: c528cb72bcaac41deba7937255c9cc33, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: a5d6384946b2d4f06a4fe551b475d73d, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 008dc5710ef3f4021bb7ac81bdb494f6, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 06264367e0a124edc998ce9070dc1106, type: 2}
+  - weight: 1
+    buildingSO: {fileID: 11400000, guid: 52dbbfb3c8800450493abbcf35320c7f, type: 2}

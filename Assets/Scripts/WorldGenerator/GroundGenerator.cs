@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class GroundGenerator : ChunkGenerator
 {
     public static readonly string GROUND_GENERATOR_DATA_ID = "GROUND_GEN_DATA";
-    [SerializeField] private List<GroundChunk> groundList = new();
+    [SerializeField] private List<Ground> groundList = new();
     [SerializeField] private List<Tile> tileBaseList = new();
     [SerializeField] private int groundHeight;
 
@@ -15,7 +15,7 @@ public class GroundGenerator : ChunkGenerator
 
     void OnEnable()
     {
-        foreach (GroundChunk groundChunk in groundList)
+        foreach (Ground groundChunk in groundList)
         {
             PossibleGrounds possibleGrounds = new()
             {
@@ -31,11 +31,11 @@ public class GroundGenerator : ChunkGenerator
             SpriteGrid.SpriteColumn[] rows = groundChunk.Sprites.Rows;
             Dictionary<Vector2Int, TileBase> spriteMap = new();
 
-            for (int y = rows.Length - 1; y >= 0; y--)
+            for (int y = 0; y < rows.Length; y++)
             {
                 for (int x = rows[y].Columns.Length - 1; x >= 0; x--)
                 {
-                    Vector2Int pos = new(x, -y);
+                    Vector2Int pos = new(x, -y + ChunkSize.Value - 1);
                     foreach (Tile tile in tileBaseList)
                     {
                         if (tile.sprite != rows[y].Columns[x])
@@ -51,10 +51,10 @@ public class GroundGenerator : ChunkGenerator
         }
     }
 
-    HashSet<GroundType> GetGroundID(GroundChunk[] possibleGround)
+    HashSet<GroundType> GetGroundID(Ground[] possibleGround)
     {
         HashSet<GroundType> idList = new();
-        foreach (GroundChunk ground in possibleGround)
+        foreach (Ground ground in possibleGround)
         {
             idList.Add(ground.Type);
         }
@@ -131,7 +131,7 @@ public class GroundGenerator : ChunkGenerator
         }
 
         List<GroundType> possibleGroundType = new();
-        foreach (GroundChunk groundChunk in groundList)
+        foreach (Ground groundChunk in groundList)
         {
             GroundType type = groundChunk.Type;
 

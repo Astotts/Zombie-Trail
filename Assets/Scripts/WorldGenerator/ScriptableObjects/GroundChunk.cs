@@ -6,9 +6,9 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CreateAssetMenu(fileName = "RoadChunk", menuName = "Scriptable Objects/WorldGenerator/Sprite2D")]
+[CreateAssetMenu(fileName = "Ground", menuName = "Scriptable Objects/WorldGenerator/Ground")]
 [Serializable]
-public class GroundChunk : ScriptableObject
+public class Ground : ScriptableObject
 {
     public GroundGenerator.GroundType Type;
     public SpriteGrid Sprites;
@@ -18,10 +18,10 @@ public class GroundChunk : ScriptableObject
 [Serializable]
 public struct AdjacentRoad
 {
-    public GroundChunk[] North;
-    public GroundChunk[] South;
-    public GroundChunk[] East;
-    public GroundChunk[] West;
+    public Ground[] North;
+    public Ground[] South;
+    public Ground[] East;
+    public Ground[] West;
 }
 
 [Serializable]
@@ -30,8 +30,6 @@ public struct SpriteGrid
     public int RowNum;
     public int ColNum;  
 
-    public float PreviewWidth;
-    public float PreviewHeight;
     public float PreviewSpace;
     
     [Serializable]

@@ -18,23 +18,34 @@ public class WorldGenerator : MonoBehaviour
     private int currentRightX;
     private int currentLeftX;
 
+    private float elapsed;
+
     void Awake()
     {
         currentLeftX = startPos.x;
         currentRightX = currentLeftX + 1;
+
+        weightedChunkGenerators.Sort((a, b) => {
+            return a.Weight.CompareTo(b.Weight);
+        });
     }
 
     void Start()
     {
-        seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
-        // seed = 0;
+        // seed = UnityEngine.Random.Range(int.MinValue, int.MaxValue);
+        seed = 0;
         cameraTransform = Camera.main.transform;
     }
 
     void Update()
     {
-        HandleLeft();
-        HandleRight();
+        if (elapsed <= 0)
+        {
+            elapsed = 1;
+            HandleLeft();
+            HandleRight();
+        }
+        elapsed -= Time.deltaTime;
     }
 
     void HandleLeft()

@@ -9,10 +9,9 @@ public class Sprite2DInspector : PropertyDrawer
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         int rowNum = property.FindPropertyRelative("RowNum").intValue;
-        float previewHeight = property.FindPropertyRelative("PreviewHeight").floatValue;
         float previewSpace = property.FindPropertyRelative("PreviewSpace").floatValue;
         
-        return math.max(rowNum * 20, previewHeight * rowNum + previewSpace * rowNum + 20) + 40;
+        return math.max(rowNum * 20, rowNum + previewSpace * rowNum + 20) + 40;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -22,15 +21,11 @@ public class Sprite2DInspector : PropertyDrawer
         SerializedProperty RowNumProperty = property.FindPropertyRelative("RowNum");
         SerializedProperty ColNumProperty = property.FindPropertyRelative("ColNum");
         SerializedProperty RowsProperty = property.FindPropertyRelative("Rows");
-        SerializedProperty PreviewWidthProperty = property.FindPropertyRelative("PreviewWidth");
-        SerializedProperty PreviewHeightProperty = property.FindPropertyRelative("PreviewHeight");
         SerializedProperty PreviewSpaceProperty = property.FindPropertyRelative("PreviewSpace");
 
         Rect previewRect = new(position.x, position.y, position.width / 3, position.height);
         DrawPreviewOptions(
             ref previewRect,
-            PreviewWidthProperty,
-            PreviewHeightProperty,
             PreviewSpaceProperty,
             RowNumProperty,
             ColNumProperty,
@@ -53,7 +48,7 @@ public class Sprite2DInspector : PropertyDrawer
         Rect labelRect = new(position.x, position.y, position.width, 18);
         EditorGUI.LabelField(labelRect, "Grid");
 
-        GUIStyle numberStyle = EditorStyles.numberField;
+        GUIStyle numberStyle = new(EditorStyles.numberField);
         TextAnchor previewAnchor = numberStyle.alignment;
         numberStyle.alignment = TextAnchor.MiddleCenter;
 
@@ -103,7 +98,7 @@ public class Sprite2DInspector : PropertyDrawer
         Rect rowIncreaseRect = new(position.x, spriteFieldRect.y, rowButtonWidth, 18);
         Rect rowDecreaseRect = new(position.x + rowButtonWidth, spriteFieldRect.y, rowButtonWidth, 18);
 
-        GUIStyle fontStyle = EditorStyles.miniButton;
+        GUIStyle fontStyle = new(EditorStyles.miniButton);
         fontStyle.fontSize += 5;
         fontStyle.fontStyle = FontStyle.Bold;
         float prevHeight = fontStyle.fixedHeight;
@@ -140,8 +135,8 @@ public class Sprite2DInspector : PropertyDrawer
         numberStyle.alignment = previewAnchor;
     }
 
-    private void DrawPreviewOptions(ref Rect position, SerializedProperty previewWidth, SerializedProperty previewHeight,
-        SerializedProperty previewSpace, SerializedProperty rowNum, SerializedProperty colNum, SerializedProperty gridProperty)
+    private void DrawPreviewOptions(ref Rect position, SerializedProperty previewSpace,
+    SerializedProperty rowNum, SerializedProperty colNum, SerializedProperty gridProperty)
     {
         Rect backGroundRect = new(position.x, position.y, position.width, position.height);
         EditorGUI.DrawRect(backGroundRect, new Color(0.2f, 0.2f, 0.2f));
@@ -149,29 +144,22 @@ public class Sprite2DInspector : PropertyDrawer
         Rect labelRect = new(position.x, position.y, "Preview".Length * 8.5f, 18);
         EditorGUI.LabelField(labelRect, "Preview");
 
-        GUIStyle fontStyle = EditorStyles.numberField;
+        GUIStyle fontStyle = new(EditorStyles.numberField);
         TextAnchor previewAlignment = fontStyle.alignment;
         fontStyle.alignment = TextAnchor.MiddleCenter;
 
-        float widthFieldWidth = previewWidth.floatValue.ToString().Length * 7.5f + 10f;
-        float heightFieldWidth = previewHeight.floatValue.ToString().Length * 7.5f + 10f;
         float spaceFieldWidth = previewSpace.floatValue.ToString().Length * 7.5f + 10f;
 
-        Rect widthFieldRect = new(position.width - widthFieldWidth + 18 - spaceFieldWidth - 5 - heightFieldWidth - 5, position.y, widthFieldWidth, 18);
-        Rect heightFieldRect = new(position.width - heightFieldWidth + 18 - spaceFieldWidth - 5, position.y, heightFieldWidth, 18);
         Rect spaceFieldRect = new(position.width - spaceFieldWidth + 18, position.y, spaceFieldWidth, 18);
 
-        previewWidth.floatValue = EditorGUI.FloatField(widthFieldRect, previewWidth.floatValue);
-        previewHeight.floatValue = EditorGUI.FloatField(heightFieldRect, previewHeight.floatValue);
         previewSpace.floatValue = EditorGUI.FloatField(spaceFieldRect, previewSpace.floatValue);
 
         position.y += 20;
-        position.y += 8;
 
-        float spriteWidth = previewWidth.floatValue;
-        float spriteHeight = previewHeight.floatValue;
+        float spriteWidth = (math.min(position.width, position.height - 20) - colNum.intValue * previewSpace.floatValue) / math.max(colNum.intValue, rowNum.intValue);
+        float spriteHeight = spriteWidth;
 
-        Rect spriteRect = new(position.x + 18, position.y, spriteWidth, spriteHeight);
+        Rect spriteRect = new(position.x, position.y, spriteWidth, spriteHeight);
 
         for (int row = 0; row < rowNum.intValue; row++)
         {
