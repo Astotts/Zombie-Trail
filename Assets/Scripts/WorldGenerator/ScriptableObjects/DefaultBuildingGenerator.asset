@@ -21,6 +21,7 @@ MonoBehaviour:
   buildingLayer:
     serializedVersion: 2
     m_Bits: 64
+  buildingShadowTag: BuildingShadow
   frontBuildingPrefabs:
   - weight: 1
     buildingSO: {fileID: 11400000, guid: bd3137ffcae8c45e4bdb8f4a1cc24d90, type: 2}

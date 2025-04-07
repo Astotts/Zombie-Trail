@@ -18,6 +18,7 @@ public class BuildingGenerator : ChunkGenerator
     [SerializeField] private float lengthRatio;
     [SerializeField] private Vector2 buildingOffset;
     [SerializeField] private LayerMask buildingLayer;
+    [SerializeField] private string buildingShadowTag;
     [SerializeField] private List<WeightedBuilding> frontBuildingPrefabs;
     [SerializeField] private List<WeightedBuilding> backBuildingPrefabs;
 
@@ -168,7 +169,9 @@ public class BuildingGenerator : ChunkGenerator
         Vector2 endPos = worldPos + Vector2.one * ChunkSize.Value;
         foreach (Collider2D collider2D in Physics2D.OverlapAreaAll(worldPos, endPos, buildingLayer))
         {
-            Building building = collider2D.GetComponent<Building>();
+            if (!collider2D.CompareTag(buildingShadowTag))
+                continue;
+            Building building = collider2D.GetComponentInParent<Building>();
             building.RemoveSelfFromData();
         }
     }
@@ -218,7 +221,6 @@ public class BuildingGenerator : ChunkGenerator
         int currentWeight = 0;
 
         byte id = 0;
-        Debug.Log("Target: " + targetWeight + "/" + backTotalWeight);
         foreach (WeightedBuilding building in backBuildingPrefabs)
         {
             if (currentWeight >= targetWeight)

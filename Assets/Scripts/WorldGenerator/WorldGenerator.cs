@@ -18,8 +18,6 @@ public class WorldGenerator : MonoBehaviour
     private int currentRightX;
     private int currentLeftX;
 
-    private float elapsed;
-
     void Awake()
     {
         currentLeftX = startPos.x;
@@ -39,13 +37,8 @@ public class WorldGenerator : MonoBehaviour
 
     void Update()
     {
-        if (elapsed <= 0)
-        {
-            elapsed = 1;
-            HandleLeft();
-            HandleRight();
-        }
-        elapsed -= Time.deltaTime;
+        HandleLeft();
+        HandleRight();
     }
 
     void HandleLeft()

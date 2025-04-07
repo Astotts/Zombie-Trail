@@ -553,6 +553,7 @@ MonoBehaviour:
   weightedChunkGenerators:
   - {fileID: 11400000, guid: 6a66ef49061c4418d959b88ea4f30f3c, type: 2}
   - {fileID: 11400000, guid: 2e405fc0052d948d4b44575c6f7988c5, type: 2}
+  - {fileID: 11400000, guid: d8dd1fc656cc4439ba2c07798d9e0108, type: 2}
 --- !u!1 &2041433040
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +636,7 @@ TilemapRenderer:
   m_MaxChunkCount: 16
   m_MaxFrameAge: 16
   m_SortOrder: 0
-  m_Mode: 0
+  m_Mode: 1
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
 --- !u!1839735485 &2041433043

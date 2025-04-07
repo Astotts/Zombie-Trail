@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - BuildingShadow
   layers:
   - Default
   - TransparentFX
@@ -38,17 +39,20 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Ground
     uniqueID: 1595278751
     locked: 0
   - name: GroundDecoration
     uniqueID: 3851735809
     locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
   - name: Building
     uniqueID: 1424936171
+    locked: 0
+  - name: Entities
+    uniqueID: 2416197871
     locked: 0
   m_RenderingLayers:
   - Default
