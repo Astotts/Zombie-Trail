@@ -5,4 +5,5 @@ using UnityEngine;
 public class PlayerInventoriesSO : ScriptableObject
 {
     public readonly Dictionary<int, IWeapon[]> Inventories = new();
+    public readonly Dictionary<int, EquipmentSlot> CurrentSlot = new();
 }

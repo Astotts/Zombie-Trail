@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,13 +6,21 @@ public class PlayerInventory : NetworkBehaviour
 {
     [SerializeField] PlayerInventoriesSO inventoriesSO;
 
-    InputAction attackAction;
-    InputAction useAction;
+    InputAction hotbarAction;
 
-    void Start()
+    void OnEnable()
     {
-        attackAction = InputSystem.actions.FindAction("Attack");
-        useAction = InputSystem.actions.FindAction("Use");
+        hotbarAction = InputSystem.actions.FindAction("HotbarSelect");
+        hotbarAction.performed += OnHotbarSelect;
+    }
+
+    void OnDisable() {
+        hotbarAction.performed -= OnHotbarSelect;
+    }
+
+    private void OnHotbarSelect(InputAction.CallbackContext context)
+    {
+        Debug.Log(context.ReadValue<float>());
     }
 
     public override void OnStartNetwork()
