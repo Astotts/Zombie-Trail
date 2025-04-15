@@ -13,7 +13,7 @@ TagManager:
   - Water
   - UI
   - Building
-  - 
+  - Weapon
   - 
   - 
   - 
@@ -53,6 +53,9 @@ TagManager:
     locked: 0
   - name: Entities
     uniqueID: 2416197871
+    locked: 0
+  - name: UI
+    uniqueID: 3129006629
     locked: 0
   m_RenderingLayers:
   - Default

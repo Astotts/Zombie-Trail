@@ -39,7 +39,6 @@ public class Building : MonoBehaviour
     {
         if (!collider.CompareTag("Player"))
             return;
-        Debug.Log("Enter");
         
         if (isShowing)
             StopCoroutine(showCoroutine);
