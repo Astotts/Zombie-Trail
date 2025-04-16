@@ -141,6 +141,8 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 3117174727968481749}
+  - {fileID: 2283019125418485441}
+  - {fileID: 8475619948979796584}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -219,9 +221,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 770d4193695504c10aa230be2c9418cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8415849870400891737}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8415849870400891737}
   inventoriesSO: {fileID: 11400000, guid: 719b31159b41443cf8cc51d61ba26a91, type: 2}
   pickUpRange: 2
   itemOffset: {x: 0, y: 0}
@@ -230,6 +232,9 @@ MonoBehaviour:
   weaponLayer:
     serializedVersion: 2
     m_Bits: 128
+  ignoreRaycastLayer:
+    serializedVersion: 2
+    m_Bits: 4
 --- !u!114 &8475619948979796584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,17 +247,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c42bd0789583f4c2c949b670cb6b023e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8415849870400891737}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 8415849870400891737}
   inventoriesSO: {fileID: 11400000, guid: 719b31159b41443cf8cc51d61ba26a91, type: 2}
-  pickUpInterval: 0
-  PickUpRange: 0
-  PickUpOffset: {x: 0, y: 0}
-  WeaponLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  Player: {fileID: 0}
 --- !u!61 &3145595260562333232
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -4,6 +4,7 @@ using FishNet.Connection;
 using FishNet.Object;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEditor.MPE;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,17 +15,30 @@ public class PlayerPickUp : NetworkBehaviour
     [SerializeField] Vector2 itemOffset;
     [SerializeField] float pickUpInterval;
     [SerializeField] GameObject pickUpButton;
-    [SerializeField] LayerMask weaponLayer;
-    
+
     InputAction pickUpAction;
 
     Coroutine pickUpCoroutine;
 
-    void Start()
+    public override void OnStartClient()
     {
-        pickUpAction = InputSystem.actions.FindAction("PickUp");
+        base.OnStartClient();
 
+        if (!IsOwner)
+            return;
+
+        pickUpAction = InputSystem.actions.FindAction("PickUp");
         pickUpAction.performed += OnPickUpPerformed;
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        
+        if (!IsOwner)
+            return;
+
+        pickUpAction.performed -= OnPickUpPerformed;
     }
 
     private void OnPickUpPerformed(InputAction.CallbackContext context)
@@ -82,8 +96,11 @@ public class PlayerPickUp : NetworkBehaviour
         float distance = float.MaxValue;
         IWeapon abstractWeapon = null;
         Vector2 pickUpCenter = (Vector2) transform.position + itemOffset;
-        foreach (Collider2D collider in Physics2D.OverlapCircleAll(pickUpCenter, pickUpRange, weaponLayer))
+        LayerMask mask = LayerMask.NameToLayer("Weapon");
+        // Gotta use 1 << to make the layer bitmask instead
+        foreach (Collider2D collider in Physics2D.OverlapCircleAll(pickUpCenter, pickUpRange, 1 << mask))
         {
+            Debug.Log(collider.gameObject.name);
             float currentDistance = Vector2.Distance(pickUpCenter, collider.transform.position);
             if (distance <= currentDistance)
                 continue;
@@ -106,13 +123,23 @@ public class PlayerPickUp : NetworkBehaviour
         pickUpButton.SetActive(false);
     }
 
-    [ObserversRpc]
-    void DropWeapon(NetworkBehaviour weaponNetworkBehaviour, Vector2 direction)
+    void DropWeapon(IWeapon weapon)
     {
-        // TODO Calculate direction to throw weapon
-        // Might need to add predicted rigid to weapon
+        NetworkBehaviour weaponBehaviour = weapon.NetworkBehaviour;
+        weaponBehaviour.gameObject.SetActive(true);
+        weaponBehaviour.transform.localPosition = Vector3.zero;
+        weaponBehaviour.NetworkObject.UnsetParent();
+        weaponBehaviour.gameObject.layer = LayerMask.NameToLayer("Weapon");
+        Debug.Log("Dropped");
     }
 
+    [ObserversRpc]
+    void DropWeaponObserverRpc(NetworkBehaviour weaponBehaviour)
+    {
+        weaponBehaviour.transform.localPosition = Vector3.zero;
+        weaponBehaviour.NetworkObject.UnsetParent();
+        weaponBehaviour.gameObject.layer = LayerMask.NameToLayer("Weapon");
+    }
 
     [ServerRpc]
     void RequestPickup()
@@ -129,32 +156,95 @@ public class PlayerPickUp : NetworkBehaviour
 
         IWeapon currentWeapon = ownerInventory[equipmentSlot];
 
-        if (currentWeapon == null)
+        // Drop if the current slot have a weapon
+        if (currentWeapon != null)
         {
-            ownerInventory[equipmentSlot] = nearestWeapon;
+            DropWeapon(currentWeapon);
         }
+        
+        PickUpWeapon(nearestWeapon);
+
+        // Send only the new weapon to clients
+        if (inventoriesSO.CurrentSlot[OwnerId] == equipmentSlot)
+        {
+            Debug.Log("Current weapon should be true");
+            PickUpWeaponObserverRpc(nearestWeapon.NetworkBehaviour);
+        }
+        // Send the new weapon along with new slot
         else
         {
-            NetworkBehaviour weaponNetworkB = currentWeapon.NetworkBehaviour;
-            weaponNetworkB.transform.localPosition = itemOffset;
-            weaponNetworkB.NetworkObject.UnsetParent();
-            weaponNetworkB.gameObject.layer = LayerMask.NameToLayer("Weapon");
-            ownerInventory[equipmentSlot] = nearestWeapon;
+            Debug.Log("Current weapon should be false");
+            int currentSlot = inventoriesSO.CurrentSlot[OwnerId];
+            IWeapon currentSlotWeapon = inventoriesSO.Inventories[OwnerId][currentSlot];
+            if (currentSlotWeapon != null)
+            {
+                NetworkBehaviour currentSlotWeaponBehaviour = currentSlotWeapon.NetworkBehaviour;
+                currentSlotWeaponBehaviour.gameObject.SetActive(false);
+                PickUpWeaponObserverRpc(currentSlotWeaponBehaviour, nearestWeapon.NetworkBehaviour, equipmentSlot);
+            }
+            else
+            {
+                PickUpWeaponObserverRpc(nearestWeapon.NetworkBehaviour, equipmentSlot);
+            }
         }
-        NetworkBehaviour weaponNetworkBehaviour = nearestWeapon.NetworkBehaviour;
-        weaponNetworkBehaviour.NetworkObject.SetParent(this);
-        weaponNetworkBehaviour.transform.localPosition = itemOffset;
-        weaponNetworkBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
-        PickUpWeaponRpc(weaponNetworkBehaviour);
+    }
+
+    void PickUpWeapon(IWeapon weapon)
+    {
+        NetworkBehaviour nearestWeaponBehaviour = weapon.NetworkBehaviour;
+        nearestWeaponBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        nearestWeaponBehaviour.NetworkObject.SetParent(this);
+        nearestWeaponBehaviour.transform.localPosition = itemOffset;
     }
 
     [ObserversRpc]
-    public void PickUpWeaponRpc(NetworkBehaviour weaponNetworkBehaviour) {
-        Debug.Log("Client is now allowed to pickup");
-        IWeapon weapon = (IWeapon)weaponNetworkBehaviour;
-        int equipmentSlot = (int)weapon.Stats.Type;
-        inventoriesSO.Inventories[OwnerId][equipmentSlot] = weapon;
+    public void PickUpWeaponObserverRpc(NetworkBehaviour weaponNetworkBehaviour) {
+        Debug.Log("Clients is picking up");
+        if (IsOwner)
+        {
+            // Only owner of this player need this
+            IWeapon weapon = (IWeapon)weaponNetworkBehaviour;
+            int equipmentSlot = (int)weapon.Stats.Type;
+            inventoriesSO.Inventories[OwnerId][equipmentSlot] = weapon;
+        }
         
         weaponNetworkBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        weaponNetworkBehaviour.NetworkObject.SetParent(this);
+        weaponNetworkBehaviour.transform.localPosition = itemOffset;
+    }
+
+
+    [ObserversRpc]
+    public void PickUpWeaponObserverRpc(NetworkBehaviour newWeaponBehaviour, int newEquipSlot) {
+        Debug.Log("Clients is picking up");
+        if (IsOwner)
+        {
+            // Only owner of this player need this
+            IWeapon weapon = (IWeapon)newWeaponBehaviour;
+            int equipmentSlot = (int)weapon.Stats.Type;
+            inventoriesSO.Inventories[OwnerId][equipmentSlot] = weapon;
+            inventoriesSO.CurrentSlot[OwnerId] = newEquipSlot;
+        }
+        newWeaponBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        newWeaponBehaviour.NetworkObject.SetParent(this);
+        newWeaponBehaviour.transform.localPosition = itemOffset;
+    }
+
+    [ObserversRpc]
+    public void PickUpWeaponObserverRpc(NetworkBehaviour currentWeaponBehaviour, NetworkBehaviour newWeaponBehaviour, int newEquipSlot) {
+        Debug.Log("Clients is picking up");
+        if (IsOwner)
+        {
+            // Only owner of this player need this
+            IWeapon weapon = (IWeapon)newWeaponBehaviour;
+            int equipmentSlot = (int)weapon.Stats.Type;
+            inventoriesSO.Inventories[OwnerId][equipmentSlot] = weapon;
+            inventoriesSO.CurrentSlot[OwnerId] = newEquipSlot;
+        }
+        currentWeaponBehaviour.gameObject.SetActive(false);
+        
+        newWeaponBehaviour.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+        newWeaponBehaviour.NetworkObject.SetParent(this);
+        newWeaponBehaviour.transform.localPosition = itemOffset;
     }
 }
